@@ -23,16 +23,22 @@ export function Hero() {
       const progress = reduced ? 0 : clamp(-rect.top / distance);
 
       stage.style.setProperty("--hero-progress", progress.toFixed(4));
-      stage.style.setProperty("--hero-bg-x", `${50 + progress * 15}%`);
-      stage.style.setProperty("--hero-bg-y", `${48 + progress * 10}%`);
+      const travelled = clamp(-rect.top, 0, distance);
+      const wordReveal = clamp((progress - 0.015) / 0.27);
+
+      stage.style.setProperty("--hero-bg-x", `${50 + progress * 8}%`);
+      stage.style.setProperty("--hero-bg-y", `${48 + progress * 5}%`);
+      stage.style.setProperty("--hero-word-bg-x", `calc(50% + ${travelled * 0.62}px)`);
+      stage.style.setProperty("--hero-word-bg-y", `calc(48% + ${travelled * 0.42}px)`);
       stage.style.setProperty("--hero-photo-scale", (1.035 + progress * 0.08).toFixed(4));
       stage.style.setProperty("--hero-copy-opacity", String(Math.max(0, 1 - progress * 1.8)));
       stage.style.setProperty("--hero-copy-y", `${progress * -64}px`);
       stage.style.setProperty("--hero-side-opacity", String(Math.max(0, 1 - progress * 2.1)));
       stage.style.setProperty("--hero-side-y", `${progress * -34}px`);
-      stage.style.setProperty("--hero-word-y", `${progress * -28}px`);
-      stage.style.setProperty("--hero-word-scale", (1 + progress * 0.08).toFixed(4));
-      stage.style.setProperty("--hero-word-opacity", String(0.82 + progress * 0.18));
+      stage.style.setProperty("--hero-word-y", `${progress * -54}px`);
+      stage.style.setProperty("--hero-word-scale", (1 + progress * 0.012).toFixed(4));
+      stage.style.setProperty("--hero-word-opacity", String(wordReveal));
+      stage.style.setProperty("--hero-word-stroke-opacity", String(clamp((progress - 0.08) / 0.3) * 0.28));
       stage.style.setProperty("--hero-credit-opacity", String(Math.max(0, 1 - progress * 1.6)));
     };
 

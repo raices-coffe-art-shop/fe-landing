@@ -31,6 +31,7 @@ npm start
 
 - `app/page.tsx`: landing principal.
 - `app/personas/[slug]/page.tsx`: páginas individuales de cada protagonista.
+- `app/links/page.tsx`: hub de enlaces para biografías de Instagram, WhatsApp y campañas.
 - `data/site.ts`: historias y catálogo provisional.
 - `components/PeopleMasonry.tsx`: grilla tipo masonry con inclinación suave.
 - `components/OriginJourney.tsx`: recorrido sticky de café, miel, cacao y arte.
@@ -62,3 +63,8 @@ npm cache verify
 npm install
 npm run dev
 ```
+
+
+## Página de enlaces
+
+Abrir `http://localhost:3000/links`. Antes de publicar, reemplazar WhatsApp, Instagram y Google Maps por los datos definitivos.

@@ -9,7 +9,8 @@ const links = [
   ["Personas", "#personas"],
   ["Arte", "#arte"],
   ["Catálogo", "#catalogo"],
-  ["Visítanos", "#visita"]
+  ["Visítanos", "#visita"],
+  ["Enlaces", "/links"]
 ];
 
 export function SiteHeader() {
