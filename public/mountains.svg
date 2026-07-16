@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1100" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6e7969"/><stop offset=".48" stop-color="#b5aa8f"/><stop offset="1" stop-color="#d8b17a"/>
+    </linearGradient>
+    <linearGradient id="m1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#36493d"/><stop offset="1" stop-color="#1f2b25"/></linearGradient>
+    <linearGradient id="m2" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#8c604a"/><stop offset="1" stop-color="#4b4f3e"/></linearGradient>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="3"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .18 0"/></filter>
+  </defs>
+  <rect width="1800" height="1100" fill="url(#sky)"/>
+  <circle cx="1370" cy="220" r="105" fill="#e7c47e" opacity=".78"/>
+  <path d="M0 690 210 480 390 610 650 330 830 590 1050 350 1260 610 1480 410 1800 650V1100H0Z" fill="url(#m2)" opacity=".75"/>
+  <path d="M0 790 250 590 460 760 700 510 940 720 1190 500 1430 735 1620 560 1800 710V1100H0Z" fill="url(#m1)"/>
+  <path d="M0 900c240-110 390-60 600-30 220 32 355-100 600-40 250 61 390-25 600-50v320H0Z" fill="#18221d"/>
+  <path d="M80 1000c260-80 390-30 610-12 245 20 380-60 650-25 190 25 300 5 460-25" fill="none" stroke="#d09f59" stroke-width="8" opacity=".52"/>
+  <rect width="1800" height="1100" filter="url(#grain)" opacity=".28"/>
+</svg>
