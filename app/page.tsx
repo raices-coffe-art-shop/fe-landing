@@ -6,6 +6,9 @@ import { OriginJourney } from "@/components/OriginJourney";
 import { PeopleStack } from "@/components/PeopleStack";
 import { AyacuchoLexicon } from "@/components/AyacuchoLexicon";
 import { CulturalSplitShowcase } from "@/components/CulturalSplitShowcase";
+import { VerticalStorySlider } from "@/components/VerticalStorySlider";
+import { HorizontalParallaxGallery } from "@/components/HorizontalParallaxGallery";
+import { LayeredRevealGallery } from "@/components/LayeredRevealGallery";
 import { CatalogPreview } from "@/components/CatalogPreview";
 import { EditorialImage } from "@/components/EditorialImage";
 import { Footer } from "@/components/Footer";
@@ -41,6 +44,8 @@ export default function HomePage() {
             </div>
           </section>
 
+          <VerticalStorySlider />
+
           <section className="territory-section" id="territorio">
             <div className="territory-photo">
               <EditorialImage
@@ -67,6 +72,8 @@ export default function HomePage() {
           <OriginJourney />
           <PeopleStack />
 
+          <HorizontalParallaxGallery />
+
           <section className="art-section" id="arte">
             <div className="art-intro page-shell">
               <div>
@@ -78,6 +85,8 @@ export default function HomePage() {
 
             <CulturalSplitShowcase />
           </section>
+
+          <LayeredRevealGallery />
 
           <CatalogPreview />
 

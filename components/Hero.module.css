@@ -1,0 +1,292 @@
+.hero {
+  position: relative;
+  height: 285svh;
+  min-height: 1700px;
+  background: #17130f;
+  color: #fff8ed;
+}
+
+.stage {
+  --ay-scene-x: 50%;
+  --ay-scene-y: 50%;
+  --ay-word-x: 50%;
+  --ay-word-y: 50%;
+  --ay-copy-opacity: 1;
+  --ay-copy-shift: 0px;
+  --ay-word-opacity: 0;
+  --ay-word-stroke: 0;
+  --ay-meta-opacity: 0;
+  --ay-indicator-opacity: 1;
+  --ay-photo-scale: 1;
+  --ay-bg-size: cover;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  min-height: 680px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #173943;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background-image: url("/ayacucho-sacsamarca.jpg");
+  background-repeat: no-repeat;
+  background-size: var(--ay-bg-size);
+  background-position: var(--ay-scene-x) var(--ay-scene-y);
+  transform: scale(var(--ay-photo-scale));
+  transform-origin: center;
+  will-change: background-position, transform;
+}
+
+.ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(17, 14, 12, .84) 0%, rgba(17, 14, 12, .46) 43%, rgba(17, 14, 12, .08) 76%),
+    linear-gradient(180deg, rgba(12, 28, 31, .18), rgba(12, 28, 31, .02) 42%, rgba(17, 13, 10, .61) 100%);
+}
+
+.ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .14;
+  background-image:
+    linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.16) 1px, transparent 1px);
+  background-size: 10vw 10vw;
+  mask-image: linear-gradient(90deg, #000, transparent 78%);
+}
+
+.copy {
+  position: relative;
+  z-index: 4;
+  min-height: 100svh;
+  padding-top: 142px;
+  padding-bottom: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  opacity: var(--ay-copy-opacity);
+  transform: translate3d(0, var(--ay-copy-shift), 0);
+  will-change: opacity, transform;
+}
+
+.copy h1 {
+  max-width: 9.2ch;
+  margin: 0;
+  font: 500 clamp(3.8rem, 7.2vw, 7.6rem)/.9 var(--serif);
+  letter-spacing: -.052em;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 50ch;
+  margin: 28px 0 0;
+  color: rgba(255,248,237,.8);
+  font-size: clamp(1rem, 1.3vw, 1.18rem);
+  line-height: 1.72;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 27px;
+  margin-top: 36px;
+}
+
+.word {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding-inline: clamp(6px, 1vw, 18px);
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Anton", var(--sans);
+  font-size: var(--ay-word-size, 14vw);
+  font-weight: 400;
+  line-height: .92;
+  letter-spacing: -.032em;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  opacity: var(--ay-word-opacity);
+  background-image: url("/ayacucho-sacsamarca.jpg");
+  background-repeat: no-repeat;
+  background-size: var(--ay-bg-size);
+  background-position: var(--ay-word-x) var(--ay-word-y);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-stroke: 1px rgba(255,248,237,var(--ay-word-stroke));
+  filter: saturate(.92) brightness(1.04) contrast(1.05);
+  will-change: background-position, opacity;
+}
+
+.word::after {
+  content: attr(data-word);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-inline: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  color: transparent;
+  opacity: calc(var(--ay-word-stroke) * 2.2);
+  -webkit-text-stroke: 1px rgba(255,248,237,var(--ay-word-stroke));
+}
+
+.wordMeta {
+  position: absolute;
+  z-index: 5;
+  right: clamp(24px, 5vw, 82px);
+  bottom: clamp(30px, 4.5vh, 54px);
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: rgba(255,248,237,.72);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  opacity: var(--ay-meta-opacity);
+}
+
+.wordMeta i {
+  width: 56px;
+  height: 1px;
+  background: rgba(255,248,237,.46);
+}
+
+.scrollIndicator {
+  position: absolute;
+  top: 104px;
+  left: 50%;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: rgba(255,248,237,.88);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  opacity: var(--ay-indicator-opacity);
+}
+
+.scrollIndicator span {
+  font-size: 14px;
+  animation: indicator 1.7s ease-in-out infinite;
+}
+
+.credit {
+  position: absolute;
+  z-index: 5;
+  left: 24px;
+  bottom: 22px;
+  margin: 0;
+  color: rgba(255,248,237,.5);
+  font-size: 8px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+@keyframes indicator {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(4px); }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    height: 235svh;
+    min-height: 1350px;
+  }
+
+  .stage {
+    min-height: 610px;
+    --ay-bg-size: auto 112%;
+  }
+
+  .ambient {
+    background:
+      linear-gradient(180deg, rgba(17,14,12,.72) 0%, rgba(17,14,12,.18) 48%, rgba(17,13,10,.68) 100%),
+      linear-gradient(90deg, rgba(12,28,31,.24), transparent 75%);
+  }
+
+  .copy {
+    width: calc(100% - 36px);
+    min-height: 100svh;
+    padding-top: 106px;
+    padding-bottom: 150px;
+    justify-content: flex-start;
+  }
+
+  .copy h1 {
+    max-width: 8.4ch;
+    font-size: clamp(3rem, 14.7vw, 5.15rem);
+  }
+
+  .lead {
+    max-width: 32ch;
+    margin-top: 22px;
+    font-size: .96rem;
+  }
+
+  .actions {
+    gap: 18px;
+    margin-top: 28px;
+  }
+
+  .word {
+    padding-inline: 4px;
+    line-height: .95;
+    letter-spacing: -.022em;
+  }
+
+  .wordMeta {
+    display: none;
+  }
+
+  .scrollIndicator {
+    top: 92px;
+    gap: 8px;
+    font-size: 8px;
+    letter-spacing: .16em;
+  }
+
+  .credit {
+    left: 16px;
+    bottom: 14px;
+    font-size: 7px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    height: auto;
+    min-height: 100svh;
+  }
+
+  .stage {
+    position: relative;
+  }
+
+  .word {
+    opacity: .92;
+  }
+}
