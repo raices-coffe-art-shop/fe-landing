@@ -2,8 +2,8 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <div className="footer-top page-shell">
-        <div>
-          <p className="footer-word">Raíces</p>
+        <div className="footer-brand">
+          <img className="footer-logo" src="/raices-logo-lg.png" alt="Raíces" width={150} height={150} loading="lazy" />
           <p className="footer-tag">Café y Cultura</p>
         </div>
         <blockquote>“Todos regresamos a aquello que nos formó.”</blockquote>
