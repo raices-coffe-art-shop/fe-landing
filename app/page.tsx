@@ -12,6 +12,7 @@ import { LayeredRevealGallery } from "@/components/LayeredRevealGallery";
 import { CatalogPreview } from "@/components/CatalogPreview";
 import { EditorialImage } from "@/components/EditorialImage";
 import { Footer } from "@/components/Footer";
+import { TerritoryAtmosphere } from "@/components/TerritoryAtmosphere";
 
 export default function HomePage() {
   return (
@@ -64,6 +65,7 @@ export default function HomePage() {
                 <p>El café es una de las puertas de entrada. También lo son la miel, el cacao, los quesos, la pintura, los nacimientos y las pequeñas esculturas.</p>
                 <p>El sitio está pensado para crecer: primero Ayacucho; después, una región invitada de la sierra peruana cada temporada.</p>
               </div>
+              <TerritoryAtmosphere />
               <CulturalMap />
             </div>
           </section>

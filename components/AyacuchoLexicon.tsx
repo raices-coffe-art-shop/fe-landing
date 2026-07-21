@@ -48,6 +48,15 @@ export function AyacuchoLexicon() {
       const progress = reduced ? 0.52 : clamp(-rect.top / distance);
       stage.style.setProperty("--lexicon-progress", progress.toFixed(4));
 
+      const huamangaOut = reduced ? 1 : clamp((progress - 0.34) / 0.26);
+      const ayacuchoIn = reduced ? 1 : clamp((progress - 0.29) / 0.3);
+      stage.style.setProperty("--lexicon-huamanga-opacity", (1 - huamangaOut).toFixed(4));
+      stage.style.setProperty("--lexicon-huamanga-blur", `${(huamangaOut * 6).toFixed(2)}px`);
+      stage.style.setProperty("--lexicon-huamanga-y", `${(-10 * huamangaOut).toFixed(2)}px`);
+      stage.style.setProperty("--lexicon-ayacucho-opacity", ayacuchoIn.toFixed(4));
+      stage.style.setProperty("--lexicon-ayacucho-blur", `${((1 - ayacuchoIn) * 5).toFixed(2)}px`);
+      stage.style.setProperty("--lexicon-ayacucho-y", `${(12 * (1 - ayacuchoIn)).toFixed(2)}px`);
+
       stage.querySelectorAll<HTMLElement>("[data-lexicon-word]").forEach((element) => {
         const start = Number(element.dataset.start ?? 0.5);
         const spread = 0.19;
@@ -82,7 +91,10 @@ export function AyacuchoLexicon() {
         <div className="lexicon-texture" aria-hidden="true" />
         <div className="lexicon-center">
           <p>Una región contada desde muchas voces</p>
-          <strong>AYACUCHO</strong>
+          <strong className="lexicon-title-stack">
+            <span className="lexicon-title-word lexicon-title-huamanga">HUAMANGA</span>
+            <span className="lexicon-title-word lexicon-title-ayacucho">AYACUCHO</span>
+          </strong>
           <span>Palabras, productos y memorias que regresan al origen.</span>
         </div>
 
