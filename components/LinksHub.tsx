@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { contactChannels } from "@/data/social";
 
 type LinkItem = {
   id: string;
@@ -23,7 +24,7 @@ const primaryLinks: LinkItem[] = [
     label: "WhatsApp",
     action: "Abrir WhatsApp",
     note: "Pedidos, consultas y visitas al espacio.",
-    href: "https://wa.me/51999999999?text=Hola%2C%20quiero%20conocer%20Ra%C3%ADces.",
+    href: `${contactChannels.whatsappHref}?text=Hola%2C%20quiero%20conocer%20Ra%C3%ADces.`,
     meta: "Atención directa",
     tone: "honey",
     external: true,
@@ -84,8 +85,8 @@ const primaryLinks: LinkItem[] = [
     id: "instagram",
     label: "Instagram",
     action: "Visitar Instagram",
-    note: "Novedades, piezas, mesas y escenas del día a día.",
-    href: "https://instagram.com",
+    note: "Sigue la bitácora y conoce nuevos relatos en Instagram.",
+    href: contactChannels.instagram,
     meta: "Lo que estamos haciendo",
     tone: "coffee",
     external: true,

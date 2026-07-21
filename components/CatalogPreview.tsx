@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { products } from "@/data/site";
+import { contactChannels } from "@/data/social";
 import { EditorialImage } from "./EditorialImage";
 
 const filters = ["Todo", "Café", "Miel", "Cacao", "Quesos", "Arte", "Regalos"];
@@ -39,7 +40,7 @@ export function CatalogPreview() {
               <div><span>{product.category}</span><span>{product.region}</span></div>
               <h3>{product.name}</h3>
               <p>{product.note}</p>
-              <a href={`https://wa.me/51999999999?text=${encodeURIComponent(`Hola, quisiera consultar por ${product.name}.`)}`} target="_blank" rel="noreferrer">
+              <a href={`${contactChannels.whatsappHref}?text=${encodeURIComponent(`Hola, quisiera consultar por ${product.name}.`)}`} target="_blank" rel="noreferrer">
                 Consultar <span>↗</span>
               </a>
             </div>

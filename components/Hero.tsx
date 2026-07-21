@@ -1,11 +1,43 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Hero.module.css";
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 
+const heroImages = [
+  {
+    src: "/ayacucho-sacsamarca.jpg",
+    alt: "Paisaje de Sacsamarca en Ayacucho",
+  },
+  {
+    src: "/ayacucho-hero-1.jpg",
+    alt: "Vista aérea de la plaza principal de Ayacucho",
+  },
+  {
+    src: "/ayacucho-hero-2.jpeg",
+    alt: "Piscinas naturales turquesas entre formaciones rocosas",
+  },
+  {
+    src: "/ayacucho-hero-3.jpg",
+    alt: "Valle ayacuchano rodeado de montañas",
+  },
+  {
+    src: "/ayacucho-hero-4.webp",
+    alt: "Cañón rocoso con pozas de agua turquesa",
+  },
+  {
+    src: "/ayacucho-hero-5.jpg",
+    alt: "Campos andinos bajo un cielo nublado",
+  },
+  {
+    src: "/ayacucho-hero-6.png",
+    alt: "Persona observando terrazas agrícolas en los Andes",
+  },
+];
+
 export function Hero() {
+  const [activeImage, setActiveImage] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const wordRef = useRef<HTMLDivElement>(null);
@@ -20,8 +52,8 @@ export function Hero() {
     let frame = 0;
 
     const fitWord = () => {
-      const probe = word.cloneNode(true) as HTMLDivElement;
-      probe.removeAttribute("aria-hidden");
+      const probe = document.createElement("div");
+      probe.textContent = "AYACUCHO";
       probe.style.cssText = [
         "position:fixed",
         "left:-200vw",
@@ -35,7 +67,12 @@ export function Hero() {
         "opacity:1",
         "background:none",
         "filter:none",
-        "-webkit-text-fill-color:initial"
+        "-webkit-text-fill-color:initial",
+        'font-family:"Anton", Arial, sans-serif',
+        "font-weight:400",
+        "line-height:.92",
+        "letter-spacing:-.032em",
+        "text-transform:uppercase"
       ].join(";");
       document.body.appendChild(probe);
       const measured = probe.getBoundingClientRect().width;
@@ -105,17 +142,36 @@ export function Hero() {
     };
   }, []);
 
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches) return;
+
+    const interval = window.setInterval(() => {
+      setActiveImage((current) => (current + 1) % heroImages.length);
+    }, 6200);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
   return (
     <section ref={sectionRef} className={styles.hero} id="inicio">
       <div ref={stageRef} className={styles.stage}>
-        <div className={styles.scene} aria-hidden="true" />
+        <div className={styles.scene} aria-hidden="true">
+          {heroImages.map((image, index) => (
+            <div
+              key={image.src}
+              className={`${styles.sceneImage} ${activeImage === index ? styles.isActive : ""}`}
+              style={{ backgroundImage: `url("${image.src}")` }}
+            />
+          ))}
+        </div>
         <div className={styles.ambient} aria-hidden="true" />
 
         <div className={`${styles.copy} page-shell`}>
           <p className="eyebrow light">Raíces · Café y Cultura</p>
           <h1>Todos volvemos a nuestras raíces.</h1>
           <p className={styles.lead}>
-            Un espacio en Lima donde el café, la miel, el cacao y el arte cuentan quiénes los hicieron posibles.
+            Un espacio en Lima donde el café, el arte y los alimentos conservan el nombre, el territorio y la historia de quienes los hicieron posibles.
           </p>
           <div className={styles.actions}>
             <a className="button button-light" href="#historia">Conocer la historia</a>
@@ -126,10 +182,18 @@ export function Hero() {
         <div
           ref={wordRef}
           className={styles.word}
-          data-word="AYACUCHO"
           aria-hidden="true"
         >
-          AYACUCHO
+          {heroImages.map((image, index) => (
+            <span
+              key={image.src}
+              className={`${styles.wordImage} ${activeImage === index ? styles.isActive : ""}`}
+              data-word="AYACUCHO"
+              style={{ backgroundImage: `url("${image.src}")` }}
+            >
+              AYACUCHO
+            </span>
+          ))}
         </div>
 
         <p className={styles.scrollIndicator}><span>↓</span> Desliza para descubrir</p>

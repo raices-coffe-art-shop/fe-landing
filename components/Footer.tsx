@@ -1,3 +1,5 @@
+import { contactChannels } from "@/data/social";
+
 export function Footer() {
   return (
     <footer className="site-footer">
@@ -10,11 +12,11 @@ export function Footer() {
       </div>
       <div className="footer-grid page-shell">
         <div><span>Visita</span><p>Dirección pendiente<br />Lima, Perú</p></div>
-        <div><span>Contacto</span><p>WhatsApp pendiente<br />Instagram pendiente</p></div>
+        <div><span>Contacto</span><p><a href={contactChannels.whatsappHref}>{contactChannels.whatsappDisplay}</a><br /><a href={`mailto:${contactChannels.email}`}>{contactChannels.email}</a></p></div>
         <div><span>Explora</span><p><a href="#personas">Personas</a><br /><a href="#catalogo">Catálogo</a><br /><a href="#arte">Arte</a><br /><a href="/links">Enlaces</a></p></div>
         <div><span>Reconocimiento</span><p>A productores, artistas y artesanos cuyas historias sostienen este espacio.</p></div>
       </div>
-      <div className="footer-bottom page-shell"><span>© 2026 Raíces</span><span>Ayacucho presente en Lima</span><span>Foto principal: Pizardi · Wikimedia Commons · CC BY-SA 4.0</span></div>
+      <div className="footer-bottom page-shell"><span>© 2026 Raíces</span><span>Ayacucho presente en Lima</span><span>Archivo visual en construcción</span></div>
     </footer>
   );
 }

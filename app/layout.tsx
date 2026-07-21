@@ -5,12 +5,12 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Raíces — Café y Cultura",
   description:
-    "Café, productos, arte e historias que conectan Lima con Ayacucho y la sierra peruana.",
+    "Raíces Coffee-Art Shop conecta Ayacucho con Lima a través del café, el arte, los alimentos y las historias de las personas que los hacen posibles.",
   metadataBase: new URL("https://raices-cafe-cultura.example"),
   openGraph: {
     title: "Raíces — Café y Cultura",
     description:
-      "Todos volvemos a nuestras raíces. Descubre a las personas y territorios detrás de cada producto.",
+      "Café, arte, alimentos y archivo documental para conectar Ayacucho con Lima a través de las personas.",
     type: "website",
     locale: "es_PE"
   }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { contactChannels } from "@/data/social";
 
 type NavIcon = "home" | "story" | "territory" | "people" | "art" | "catalog" | "visit" | "links" | "contact";
 
@@ -62,7 +63,7 @@ export function SiteHeader() {
           {links.map(({ label, href, icon }) => (
             <a key={href} href={href}><NavSvg icon={icon} />{label}</a>
           ))}
-          <a className="nav-cta" href="https://wa.me/51999999999" target="_blank" rel="noreferrer">
+          <a className="nav-cta" href={contactChannels.whatsappHref} target="_blank" rel="noreferrer">
             <NavSvg icon="contact" />Conversemos
           </a>
         </nav>
@@ -80,7 +81,7 @@ export function SiteHeader() {
             <span>0{index + 1}</span><NavSvg icon={icon} />{label}
           </a>
         ))}
-        <a className="mobile-wa" href="https://wa.me/51999999999" target="_blank" rel="noreferrer">
+        <a className="mobile-wa" href={contactChannels.whatsappHref} target="_blank" rel="noreferrer">
           Escribir por WhatsApp ↗
         </a>
       </div>

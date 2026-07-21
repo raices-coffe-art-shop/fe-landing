@@ -14,6 +14,14 @@ export type Person = {
   portraitTone: "green" | "clay" | "honey" | "ink";
   initials: string;
   facts: { label: string; value: string }[];
+  preferredName?: string;
+  community?: string;
+  language?: string[];
+  products?: string[];
+  portrait?: string;
+  interviewStatus?: "pending" | "recorded" | "edited" | "published";
+  consentStatus?: "pending" | "granted";
+  media?: import("./documentary").DocumentaryMedia[];
 };
 
 export const people: Person[] = [
@@ -42,7 +50,13 @@ export const people: Person[] = [
       { label: "Región", value: "VRAEM, Ayacucho" },
       { label: "Organización", value: "Asociación de Productores Café VRAE Ayacucho" },
       { label: "Entrevista", value: "Pendiente de completar" }
-    ]
+    ],
+    preferredName: "Pedro Ñahui",
+    language: ["Español"],
+    products: ["Café"],
+    interviewStatus: "pending",
+    consentStatus: "pending",
+    media: []
   },
   {
     slug: "senor-de-la-miel",
@@ -69,7 +83,11 @@ export const people: Person[] = [
       { label: "Método", value: "Apicultura itinerante, por confirmar" },
       { label: "Región", value: "Pendiente" },
       { label: "Entrevista", value: "Pendiente" }
-    ]
+    ],
+    products: ["Miel"],
+    interviewStatus: "pending",
+    consentStatus: "pending",
+    media: []
   },
   {
     slug: "productor-de-quesos",
@@ -96,7 +114,11 @@ export const people: Person[] = [
       { label: "Comunidad", value: "Pendiente" },
       { label: "Proceso", value: "Pendiente" },
       { label: "Entrevista", value: "Pendiente" }
-    ]
+    ],
+    products: ["Quesos"],
+    interviewStatus: "pending",
+    consentStatus: "pending",
+    media: []
   },
   {
     slug: "artista-residente",
@@ -123,7 +145,11 @@ export const people: Person[] = [
       { label: "Obras", value: "Catálogo pendiente" },
       { label: "Procedencia", value: "Pendiente" },
       { label: "Entrevista", value: "Pendiente" }
-    ]
+    ],
+    products: ["Pintura", "Objetos culturales"],
+    interviewStatus: "pending",
+    consentStatus: "pending",
+    media: []
   }
 ];
 

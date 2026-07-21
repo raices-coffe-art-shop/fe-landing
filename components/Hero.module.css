@@ -33,13 +33,26 @@
   position: absolute;
   inset: 0;
   z-index: -3;
-  background-image: url("/ayacucho-sacsamarca.jpg");
+  transform: scale(var(--ay-photo-scale));
+  transform-origin: center;
+  will-change: transform;
+}
+
+.sceneImage {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
   background-repeat: no-repeat;
   background-size: var(--ay-bg-size);
   background-position: var(--ay-scene-x) var(--ay-scene-y);
-  transform: scale(var(--ay-photo-scale));
-  transform-origin: center;
-  will-change: background-position, transform;
+  transition: opacity 1.25s cubic-bezier(.22,.61,.36,1), filter 1.25s ease;
+  filter: saturate(.88) contrast(1.03);
+  will-change: opacity, background-position;
+}
+
+.sceneImage.isActive {
+  opacity: 1;
+  filter: saturate(.94) contrast(1.04);
 }
 
 .ambient {
@@ -113,6 +126,10 @@
   overflow: hidden;
   pointer-events: none;
   user-select: none;
+}
+
+.wordImage {
+  grid-area: 1 / 1;
   white-space: nowrap;
   text-align: center;
   text-transform: uppercase;
@@ -123,8 +140,7 @@
   letter-spacing: -.032em;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  opacity: var(--ay-word-opacity);
-  background-image: url("/ayacucho-sacsamarca.jpg");
+  opacity: 0;
   background-repeat: no-repeat;
   background-size: var(--ay-bg-size);
   background-position: var(--ay-word-x) var(--ay-word-y);
@@ -132,10 +148,15 @@
   -webkit-background-clip: text;
   -webkit-text-stroke: 1px rgba(255,248,237,var(--ay-word-stroke));
   filter: saturate(.92) brightness(1.04) contrast(1.05);
+  transition: opacity 1.25s cubic-bezier(.22,.61,.36,1);
   will-change: background-position, opacity;
 }
 
-.word::after {
+.wordImage.isActive {
+  opacity: var(--ay-word-opacity);
+}
+
+.wordImage::after {
   content: attr(data-word);
   position: absolute;
   inset: 0;
@@ -254,6 +275,9 @@
 
   .word {
     padding-inline: 4px;
+  }
+
+  .wordImage {
     line-height: .95;
     letter-spacing: -.022em;
   }
@@ -287,6 +311,15 @@
   }
 
   .word {
+    opacity: 1;
+  }
+
+  .wordImage.isActive {
     opacity: .92 !important;
+    transition: none !important;
+  }
+
+  .sceneImage {
+    transition: none !important;
   }
 }

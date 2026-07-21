@@ -6,13 +6,15 @@ import { OriginJourney } from "@/components/OriginJourney";
 import { PeopleStack } from "@/components/PeopleStack";
 import { AyacuchoLexicon } from "@/components/AyacuchoLexicon";
 import { CulturalSplitShowcase } from "@/components/CulturalSplitShowcase";
-import { VerticalStorySlider } from "@/components/VerticalStorySlider";
-import { HorizontalParallaxGallery } from "@/components/HorizontalParallaxGallery";
-import { LayeredRevealGallery } from "@/components/LayeredRevealGallery";
 import { CatalogPreview } from "@/components/CatalogPreview";
 import { EditorialImage } from "@/components/EditorialImage";
 import { Footer } from "@/components/Footer";
 import { TerritoryAtmosphere } from "@/components/TerritoryAtmosphere";
+import { HumanOriginSection } from "@/components/HumanOriginSection";
+import { RootsNetworkSection } from "@/components/RootsNetworkSection";
+import { DocumentaryArchive } from "@/components/DocumentaryArchive";
+import { SocialPurposeSection } from "@/components/SocialPurposeSection";
+import { contactChannels } from "@/data/social";
 
 export default function HomePage() {
   return (
@@ -23,29 +25,10 @@ export default function HomePage() {
         <div className="narrative-wrap">
           <StoryPath />
 
-          <section className="manifesto-section" id="historia">
-            <div className="page-shell manifesto-grid">
-              <div className="manifesto-label">
-                <span>01</span>
-                <p>Nuestra razón de ser</p>
-              </div>
-              <div className="manifesto-copy">
-                <p className="eyebrow">Una idea nacida lejos de casa</p>
-                <h2>Las raíces no son un lugar al que se vuelve. Son algo que viaja con nosotros.</h2>
-                <div className="manifesto-body">
-                  <p>Después de vivir en distintos países, el fundador comprendió que la distancia no borra el origen. Lo vuelve más visible.</p>
-                  <p>Raíces nace para compartir esa memoria mediante sabores, objetos y personas que conectan Ayacucho con Lima.</p>
-                </div>
-              </div>
-              <div className="founder-note">
-                <span className="quote-mark">“</span>
-                <p>Queremos que cada cosa que llegue a la mesa pueda decir de dónde viene y quién la hizo posible.</p>
-                <small>Relato del fundador · nombre y retrato por confirmar</small>
-              </div>
-            </div>
-          </section>
-
-          <VerticalStorySlider />
+          <HumanOriginSection />
+          <AyacuchoLexicon />
+          <RootsNetworkSection />
+          <PeopleStack />
 
           <section className="territory-section" id="territorio">
             <div className="territory-photo">
@@ -59,22 +42,19 @@ export default function HomePage() {
             <div className="page-shell territory-content">
               <div>
                 <p className="eyebrow">Ayacucho en Lima</p>
-                <h2>No usamos una región como decoración. La presentamos a través de sus voces.</h2>
+                <h2>El territorio no aparece como fondo. Aparece en el idioma, los alimentos, los oficios y las personas.</h2>
               </div>
               <div className="territory-text">
-                <p>El café es una de las puertas de entrada. También lo son la miel, el cacao, los quesos, la pintura, los nacimientos y las pequeñas esculturas.</p>
-                <p>El sitio está pensado para crecer: primero Ayacucho; después, una región invitada de la sierra peruana cada temporada.</p>
+                <p>Ayacucho no es una decoración ni una procedencia comercial aislada. Es el lugar desde donde se escuchan lenguas, procesos, familias y formas de trabajo.</p>
+                <p>El mapa conserva dos puntos centrales: Ayacucho como origen y Lima como lugar de encuentro.</p>
               </div>
               <TerritoryAtmosphere />
               <CulturalMap />
             </div>
           </section>
 
-          <AyacuchoLexicon />
           <OriginJourney />
-          <PeopleStack />
-
-          <HorizontalParallaxGallery />
+          <DocumentaryArchive />
 
           <section className="art-section" id="arte">
             <div className="art-intro page-shell">
@@ -88,9 +68,8 @@ export default function HomePage() {
             <CulturalSplitShowcase />
           </section>
 
-          <LayeredRevealGallery />
-
           <CatalogPreview />
+          <SocialPurposeSection />
 
           <section className="visit-section" id="visita">
             <div className="visit-image">
@@ -105,7 +84,7 @@ export default function HomePage() {
               </div>
               <div className="visit-actions">
                 <a className="button button-dark" href="https://maps.google.com" target="_blank" rel="noreferrer">Cómo llegar</a>
-                <a className="text-link" href="https://wa.me/51999999999" target="_blank" rel="noreferrer">Confirmar visita ↗</a>
+                <a className="text-link" href={contactChannels.whatsappHref} target="_blank" rel="noreferrer">Confirmar visita ↗</a>
               </div>
             </div>
           </section>

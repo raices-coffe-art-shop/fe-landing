@@ -1,20 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { documentaryRoute } from "@/data/documentary";
 
 const mapPoints = [
-  {
-    id: "origen",
-    title: "Origen",
-    description: "Información editable sobre el territorio ayacuchano y las historias que llegan a Raíces.",
-    coordinates: null,
-    x: 58,
-    y: 75,
-  },
+  { id: "origen", title: "Ayacucho", description: "Origen cultural, lingüístico y documental del proyecto.", coordinates: null, x: 58, y: 75 },
   {
     id: "encuentro",
-    title: "Punto de encuentro",
-    description: "Información editable sobre el espacio actual, visitas, mesas y contacto con el proyecto.",
+    title: "Lima",
+    description: "Lugar de encuentro donde las historias se comparten alrededor del café, el arte y los alimentos.",
     coordinates: null,
     x: 36,
     y: 63,
@@ -29,7 +23,7 @@ export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
     <div className="cultural-map">
       <div className="map-narrative-heading">
         <p className="eyebrow">Del origen al encuentro</p>
-        <h3>Una ruta visual entre la memoria de Ayacucho y el espacio donde se comparte.</h3>
+        <h3>Una ruta visual entre {documentaryRoute.origin} y {documentaryRoute.encounter}, sin inventar paradas ni coordenadas.</h3>
       </div>
 
       <div
@@ -56,10 +50,6 @@ export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
             d="M 314 594 C 282 570, 247 548, 218 520 C 202 504, 194 490, 199 501"
             filter="url(#routeGlow)"
           />
-          <path
-            className="route-path secondary"
-            d="M 314 594 C 347 582, 372 576, 392 569"
-          />
 
           <g className="pin-group pin-lima">
             <circle cx="199" cy="501" r="7" className="pin pin-outer" />
@@ -70,11 +60,6 @@ export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
             <circle cx="314" cy="594" r="8" className="pin pin-outer" />
             <circle cx="314" cy="594" r="4.3" className="pin pin-inner" />
             <text x="324" y="586">AYACUCHO</text>
-          </g>
-          <g className="pin-group pin-sierra">
-            <circle cx="392" cy="569" r="5.5" className="pin pin-outer" />
-            <circle cx="392" cy="569" r="3.2" className="pin pin-inner" />
-            <text x="403" y="563">SIERRA EN EXPANSIÓN</text>
           </g>
         </svg>
 
@@ -100,8 +85,9 @@ export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
         <div className="map-legend" aria-label="Leyenda del mapa">
           <span><i className="legend-dot ayacucho" />Origen</span>
           <span><i className="legend-dot lima" />Encuentro</span>
-          <span><i className="legend-dot sierra" />Sierra invitada</span>
+          <span><i className="legend-dot sierra" />Viaje documental</span>
         </div>
+        <p className="map-route-status">Estado del viaje: pendiente de confirmación editorial.</p>
         <a className="map-cta" href="https://maps.google.com" target="_blank" rel="noreferrer">
           Cómo llegar
         </a>

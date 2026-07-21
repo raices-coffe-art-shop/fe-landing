@@ -51,6 +51,10 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
             <div className={`editorial-status ${person.status}`}>
               {person.status === "documentada" ? "Base verificada; entrevista y material visual pendientes." : "Contenido reservado hasta completar entrevista y autorización."}
             </div>
+            <div className="editorial-status">
+              Entrevista: {person.interviewStatus === "published" ? "publicada" : person.interviewStatus === "edited" ? "en edición" : person.interviewStatus === "recorded" ? "registrada" : "pendiente"}.
+              Audio, video, transcripción y galería se añadirán solo con autorización.
+            </div>
           </aside>
 
           <article>

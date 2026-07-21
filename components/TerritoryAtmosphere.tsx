@@ -6,19 +6,19 @@ const territoryModules = [
   {
     id: "origen",
     title: "Origen",
-    description: "Texto editable sobre el punto de partida cultural y productivo de Raíces.",
+    description: "Ayacucho aparece en el idioma, la memoria y las relaciones que sostienen cada producto.",
     icon: "seed",
   },
   {
     id: "paisaje",
-    title: "Altura y paisaje",
-    description: "Espacio preparado para describir el entorno sin inventar altitudes o ubicaciones.",
+    title: "Paisaje",
+    description: "El territorio se registra con cuidado, sin convertirlo en fondo decorativo ni postal turística.",
     icon: "mountain",
   },
   {
     id: "productores",
     title: "Trabajo con productores",
-    description: "Base editable para explicar vínculos, entrevistas y procesos documentados.",
+    description: "Las historias crecerán con entrevistas, autorización y material documental propio.",
     icon: "hands",
   },
 ];
@@ -48,6 +48,8 @@ export function TerritoryAtmosphere() {
       const rect = root.getBoundingClientRect();
       const progress = Math.min(1, Math.max(0, 1 - rect.bottom / (rect.height + window.innerHeight)));
       root.style.setProperty("--territory-progress", reduced ? "0.45" : progress.toFixed(4));
+      const section = root.closest<HTMLElement>(".territory-section");
+      section?.style.setProperty("--territory-parallax", reduced ? "0" : progress.toFixed(4));
     };
 
     const requestUpdate = () => {
