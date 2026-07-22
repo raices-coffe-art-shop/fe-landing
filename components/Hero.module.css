@@ -40,7 +40,7 @@
 
 .sceneImage {
   position: absolute;
-  inset: 0;
+  inset: -7%;
   opacity: 0;
   background-repeat: no-repeat;
   background-size: var(--ay-bg-size);
@@ -240,7 +240,7 @@
 
   .stage {
     min-height: 610px;
-    --ay-bg-size: auto 112%;
+    --ay-bg-size: auto 122%;
   }
 
   .ambient {
@@ -269,8 +269,19 @@
   }
 
   .actions {
+    align-items: flex-start;
+    flex-direction: column;
     gap: 18px;
     margin-top: 28px;
+  }
+
+  .actions a {
+    max-width: 100%;
+  }
+
+  .actions a:first-child {
+    min-height: 50px;
+    padding-inline: 20px;
   }
 
   .word {
@@ -299,6 +310,7 @@
     font-size: 7px;
   }
 }
+
 
 @media (prefers-reduced-motion: reduce) {
   .hero {

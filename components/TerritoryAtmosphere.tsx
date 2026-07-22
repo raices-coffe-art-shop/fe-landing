@@ -45,10 +45,10 @@ export function TerritoryAtmosphere() {
 
     const update = () => {
       frame = 0;
-      const rect = root.getBoundingClientRect();
-      const progress = Math.min(1, Math.max(0, 1 - rect.bottom / (rect.height + window.innerHeight)));
-      root.style.setProperty("--territory-progress", reduced ? "0.45" : progress.toFixed(4));
       const section = root.closest<HTMLElement>(".territory-section");
+      const rect = (section ?? root).getBoundingClientRect();
+      const progress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / (rect.height + window.innerHeight)));
+      root.style.setProperty("--territory-progress", reduced ? "0.45" : progress.toFixed(4));
       section?.style.setProperty("--territory-parallax", reduced ? "0" : progress.toFixed(4));
     };
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { EditorialImage } from "@/components/EditorialImage";
 import { artShopSlides as slides } from "@/data/art";
@@ -23,6 +24,7 @@ export function CulturalSplitShowcase() {
           {slide.status === "pending" ? <div className="art-photo-placeholder">Fotografía por incorporar</div> : <EditorialImage src={slide.right} alt={slide.rightAlt} />}
           <div className="split-panel-text">
             <p>{slide.text}</p>
+            <Link href={`/arte/${slide.slug}`}>Ver capítulo ↗</Link>
             <small>Fotografías referenciales · reemplazar por material de Raíces</small>
           </div>
         </div>

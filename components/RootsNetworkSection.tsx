@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 
 type Segment = {
@@ -14,6 +14,23 @@ type Segment = {
   end: number;
   width: number;
   depth: number;
+  pulse: number;
+};
+
+type RootLayout = {
+  width: number;
+  height: number;
+  compact: boolean;
+  originX: number;
+  originY: number;
+  seedTop: number;
+  seedWidth: number;
+  seedHeight: number;
+  minX: number;
+  maxX: number;
+  maxY: number;
+  baseLength: number;
+  lateralAmplitude: number;
 };
 
 const chapters = [
@@ -26,81 +43,128 @@ const chapters = [
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 
+const clampPixels = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+function getRootLayout(width: number, height: number): RootLayout {
+  const compact = width <= 760;
+  const seedWidth = compact ? clampPixels(width * 0.16, 54, 64) : 78;
+  const seedHeight = compact ? clampPixels(width * 0.22, 76, 90) : 108;
+  const seedTop = compact ? clampPixels(height * 0.09, 66, 92) : height * 0.13;
+  const originX = width / 2;
+  const originY = seedTop + seedHeight * 0.98;
+  const minX = compact ? 12 : -width * 0.1;
+  const maxX = compact ? width - 12 : width * 1.1;
+  const maxY = compact ? height - 112 : height - 64;
+  const availableHeight = Math.max(300, maxY - originY);
+  const availableWidth = compact ? Math.max(290, width - 24) : width * 1.18;
+
+  return {
+    width,
+    height,
+    compact,
+    originX,
+    originY,
+    seedTop,
+    seedWidth,
+    seedHeight,
+    minX,
+    maxX,
+    maxY,
+    baseLength: compact ? availableHeight * 0.34 : Math.max(160, height * 0.23),
+    lateralAmplitude: compact ? availableWidth * 0.5 : width * 0.44,
+  };
+}
+
 function seeded(seed: number) {
   const value = Math.sin(seed * 12.9898) * 43758.5453;
   return value - Math.floor(value);
 }
 
-function buildRootSegments(width: number, height: number) {
+function buildRootSegments(layout: RootLayout) {
   const result: Segment[] = [];
   let cursor = 0;
-  const surfaceY = Math.max(118, height * 0.18);
-  const baseLength = Math.max(82, height * 0.14);
+  const { compact, originX, originY, minX, maxX, maxY, lateralAmplitude, baseLength, height } = layout;
+  const depthDurations = compact ? [0.18, 0.15, 0.13, 0.11, 0.09] : [0.17, 0.14, 0.12, 0.1, 0.08];
+  const depthWidths = compact ? [9, 6.5, 4.35, 2.35, 1.05] : [11, 7.8, 5.25, 2.9, 1.15];
 
-  const branch = (x: number, y: number, angle: number, length: number, depth: number, start: number, seed: number) => {
-    if (depth > 8 || length < 11 || y > height + 90) return;
-    const angleNoise = (seeded(seed + depth * 4.13) - 0.5) * 0.34;
+  const branch = (x: number, y: number, angle: number, length: number, depth: number, parentEnd: number, seed: number) => {
+    if (depth > 4 || length < (compact ? 14 : 10) || y > maxY) return;
+    const delay = depth === 0 ? seeded(seed) * 0.018 : 0.035 + depth * 0.035 + seeded(seed + 13.7) * 0.018;
+    const start = depth === 0 ? parentEnd + delay : parentEnd - 0.012 + delay;
+    const angleNoise = (seeded(seed + depth * 4.13) - 0.5) * (compact ? 0.24 : 0.34);
     const nextAngle = angle + angleNoise;
-    const x2 = x + Math.cos(nextAngle) * length;
-    const y2 = y + Math.sin(nextAngle) * length;
-    const bend = (seeded(seed + 91.2) - 0.5) * length * 0.46;
-    const cx = (x + x2) / 2 + bend;
-    const cy = (y + y2) / 2 + length * 0.04;
-    const travel = Math.max(0.025, length / Math.max(height, 1) * 0.2);
-    const end = Math.min(1, start + travel);
+    const rawX2 = x + Math.cos(nextAngle) * length;
+    const rawY2 = y + Math.sin(nextAngle) * length;
+    const x2 = clampPixels(rawX2, minX, maxX);
+    const y2 = clampPixels(rawY2, originY + 20, maxY);
+    const sidePull = clamp((x2 - originX) / Math.max(1, lateralAmplitude), -1, 1);
+    const bend = ((seeded(seed + 91.2) - 0.5) * length * (compact ? 0.28 : 0.46)) - sidePull * length * 0.12;
+    const cx = clampPixels((x + x2) / 2 + bend, minX, maxX);
+    const cy = clampPixels((y + y2) / 2 + length * 0.05, originY, maxY);
+    const duration = depthDurations[depth] * (0.84 + seeded(seed + 27.2) * 0.28);
+    const end = Math.min(0.96, start + duration);
+    const pulse = Math.min(1, end + 0.012);
 
-    result.push({ x1: x, y1: y, cx, cy, x2, y2, start, end, width: Math.max(0.55, 10 - depth * 1.05), depth });
+    result.push({ x1: x, y1: y, cx, cy, x2, y2, start, end, pulse, width: depthWidths[depth], depth });
     cursor += 1;
 
-    branch(x2, y2, nextAngle + (seeded(seed + 7.4) - 0.5) * 0.28, length * (0.72 + seeded(seed + 21.7) * 0.09), depth + 1, end - 0.008, seed + 19.3);
+    const childLength = length * (compact ? 0.72 + seeded(seed + 21.7) * 0.08 : 0.78 + seeded(seed + 21.7) * 0.11);
+    branch(x2, y2, nextAngle + (seeded(seed + 7.4) - 0.5) * (compact ? 0.22 : 0.28), childLength, depth + 1, end, seed + 19.3);
 
-    if (seeded(seed + 39.1) < 0.86 - depth * 0.06) {
+    if (depth < 4 && seeded(seed + 39.1) < (compact ? 0.98 - depth * 0.07 : 0.96 - depth * 0.065)) {
       const side = seeded(seed + 49.8) > 0.5 ? 1 : -1;
-      branch(x2, y2, nextAngle + side * (0.5 + seeded(seed + 52.2) * 0.54), length * (0.48 + seeded(seed + 57.6) * 0.16), depth + 1, end + 0.012, seed + 71.5 + cursor);
+      const spread = compact ? 0.42 + seeded(seed + 52.2) * 0.36 : 0.46 + seeded(seed + 52.2) * 0.58;
+      branch(x2, y2, nextAngle + side * spread, length * (0.46 + seeded(seed + 57.6) * 0.16), depth + 1, end, seed + 71.5 + cursor);
+    }
+
+    if (depth > 0 && depth < 4 && seeded(seed + 86.4) < (compact ? 0.72 : 0.62)) {
+      const side = seeded(seed + 93.1) > 0.5 ? 1 : -1;
+      branch(x2, y2, nextAngle - side * (0.54 + seeded(seed + 101.2) * 0.34), length * (0.36 + seeded(seed + 112.6) * 0.14), depth + 1, end + 0.018, seed + 131.5 + cursor);
     }
   };
 
-  branch(width / 2, surfaceY, Math.PI / 2, baseLength, 0, 0.02, 12.1);
-  branch(width / 2 - 9, surfaceY + 7, Math.PI / 2 + 0.23, baseLength * 0.95, 0, 0.05, 43.7);
-  branch(width / 2 + 9, surfaceY + 7, Math.PI / 2 - 0.23, baseLength * 0.92, 0, 0.08, 74.2);
+  branch(originX, originY, Math.PI / 2, baseLength, 0, 0.01, 12.1);
+  branch(originX, originY, Math.PI / 2 + (compact ? 0.13 : 0.19), baseLength * 0.97, 0, 0.035, 43.7);
+  branch(originX, originY, Math.PI / 2 - (compact ? 0.13 : 0.19), baseLength * 0.95, 0, 0.06, 74.2);
+  branch(originX, originY, Math.PI / 2 + (compact ? 0.31 : 0.34), baseLength * 0.72, 1, 0.11, 95.4);
+  branch(originX, originY, Math.PI / 2 - (compact ? 0.31 : 0.34), baseLength * 0.7, 1, 0.12, 118.8);
+
+  const maxEnd = Math.max(...result.map((segment) => segment.end), 1);
+  for (const segment of result) {
+    segment.start = clamp(segment.start / maxEnd);
+    segment.end = clamp(segment.end / maxEnd);
+    segment.pulse = clamp(segment.pulse / maxEnd);
+  }
 
   return result;
 }
 
-function RootsCanvas({ progress }: { progress: number }) {
+function RootsCanvas({ progress, layout }: { progress: number; layout: RootLayout | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const segmentsRef = useRef<Segment[]>([]);
-  const sizeRef = useRef({ width: 1, height: 1 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !layout) return;
     const context = canvas.getContext("2d");
     if (!context) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
 
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
-      canvas.width = Math.max(1, Math.round(rect.width * dpr));
-      canvas.height = Math.max(1, Math.round(rect.height * dpr));
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      sizeRef.current = { width: rect.width, height: rect.height };
-      segmentsRef.current = buildRootSegments(rect.width, rect.height);
-    };
-
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    resize();
-    return () => observer.disconnect();
-  }, []);
+    canvas.width = Math.max(1, Math.round(layout.width * dpr));
+    canvas.height = Math.max(1, Math.round(layout.height * dpr));
+    canvas.style.width = `${layout.width}px`;
+    canvas.style.height = `${layout.height}px`;
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    segmentsRef.current = buildRootSegments(layout);
+  }, [layout]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
-    if (!canvas || !context) return;
-    const { width, height } = sizeRef.current;
+    if (!canvas || !context || !layout) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    const { width, height } = layout;
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
     context.clearRect(0, 0, width, height);
 
     context.save();
@@ -133,50 +197,168 @@ function RootsCanvas({ progress }: { progress: number }) {
         context.fillStyle = segment.depth < 4 ? "rgba(255, 229, 150, .82)" : "rgba(207, 234, 139, .55)";
         context.fill();
       }
+
+      const pulseLocal = 1 - Math.abs(progress - segment.pulse) / 0.035;
+      if (pulseLocal > 0) {
+        const pulse = Math.pow(pulseLocal, 2);
+        const radius = (segment.depth < 2 ? 10 : 6) * (1 + (1 - pulseLocal) * 0.55);
+        const nodeGlow = context.createRadialGradient(segment.x2, segment.y2, 0, segment.x2, segment.y2, radius);
+        nodeGlow.addColorStop(0, `rgba(255, 232, 148, ${0.34 * pulse})`);
+        nodeGlow.addColorStop(0.38, `rgba(211, 235, 145, ${0.18 * pulse})`);
+        nodeGlow.addColorStop(1, "rgba(211, 235, 145, 0)");
+        context.beginPath();
+        context.arc(segment.x2, segment.y2, radius, 0, Math.PI * 2);
+        context.fillStyle = nodeGlow;
+        context.fill();
+      }
     }
     context.restore();
-  }, [progress]);
+  }, [progress, layout]);
 
   return <canvas ref={canvasRef} className="roots-canvas" aria-hidden="true" />;
 }
 
 export function RootsNetworkSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef({ width: 0, height: 0 });
   const [progress, setProgress] = useState(0);
+  const [active, setActive] = useState(0);
+  const [layout, setLayout] = useState<RootLayout | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let frame = 0;
-    const update = () => {
-      frame = 0;
+    let scrollFrame = 0;
+    let trackingFrame = 0;
+    let lastScrollY = window.scrollY;
+    viewportRef.current = { width: window.innerWidth, height: window.innerHeight };
+
+    const update = (force = false) => {
+      const nextScrollY = window.scrollY;
+      const viewportChanged =
+        Math.abs(window.innerWidth - viewportRef.current.width) > 0.5 ||
+        Math.abs(window.innerHeight - viewportRef.current.height) > 0.5;
+      if (viewportChanged) {
+        viewportRef.current = { width: window.innerWidth, height: window.innerHeight };
+        lastScrollY = nextScrollY;
+        if (!force) return;
+      }
+      if (!force && Math.abs(nextScrollY - lastScrollY) < 0.5) return;
+      lastScrollY = nextScrollY;
       const rect = section.getBoundingClientRect();
       const distance = Math.max(1, section.offsetHeight - window.innerHeight);
-      setProgress(reduced ? 1 : clamp(-rect.top / distance));
+      const nextProgress = reduced ? 1 : clamp(-rect.top / distance);
+      const targetActive = Math.min(chapters.length - 1, Math.floor(nextProgress * chapters.length));
+      setProgress((current) => (Math.abs(current - nextProgress) < 0.001 ? current : nextProgress));
+      setActive((current) => {
+        if (targetActive === current) return current;
+        return current + Math.sign(targetActive - current);
+      });
     };
+
     const requestUpdate = () => {
-      if (!frame) frame = requestAnimationFrame(update);
+      if (scrollFrame) return;
+      scrollFrame = requestAnimationFrame(() => {
+        scrollFrame = 0;
+        update();
+      });
     };
-    update();
+
+    const track = () => {
+      update();
+      trackingFrame = requestAnimationFrame(track);
+    };
+
+    const startTracking = () => {
+      if (!trackingFrame) trackingFrame = requestAnimationFrame(track);
+    };
+
+    const stopTracking = () => {
+      if (trackingFrame) cancelAnimationFrame(trackingFrame);
+      trackingFrame = 0;
+      update(false);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting && !reduced) startTracking();
+        else stopTracking();
+      },
+      { rootMargin: "35% 0px" },
+    );
+
+    observer.observe(section);
+    update(true);
     window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
     return () => {
+      observer.disconnect();
       window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
+      if (scrollFrame) cancelAnimationFrame(scrollFrame);
+      if (trackingFrame) cancelAnimationFrame(trackingFrame);
+    };
+  }, []);
+
+  useEffect(() => {
+    const sticky = stickyRef.current;
+    if (!sticky) return;
+    let frame = 0;
+
+    const resize = () => {
+      frame = 0;
+      const rect = sticky.getBoundingClientRect();
+      const nextLayout = getRootLayout(rect.width, rect.height);
+      setLayout((current) => {
+        if (
+          current &&
+          Math.abs(current.width - nextLayout.width) < 0.5 &&
+          Math.abs(current.height - nextLayout.height) < 0.5 &&
+          Math.abs(current.originX - nextLayout.originX) < 0.5 &&
+          Math.abs(current.originY - nextLayout.originY) < 0.5
+        ) {
+          return current;
+        }
+        return nextLayout;
+      });
+    };
+
+    const requestResize = () => {
+      if (!frame) frame = requestAnimationFrame(resize);
+    };
+
+    const observer = new ResizeObserver(requestResize);
+    observer.observe(sticky);
+    resize();
+    window.addEventListener("orientationchange", requestResize);
+    window.visualViewport?.addEventListener("resize", requestResize);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("orientationchange", requestResize);
+      window.visualViewport?.removeEventListener("resize", requestResize);
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);
 
-  const active = useMemo(() => Math.min(chapters.length - 1, Math.floor(progress * chapters.length * 1.45)), [progress]);
   const introProgress = clamp(progress * 2.6);
   const chapterProgress = clamp((progress - 0.04) * 3.4);
+  const rootStyle = {
+    "--roots-progress": progress,
+    ...(layout
+      ? {
+          "--roots-seed-x": `${layout.originX}px`,
+          "--roots-seed-top": `${layout.seedTop}px`,
+          "--roots-seed-width": `${layout.seedWidth}px`,
+          "--roots-seed-height": `${layout.seedHeight}px`,
+        }
+      : {}),
+  } as CSSProperties;
 
   return (
     <section ref={sectionRef} className="roots-network-section" id="raices-vivas">
-      <div className="roots-network-sticky" style={{ "--roots-progress": progress } as CSSProperties}>
+      <div ref={stickyRef} className="roots-network-sticky" style={rootStyle}>
         <div className="roots-texture" aria-hidden="true" />
-        <RootsCanvas progress={progress} />
+        <RootsCanvas progress={progress} layout={layout} />
         <div className="roots-bean-large" aria-hidden="true"><i /></div>
         <div
           className="roots-network-copy"

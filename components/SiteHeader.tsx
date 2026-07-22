@@ -1,16 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useId, useRef, useState } from "react";
 import { contactChannels } from "@/data/social";
 
 type NavIcon = "home" | "story" | "territory" | "people" | "art" | "catalog" | "visit" | "links" | "contact";
 
-const links: { label: string; href: string; icon: NavIcon }[] = [
+type NavLink = { label: string; href: string; icon: NavIcon };
+
+type WindowWithLenis = Window & {
+  lenis?: {
+    stop?: () => void;
+    start?: () => void;
+  };
+};
+
+const desktopLinks: NavLink[] = [
   { label: "Inicio", href: "/#inicio", icon: "home" },
   { label: "Historia", href: "/#historia", icon: "story" },
-  { label: "Territorio", href: "/#territorio", icon: "territory" },
   { label: "Personas", href: "/#personas", icon: "people" },
+  { label: "Territorio", href: "/#territorio", icon: "territory" },
+  { label: "Archivo", href: "/#archivo", icon: "story" },
+  { label: "Arte", href: "/#arte", icon: "art" },
+  { label: "Catálogo", href: "/#catalogo", icon: "catalog" },
+  { label: "Visítanos", href: "/#visita", icon: "visit" },
+  { label: "Enlaces", href: "/links", icon: "links" }
+];
+
+const mobileLinks: NavLink[] = [
+  { label: "Inicio", href: "/#inicio", icon: "home" },
+  { label: "Historia", href: "/#historia", icon: "story" },
+  { label: "Raíces vivas", href: "/#raices-vivas", icon: "story" },
+  { label: "Personas", href: "/#personas", icon: "people" },
+  { label: "Territorio", href: "/#territorio", icon: "territory" },
+  { label: "Archivo documental", href: "/#archivo", icon: "story" },
   { label: "Arte", href: "/#arte", icon: "art" },
   { label: "Catálogo", href: "/#catalogo", icon: "catalog" },
   { label: "Visítanos", href: "/#visita", icon: "visit" },
@@ -36,6 +60,12 @@ function NavSvg({ icon }: { icon: NavIcon }) {
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const navigationId = useId();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const previousBodyOverflow = useRef("");
+  const previousHtmlOverflow = useRef("");
+  const shouldReturnFocus = useRef(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 48);
@@ -45,11 +75,55 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (open) {
+      previousBodyOverflow.current = document.body.style.overflow;
+      previousHtmlOverflow.current = document.documentElement.style.overflow;
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      (window as WindowWithLenis).lenis?.stop?.();
+    } else {
+      document.body.style.overflow = previousBodyOverflow.current;
+      document.documentElement.style.overflow = previousHtmlOverflow.current;
+      (window as WindowWithLenis).lenis?.start?.();
+      if (shouldReturnFocus.current) {
+        buttonRef.current?.focus();
+        shouldReturnFocus.current = false;
+      }
+    }
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousBodyOverflow.current;
+      document.documentElement.style.overflow = previousHtmlOverflow.current;
+      (window as WindowWithLenis).lenis?.start?.();
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        shouldReturnFocus.current = true;
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onHashChange = () => setOpen(false);
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, [open]);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  const closeMenu = (returnFocus = false) => {
+    shouldReturnFocus.current = returnFocus;
+    setOpen(false);
+  };
 
   return (
     <header className={`site-header ${scrolled ? "is-scrolled" : ""} ${open ? "is-open" : ""}`}>
@@ -60,7 +134,7 @@ export function SiteHeader() {
         </Link>
 
         <nav className="desktop-nav" aria-label="Navegación principal">
-          {links.map(({ label, href, icon }) => (
+          {desktopLinks.map(({ label, href, icon }) => (
             <a key={href} href={href}><NavSvg icon={icon} />{label}</a>
           ))}
           <a className="nav-cta" href={contactChannels.whatsappHref} target="_blank" rel="noreferrer">
@@ -68,22 +142,45 @@ export function SiteHeader() {
           </a>
         </nav>
 
-        <button className="menu-button" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu">
+        <button
+          ref={buttonRef}
+          className="menu-button"
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+          aria-expanded={open}
+          aria-controls={navigationId}
+          aria-label={open ? "Cerrar menú" : "Abrir menú"}
+        >
           <span>{open ? "Cerrar" : "Menú"}</span>
-          <i aria-hidden="true" />
+          <span className="menu-button-lines" aria-hidden="true">
+            <span />
+            <span />
+          </span>
         </button>
       </div>
 
-      <div id="mobile-menu" className="mobile-menu" aria-hidden={!open}>
-        <p>Explora Raíces</p>
-        {links.map(({ label, href, icon }, index) => (
-          <a key={href} href={href} onClick={() => setOpen(false)}>
-            <span>0{index + 1}</span><NavSvg icon={icon} />{label}
+      <div
+        className="mobile-menu-backdrop"
+        aria-hidden="true"
+        onClick={() => closeMenu()}
+      />
+
+      <div
+        id={navigationId}
+        className="mobile-menu"
+        aria-hidden={!open}
+      >
+        <nav aria-label="Navegación móvil">
+          <p>Explora Raíces</p>
+          {mobileLinks.map(({ label, href, icon }, index) => (
+            <a key={href} href={href} onClick={() => closeMenu()} tabIndex={open ? 0 : -1}>
+              <span>{String(index + 1).padStart(2, "0")}</span><NavSvg icon={icon} />{label}
+            </a>
+          ))}
+          <a className="mobile-wa" href={contactChannels.whatsappHref} target="_blank" rel="noreferrer" onClick={() => closeMenu()} tabIndex={open ? 0 : -1}>
+            Escribir por WhatsApp ↗
           </a>
-        ))}
-        <a className="mobile-wa" href={contactChannels.whatsappHref} target="_blank" rel="noreferrer">
-          Escribir por WhatsApp ↗
-        </a>
+        </nav>
       </div>
     </header>
   );

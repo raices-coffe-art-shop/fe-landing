@@ -36,7 +36,17 @@ const heroImages = [
   },
 ];
 
+function shuffleImages() {
+  const next = [...heroImages];
+  for (let index = next.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [next[index], next[swapIndex]] = [next[swapIndex], next[index]];
+  }
+  return next;
+}
+
 export function Hero() {
+  const [images, setImages] = useState(heroImages);
   const [activeImage, setActiveImage] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -94,8 +104,8 @@ export function Hero() {
 
       const sceneX = progress * (mobile ? -28 : -88);
       const sceneY = progress * (mobile ? 28 : 70);
-      const wordX = progress * (mobile ? 148 : 362);
-      const wordY = progress * (mobile ? -66 : -146);
+      const wordX = mobile ? sceneX : progress * 362;
+      const wordY = mobile ? sceneY : progress * -146;
       const copyFade = clamp(1 - progress * 3.1);
       const wordOpacity = clamp((progress - 0.05) / 0.16);
       const wordStrength = clamp((progress - 0.16) / 0.22);
@@ -143,21 +153,26 @@ export function Hero() {
   }, []);
 
   useEffect(() => {
+    setImages(shuffleImages());
+    setActiveImage(0);
+  }, []);
+
+  useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reducedMotion.matches) return;
 
     const interval = window.setInterval(() => {
-      setActiveImage((current) => (current + 1) % heroImages.length);
+      setActiveImage((current) => (current + 1) % images.length);
     }, 6200);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   return (
     <section ref={sectionRef} className={styles.hero} id="inicio">
       <div ref={stageRef} className={styles.stage}>
         <div className={styles.scene} aria-hidden="true">
-          {heroImages.map((image, index) => (
+          {images.map((image, index) => (
             <div
               key={image.src}
               className={`${styles.sceneImage} ${activeImage === index ? styles.isActive : ""}`}
@@ -184,7 +199,7 @@ export function Hero() {
           className={styles.word}
           aria-hidden="true"
         >
-          {heroImages.map((image, index) => (
+          {images.map((image, index) => (
             <span
               key={image.src}
               className={`${styles.wordImage} ${activeImage === index ? styles.isActive : ""}`}
