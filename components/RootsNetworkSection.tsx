@@ -17,6 +17,14 @@ type Segment = {
   pulse: number;
 };
 
+type SegmentRaster = {
+  canvas: HTMLCanvasElement;
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+};
+
 type RootLayout = {
   width: number;
   height: number;
@@ -102,8 +110,11 @@ function buildRootSegments(layout: RootLayout) {
     const cx = clampPixels((x + x2) / 2 + bend, minX, maxX);
     const cy = clampPixels((y + y2) / 2 + length * 0.05, originY, maxY);
     const duration = depthDurations[depth] * (0.84 + seeded(seed + 27.2) * 0.28);
-    const end = Math.min(0.96, start + duration);
-    const pulse = Math.min(1, end + 0.012);
+    // Keep the complete duration of late twigs. Capping every branch at .96
+    // compressed many descendants into the last frames and produced a visible pop.
+    // The full tree timeline is normalized after all segments have been generated.
+    const end = start + duration;
+    const pulse = end + 0.012;
 
     result.push({ x1: x, y1: y, cx, cy, x2, y2, start, end, pulse, width: depthWidths[depth], depth });
     cursor += 1;
@@ -139,9 +150,44 @@ function buildRootSegments(layout: RootLayout) {
   return result;
 }
 
+function drawRootSegment(target: CanvasRenderingContext2D, segment: Segment, local: number, endpoint: boolean) {
+  const t = 1 - Math.pow(1 - local, 3);
+  const inv = 1 - t;
+  const x = inv * inv * segment.x1 + 2 * inv * t * segment.cx + t * t * segment.x2;
+  const y = inv * inv * segment.y1 + 2 * inv * t * segment.cy + t * t * segment.y2;
+  const gradient = target.createLinearGradient(segment.x1, segment.y1, x, y);
+  gradient.addColorStop(0, segment.depth < 2 ? "rgba(226, 166, 93, .94)" : "rgba(180, 204, 119, .78)");
+  gradient.addColorStop(1, segment.depth < 3 ? "rgba(250, 214, 140, .8)" : "rgba(140, 166, 90, .68)");
+  target.beginPath();
+  target.moveTo(segment.x1, segment.y1);
+  target.quadraticCurveTo(segment.cx, segment.cy, x, y);
+  target.lineCap = "round";
+  target.lineJoin = "round";
+  target.lineWidth = segment.width;
+  target.strokeStyle = gradient;
+  target.shadowColor = segment.depth < 3 ? "rgba(228, 187, 114, .34)" : "rgba(155, 184, 103, .22)";
+  target.shadowBlur = segment.depth < 2 ? 12 : 5;
+  target.stroke();
+
+  if (endpoint && local > 0.72) {
+    target.beginPath();
+    target.arc(x, y, Math.max(0.75, 2.3 - segment.depth * 0.18), 0, Math.PI * 2);
+    target.fillStyle = segment.depth < 4 ? "rgba(255, 229, 150, .82)" : "rgba(207, 234, 139, .55)";
+    target.fill();
+  }
+}
+
 function RootsCanvas({ progress, layout }: { progress: number; layout: RootLayout | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const segmentsRef = useRef<Segment[]>([]);
+  const segmentRastersRef = useRef<SegmentRaster[]>([]);
+  const staticLayerRef = useRef<{
+    canvas: HTMLCanvasElement;
+    context: CanvasRenderingContext2D;
+    completed: Set<number>;
+    progress: number;
+    dpr: number;
+  } | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -155,7 +201,41 @@ function RootsCanvas({ progress, layout }: { progress: number; layout: RootLayou
     canvas.style.width = `${layout.width}px`;
     canvas.style.height = `${layout.height}px`;
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    segmentsRef.current = buildRootSegments(layout);
+    const segments = buildRootSegments(layout);
+    segmentsRef.current = segments;
+    segmentRastersRef.current = segments.map((segment) => {
+      const padding = segment.depth < 2 ? 20 : 12;
+      const left = Math.floor(Math.min(segment.x1, segment.cx, segment.x2) - segment.width - padding);
+      const top = Math.floor(Math.min(segment.y1, segment.cy, segment.y2) - segment.width - padding);
+      const right = Math.ceil(Math.max(segment.x1, segment.cx, segment.x2) + segment.width + padding);
+      const bottom = Math.ceil(Math.max(segment.y1, segment.cy, segment.y2) + segment.width + padding);
+      const rasterWidth = Math.max(1, right - left);
+      const rasterHeight = Math.max(1, bottom - top);
+      const rasterCanvas = document.createElement("canvas");
+      rasterCanvas.width = Math.ceil(rasterWidth * dpr);
+      rasterCanvas.height = Math.ceil(rasterHeight * dpr);
+      const rasterContext = rasterCanvas.getContext("2d");
+      if (rasterContext) {
+        rasterContext.setTransform(dpr, 0, 0, dpr, -left * dpr, -top * dpr);
+        rasterContext.globalCompositeOperation = "lighter";
+        drawRootSegment(rasterContext, segment, 1, true);
+      }
+      return { canvas: rasterCanvas, left, top, width: rasterWidth, height: rasterHeight };
+    });
+
+    const staticCanvas = document.createElement("canvas");
+    staticCanvas.width = canvas.width;
+    staticCanvas.height = canvas.height;
+    const staticContext = staticCanvas.getContext("2d");
+    if (!staticContext) return;
+    staticContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+    staticLayerRef.current = {
+      canvas: staticCanvas,
+      context: staticContext,
+      completed: new Set(),
+      progress: 0,
+      dpr,
+    };
   }, [layout]);
 
   useEffect(() => {
@@ -164,39 +244,54 @@ function RootsCanvas({ progress, layout }: { progress: number; layout: RootLayou
     if (!canvas || !context || !layout) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
     const { width, height } = layout;
+    const staticLayer = staticLayerRef.current;
+    if (!staticLayer) return;
+
+    const drawRaster = (target: CanvasRenderingContext2D, index: number) => {
+      const raster = segmentRastersRef.current[index];
+      if (!raster) return;
+      target.drawImage(raster.canvas, raster.left, raster.top, raster.width, raster.height);
+    };
+
+    const rebuildStaticLayer = () => {
+      staticLayer.context.setTransform(1, 0, 0, 1, 0, 0);
+      staticLayer.context.clearRect(0, 0, staticLayer.canvas.width, staticLayer.canvas.height);
+      staticLayer.context.setTransform(staticLayer.dpr, 0, 0, staticLayer.dpr, 0, 0);
+      staticLayer.context.globalCompositeOperation = "lighter";
+      staticLayer.completed.clear();
+      segmentsRef.current.forEach((segment, index) => {
+        if (progress < segment.end) return;
+        drawRaster(staticLayer.context, index);
+        staticLayer.completed.add(index);
+      });
+    };
+
+    if (progress < staticLayer.progress) {
+      const containsFutureSegment = Array.from(staticLayer.completed).some(
+        (index) => segmentsRef.current[index].end > progress,
+      );
+      if (containsFutureSegment) rebuildStaticLayer();
+    } else {
+      staticLayer.context.globalCompositeOperation = "lighter";
+      segmentsRef.current.forEach((segment, index) => {
+        if (segment.end > progress || staticLayer.completed.has(index)) return;
+        drawRaster(staticLayer.context, index);
+        staticLayer.completed.add(index);
+      });
+    }
+    staticLayer.progress = progress;
+
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(staticLayer.canvas, 0, 0);
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    context.clearRect(0, 0, width, height);
 
     context.save();
     context.globalCompositeOperation = "lighter";
     for (const segment of segmentsRef.current) {
       if (progress <= segment.start) continue;
       const local = clamp((progress - segment.start) / Math.max(0.001, segment.end - segment.start));
-      const t = 1 - Math.pow(1 - local, 3);
-      const inv = 1 - t;
-      const x = inv * inv * segment.x1 + 2 * inv * t * segment.cx + t * t * segment.x2;
-      const y = inv * inv * segment.y1 + 2 * inv * t * segment.cy + t * t * segment.y2;
-
-      const gradient = context.createLinearGradient(segment.x1, segment.y1, x, y);
-      gradient.addColorStop(0, segment.depth < 2 ? "rgba(226, 166, 93, .94)" : "rgba(180, 204, 119, .78)");
-      gradient.addColorStop(1, segment.depth < 3 ? "rgba(250, 214, 140, .8)" : "rgba(140, 166, 90, .68)");
-      context.beginPath();
-      context.moveTo(segment.x1, segment.y1);
-      context.quadraticCurveTo(segment.cx, segment.cy, x, y);
-      context.lineCap = "round";
-      context.lineJoin = "round";
-      context.lineWidth = segment.width;
-      context.strokeStyle = gradient;
-      context.shadowColor = segment.depth < 3 ? "rgba(228, 187, 114, .34)" : "rgba(155, 184, 103, .22)";
-      context.shadowBlur = segment.depth < 2 ? 12 : 5;
-      context.stroke();
-
-      if (local > 0.72) {
-        context.beginPath();
-        context.arc(x, y, Math.max(0.75, 2.3 - segment.depth * 0.18), 0, Math.PI * 2);
-        context.fillStyle = segment.depth < 4 ? "rgba(255, 229, 150, .82)" : "rgba(207, 234, 139, .55)";
-        context.fill();
-      }
+      if (local < 1) drawRootSegment(context, segment, local, true);
 
       const pulseLocal = 1 - Math.abs(progress - segment.pulse) / 0.035;
       if (pulseLocal > 0) {

@@ -63,6 +63,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const navigationId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const previousBodyOverflow = useRef("");
   const previousHtmlOverflow = useRef("");
   const shouldReturnFocus = useRef(false);
@@ -75,25 +76,48 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => {
-    if (open) {
-      previousBodyOverflow.current = document.body.style.overflow;
-      previousHtmlOverflow.current = document.documentElement.style.overflow;
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
-      (window as WindowWithLenis).lenis?.stop?.();
-    } else {
+    if (!open) return;
+
+    previousBodyOverflow.current = document.body.style.overflow;
+    previousHtmlOverflow.current = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    const lenis = (window as WindowWithLenis).lenis;
+    lenis?.stop?.();
+
+    const backgroundElements = Array.from(
+      document.body.querySelectorAll<HTMLElement>("body > main, body > footer")
+    );
+    const previousInert = backgroundElements.map((element) => element.inert);
+    backgroundElements.forEach((element) => { element.inert = true; });
+
+    // SmoothScroll does not currently expose its Lenis instance globally. These
+    // listeners prevent Lenis and native scrolling from reacting behind the panel.
+    const preventBackgroundScroll = (event: Event) => {
+      const target = event.target as Node | null;
+      if (target && menuRef.current?.contains(target)) return;
+      event.preventDefault();
+    };
+    window.addEventListener("wheel", preventBackgroundScroll, { passive: false });
+    window.addEventListener("touchmove", preventBackgroundScroll, { passive: false });
+
+    const firstLink = menuRef.current?.querySelector<HTMLElement>("a[href]");
+    firstLink?.focus();
+
+    return () => {
       document.body.style.overflow = previousBodyOverflow.current;
       document.documentElement.style.overflow = previousHtmlOverflow.current;
-      (window as WindowWithLenis).lenis?.start?.();
+      lenis?.start?.();
+      window.removeEventListener("wheel", preventBackgroundScroll);
+      window.removeEventListener("touchmove", preventBackgroundScroll);
+      backgroundElements.forEach((element, index) => {
+        element.inert = previousInert[index];
+      });
       if (shouldReturnFocus.current) {
         buttonRef.current?.focus();
         shouldReturnFocus.current = false;
       }
-    }
-    return () => {
-      document.body.style.overflow = previousBodyOverflow.current;
-      document.documentElement.style.overflow = previousHtmlOverflow.current;
-      (window as WindowWithLenis).lenis?.start?.();
     };
   }, [open]);
 
@@ -103,6 +127,24 @@ export function SiteHeader() {
       if (event.key === "Escape") {
         shouldReturnFocus.current = true;
         setOpen(false);
+        return;
+      }
+
+      if (event.key === "Tab") {
+        const focusable = [
+          buttonRef.current,
+          ...Array.from(menuRef.current?.querySelectorAll<HTMLElement>("a[href]") ?? [])
+        ].filter((element): element is HTMLElement => Boolean(element));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -114,6 +156,18 @@ export function SiteHeader() {
     const onHashChange = () => setOpen(false);
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target || menuRef.current?.contains(target) || buttonRef.current?.contains(target)) return;
+      shouldReturnFocus.current = true;
+      setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown, true);
+    return () => document.removeEventListener("pointerdown", onPointerDown, true);
   }, [open]);
 
   useEffect(() => {
@@ -166,6 +220,7 @@ export function SiteHeader() {
       />
 
       <div
+        ref={menuRef}
         id={navigationId}
         className="mobile-menu"
         aria-hidden={!open}
