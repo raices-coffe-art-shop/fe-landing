@@ -262,5 +262,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .track,
-  .card { transform: none !important; }
+  .card { transform: none; }
 }

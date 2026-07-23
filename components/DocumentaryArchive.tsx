@@ -33,6 +33,7 @@ export function DocumentaryArchive() {
   const [mobileActive, setMobileActive] = useState(0);
   const [mobileEnabled, setMobileEnabled] = useState(false);
   const mobileStoryRef = useRef<HTMLDivElement>(null);
+  const mobileEnabledRef = useRef(false);
   const viewportRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef(0);
@@ -42,6 +43,7 @@ export function DocumentaryArchive() {
   const current = archiveCategories[active] ?? archiveCategories[0];
   const media = current.media;
   const selectedMedia = media[selected % media.length] ?? media[0];
+  const mobileCurrent = archiveCategories[mobileActive] ?? archiveCategories[0];
 
   const cells = useMemo(() => {
     return Array.from({ length: 9 }, (_, cellIndex) => ({
@@ -184,10 +186,16 @@ export function DocumentaryArchive() {
     const mobileQuery = window.matchMedia("(max-width: 760px)");
     const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
+    let loopFrame = 0;
 
     const update = () => {
       frame = 0;
-      if (!mobileQuery.matches || reducedQuery.matches) return;
+      const isMobile = mobileQuery.matches;
+      if (mobileEnabledRef.current !== isMobile) {
+        mobileEnabledRef.current = isMobile;
+        setMobileEnabled(isMobile);
+      }
+      if (!isMobile || reducedQuery.matches) return;
       const rect = story.getBoundingClientRect();
       const distance = Math.max(1, story.offsetHeight - window.innerHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / distance));
@@ -200,9 +208,25 @@ export function DocumentaryArchive() {
       if (!frame) frame = requestAnimationFrame(update);
     };
 
+    const startLoop = () => {
+      cancelAnimationFrame(loopFrame);
+      const tick = () => {
+        update();
+        if (mobileQuery.matches && !reducedQuery.matches) {
+          loopFrame = requestAnimationFrame(tick);
+        }
+      };
+      loopFrame = requestAnimationFrame(tick);
+    };
+
     const syncMobile = () => {
-      setMobileEnabled(mobileQuery.matches);
+      if (mobileEnabledRef.current !== mobileQuery.matches) {
+        mobileEnabledRef.current = mobileQuery.matches;
+        setMobileEnabled(mobileQuery.matches);
+      }
       requestUpdate();
+      if (mobileQuery.matches && !reducedQuery.matches) startLoop();
+      else cancelAnimationFrame(loopFrame);
     };
 
     syncMobile();
@@ -210,13 +234,14 @@ export function DocumentaryArchive() {
     window.addEventListener("scroll", requestUpdate, { passive: true });
     window.addEventListener("resize", requestUpdate);
     mobileQuery.addEventListener("change", syncMobile);
-    reducedQuery.addEventListener("change", requestUpdate);
+    reducedQuery.addEventListener("change", syncMobile);
     return () => {
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
       mobileQuery.removeEventListener("change", syncMobile);
-      reducedQuery.removeEventListener("change", requestUpdate);
+      reducedQuery.removeEventListener("change", syncMobile);
       if (frame) cancelAnimationFrame(frame);
+      if (loopFrame) cancelAnimationFrame(loopFrame);
     };
   }, []);
 
@@ -287,6 +312,7 @@ export function DocumentaryArchive() {
       <div
         ref={mobileStoryRef}
         className="archive-mobile-story"
+        style={{ "--archive-mobile-scroll": `${archiveCategories.length * 68}svh` } as CSSProperties}
       >
         <div className="archive-mobile-sticky">
           <div className="archive-mobile-visual">
@@ -312,11 +338,11 @@ export function DocumentaryArchive() {
             </div>
           </div>
 
-          <div key={archiveCategories[mobileActive].id} className="archive-mobile-copy">
-            <span>{archiveCategories[mobileActive].status === "confirmed" ? "Material disponible" : "Material en edición"}</span>
-            <h3>{archiveCategories[mobileActive].title}</h3>
-            <p>{archiveCategories[mobileActive].summary}</p>
-            <Link href={`/archivo/${archiveCategories[mobileActive].id}`}>Ver archivo ↗</Link>
+          <div key={mobileCurrent.id} className="archive-mobile-copy">
+            <span>{mobileCurrent.status === "confirmed" ? "Material disponible" : "Material en edición"}</span>
+            <h3>{mobileCurrent.title}</h3>
+            <p>{mobileCurrent.summary}</p>
+            <Link href={`/archivo/${mobileCurrent.id}`}>Ver archivo ↗</Link>
           </div>
 
           <div className="archive-mobile-progress" aria-hidden="true">

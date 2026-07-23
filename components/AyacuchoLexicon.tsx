@@ -42,13 +42,14 @@ export function AyacuchoLexicon() {
     const stage = stageRef.current;
     if (!section || !stage) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
 
     const update = () => {
       frame = 0;
       const rect = section.getBoundingClientRect();
       const distance = Math.max(1, section.offsetHeight - window.innerHeight);
+      const reduced = reducedQuery.matches;
       const progress = reduced ? 0.52 : clamp(-rect.top / distance);
       stage.style.setProperty("--lexicon-progress", progress.toFixed(4));
 
@@ -64,6 +65,13 @@ export function AyacuchoLexicon() {
       stage.style.setProperty("--lexicon-ayacucho-y", `${(12 * (1 - ayacuchoIn)).toFixed(2)}px`);
 
       stage.querySelectorAll<HTMLElement>("[data-lexicon-word]").forEach((element) => {
+        if (reduced) {
+          element.style.removeProperty("opacity");
+          element.style.removeProperty("filter");
+          element.style.removeProperty("transform");
+          return;
+        }
+
         const start = Number(element.dataset.start ?? 0.5);
         const spread = 0.19;
         const intensity = clamp(1 - Math.abs(progress - start) / spread);
@@ -84,9 +92,11 @@ export function AyacuchoLexicon() {
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+    reducedQuery.addEventListener("change", onScroll);
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      reducedQuery.removeEventListener("change", onScroll);
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);

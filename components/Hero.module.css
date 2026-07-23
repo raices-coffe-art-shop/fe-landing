@@ -327,11 +327,11 @@
   }
 
   .wordImage.isActive {
-    opacity: .92 !important;
-    transition: none !important;
+    opacity: .92;
+    transition: none;
   }
 
   .sceneImage {
-    transition: none !important;
+    transition: none;
   }
 }

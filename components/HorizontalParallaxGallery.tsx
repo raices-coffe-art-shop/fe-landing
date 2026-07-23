@@ -92,10 +92,11 @@ export function HorizontalParallaxGallery() {
     let frame = 0;
     let travel = 0;
     let mobile = false;
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const measure = () => {
       mobile = window.innerWidth <= 760;
-      if (mobile) {
+      if (mobile || reducedQuery.matches) {
         section.style.removeProperty("height");
         track.style.removeProperty("transform");
         track.querySelectorAll<HTMLElement>("[data-parallax-card]").forEach((card) => {
@@ -110,7 +111,7 @@ export function HorizontalParallaxGallery() {
 
     const update = () => {
       frame = 0;
-      if (mobile) return;
+      if (mobile || reducedQuery.matches) return;
 
       const rect = section.getBoundingClientRect();
       const distance = Math.max(1, section.offsetHeight - window.innerHeight);
@@ -139,10 +140,12 @@ export function HorizontalParallaxGallery() {
     update();
     window.addEventListener("scroll", requestUpdate, { passive: true });
     window.addEventListener("resize", onResize);
+    reducedQuery.addEventListener("change", onResize);
 
     return () => {
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", onResize);
+      reducedQuery.removeEventListener("change", onResize);
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);

@@ -1237,12 +1237,15 @@ img { max-width: 100%; }
   gap: 4px;
   min-width: 0;
 }
-.split-nav-preview img {
+.split-nav-preview img,
+.split-nav-preview span {
   width: 100%;
   aspect-ratio: 1.25;
-  object-fit: cover;
   display: block;
   background: rgba(255,248,237,.18);
+}
+.split-nav-preview img {
+  object-fit: cover;
   filter: saturate(.78) contrast(1.02);
 }
 .split-pagination button.is-active .split-nav-preview img {
@@ -1254,6 +1257,9 @@ img { max-width: 100%; }
   letter-spacing: .14em;
   text-transform: uppercase;
   line-height: 1.35;
+}
+.art-mobile-story {
+  display: none;
 }
 @keyframes splitRevealLeft {
   from { opacity: .25; transform: translateY(-6%) scale(1.05); }
@@ -1290,7 +1296,7 @@ img { max-width: 100%; }
   .lexicon-sticky { min-height: 610px; }
   .lexicon-center { width: 86vw; }
   .lexicon-title-stack { font-size: clamp(3.8rem, 17vw, 6.2rem); letter-spacing: -.065em; }
-  .lexicon-center span { font-size: 1rem; max-width: 30ch; }
+  .lexicon-center > span { font-size: 1rem; max-width: 30ch; }
   .lexicon-word.size-sm b { font-size: 1rem; }
   .lexicon-word.size-md b { font-size: 1.4rem; }
   .lexicon-word.size-lg b { font-size: 1.8rem; }
@@ -1335,12 +1341,12 @@ img { max-width: 100%; }
   .hero-side-notes,
   .hero-word-wrap,
   .lexicon-word,
-  .stack-person-card { transform: none !important; }
+  .stack-person-card { transform: none; }
   .hero-copy,
   .hero-side-notes,
-  .lexicon-word { opacity: 1 !important; filter: none !important; }
-  .lexicon-title-huamanga { opacity: 0 !important; filter: none !important; transform: none !important; }
-  .lexicon-title-ayacucho { opacity: 1 !important; filter: none !important; transform: none !important; }
+  .lexicon-word { opacity: 1; filter: none; }
+  .lexicon-title-huamanga { opacity: 0; filter: none; transform: none; }
+  .lexicon-title-ayacucho { opacity: 1; filter: none; transform: none; }
 }
 
 /* =========================================================
@@ -2202,7 +2208,7 @@ img { max-width: 100%; }
   .link-card-toggle,
   .link-card-action,
   .link-card {
-    transition: none !important;
+    transition: none;
   }
 }
 
@@ -2622,11 +2628,11 @@ img { max-width: 100%; }
   .territory-contours,
   .territory-module,
   .territory-coordinate i {
-    transform: none !important;
+    transform: none;
   }
 
   .map-point-button {
-    animation: none !important;
+    animation: none;
   }
 }
 
@@ -2700,7 +2706,7 @@ img { max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .lexicon-sticky,
   .lexicon-sticky::before {
-    animation: none !important;
+    animation: none;
   }
 }
 
@@ -3383,23 +3389,26 @@ img { max-width: 100%; }
   .documentary-archive-section > .archive-mobile-grid { display: none; }
   .archive-mobile-story {
     --archive-mobile-progress: 0;
+    --archive-mobile-scroll: 408svh;
     display: block;
     position: relative;
     width: min(100% - 28px, 560px);
-    margin: 38px auto 0;
+    min-height: calc(100svh + var(--archive-mobile-scroll));
+    margin: 34px auto 0;
     background: #17120e;
     color: #fff8ed;
   }
   .archive-mobile-sticky {
     position: sticky;
     z-index: 2;
-    top: 0;
-    height: 100svh;
+    top: 70px;
+    min-height: calc(100svh - 70px);
+    height: calc(100svh - 70px);
     display: grid;
-    grid-template-rows: minmax(280px, 49svh) auto auto;
-    align-content: start;
-    gap: 0;
-    padding: 14px 14px 18px;
+    grid-template-rows: minmax(260px, 48svh) minmax(0, 1fr) auto;
+    align-content: stretch;
+    gap: 16px;
+    padding: 12px 12px 16px;
     overflow: hidden;
     background:
       radial-gradient(circle at 76% 20%, rgba(196,148,73,.12), transparent 34%),
@@ -3430,14 +3439,14 @@ img { max-width: 100%; }
   .archive-mobile-counter b { font: 500 2rem/1 var(--serif); }
   .archive-mobile-counter span { color: rgba(255,248,237,.62); font-size: 9px; letter-spacing: .12em; }
   .archive-mobile-copy {
-    min-height: 210px;
-    padding: 22px 5px 16px;
+    min-height: 0;
+    padding: 0 5px;
     animation: archiveMobileCopyIn .38s cubic-bezier(.2,.8,.2,1) both;
   }
   .archive-mobile-copy > span,
   .archive-mobile-reduced-list article > span { color: #e4bb72; font-size: 8px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
-  .archive-mobile-copy h3 { margin: 10px 0 0; font: 500 clamp(2.35rem, 11vw, 3.5rem)/.92 var(--serif); letter-spacing: -.035em; }
-  .archive-mobile-copy p { max-width: 37ch; margin: 13px 0 0; color: rgba(255,248,237,.68); font-size: 13px; line-height: 1.55; }
+  .archive-mobile-copy h3 { margin: 10px 0 0; font: 500 clamp(2.05rem, 9.4vw, 3.15rem)/.94 var(--serif); letter-spacing: -.035em; }
+  .archive-mobile-copy p { max-width: 37ch; margin: 12px 0 0; color: rgba(255,248,237,.68); font-size: 13px; line-height: 1.55; }
   .archive-mobile-copy a,
   .archive-mobile-reduced-list a { display: inline-block; margin-top: 14px; padding-bottom: 3px; border-bottom: 1px solid rgba(228,187,114,.48); color: #fff2ce; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; }
   .archive-mobile-progress { align-self: end; display: grid; gap: 8px; padding: 0 5px; color: rgba(255,248,237,.48); font-size: 8px; letter-spacing: .16em; text-transform: uppercase; }
@@ -3447,10 +3456,10 @@ img { max-width: 100%; }
     position: relative;
     z-index: 1;
     display: grid;
-    margin-top: -100svh;
+    margin-top: calc((100svh - 70px) * -1);
     pointer-events: none;
   }
-  .archive-mobile-steps > div { height: 76svh; }
+  .archive-mobile-steps > div { height: 68svh; }
   .archive-mobile-reduced-list { display: none; }
   @keyframes archiveMobileCopyIn {
     from { opacity: 0; transform: translate3d(0, 9px, 0); }
@@ -4051,11 +4060,11 @@ img { max-width: 100%; }
   .lexicon-title-stack {
     width: 100%;
     min-height: .8em;
-    font-family: "Anton", var(--sans);
-    font-size: clamp(4.2rem, 20vw, 7.5rem);
-    font-weight: 400;
-    line-height: .78;
-    letter-spacing: -.035em;
+    font-family: var(--sans);
+    font-size: clamp(4.25rem, 14vw, 5.8rem);
+    font-weight: 700;
+    line-height: .82;
+    letter-spacing: -.065em;
   }
 
   .lexicon-title-word {
@@ -4328,6 +4337,209 @@ img { max-width: 100%; }
     padding: 12px 14px;
   }
 
+  .art-section {
+    padding: 58px 0 64px;
+  }
+
+  .art-intro {
+    gap: 14px;
+  }
+
+  .art-intro h2 {
+    max-width: 11ch;
+    font-size: clamp(2.25rem, 9.4vw, 3.35rem);
+    line-height: .96;
+  }
+
+  .art-intro > p {
+    max-width: 33ch;
+    font-size: 13px;
+    line-height: 1.58;
+  }
+
+  .cultural-split-showcase {
+    margin-top: 28px;
+    width: min(100% - 24px, 560px);
+  }
+
+  .split-stage,
+  .split-pagination {
+    display: none;
+  }
+
+  .art-mobile-story {
+    --art-mobile-progress: 0;
+    --art-mobile-scroll: 256svh;
+    display: block;
+    position: relative;
+    min-height: calc(100svh + var(--art-mobile-scroll));
+  }
+
+  .art-mobile-sticky {
+    position: sticky;
+    top: 70px;
+    min-height: calc(100svh - 70px);
+    height: calc(100svh - 70px);
+    display: grid;
+    grid-template-rows: minmax(260px, 47svh) minmax(0, 1fr) auto;
+    gap: 14px;
+    padding: 0 0 16px;
+    color: #fff8ed;
+  }
+
+  .art-mobile-visual {
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+    border: 1px solid rgba(255,248,237,.16);
+    background: #241b17;
+    box-shadow: 0 24px 54px rgba(33,22,18,.22);
+  }
+
+  .art-mobile-visual::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(20,14,11,.05), rgba(20,14,11,.42));
+  }
+
+  .art-mobile-visual img,
+  .art-mobile-visual > span {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.025);
+    transition: opacity .62s ease, transform .86s cubic-bezier(.2,.75,.25,1);
+  }
+
+  .art-mobile-visual > span {
+    padding: 24px;
+    background: linear-gradient(145deg, rgba(36,27,23,.92), rgba(82,56,47,.86));
+    color: rgba(255,248,237,.62);
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .art-mobile-visual .is-active {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .art-mobile-counter {
+    position: absolute;
+    z-index: 3;
+    left: 16px;
+    top: 15px;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    text-shadow: 0 2px 14px rgba(0,0,0,.45);
+  }
+
+  .art-mobile-counter b {
+    color: #f4cc7b;
+    font: 500 2rem/1 var(--serif);
+  }
+
+  .art-mobile-counter span {
+    color: rgba(255,248,237,.62);
+    font-size: 9px;
+    letter-spacing: .12em;
+  }
+
+  .art-mobile-copy {
+    min-height: 0;
+    padding: 0 2px;
+    animation: artMobileCopyIn .46s cubic-bezier(.2,.75,.25,1) both;
+  }
+
+  .art-mobile-copy > span,
+  .art-mobile-reduced-list article > span {
+    color: #f4cc7b;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .art-mobile-copy h3 {
+    margin: 8px 0 0;
+    max-width: 10.5ch;
+    font: 500 clamp(2rem, 8.8vw, 3rem)/.94 var(--serif);
+    letter-spacing: -.035em;
+  }
+
+  .art-mobile-copy p {
+    max-width: 35ch;
+    margin: 12px 0 0;
+    color: rgba(255,248,237,.72);
+    font-size: 13px;
+    line-height: 1.52;
+  }
+
+  .art-mobile-copy a,
+  .art-mobile-reduced-list a {
+    display: inline-block;
+    margin-top: 13px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid rgba(244,204,123,.48);
+    color: #fff2ce;
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .art-mobile-progress {
+    display: grid;
+    gap: 8px;
+    color: rgba(255,248,237,.5);
+    font-size: 8px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .art-mobile-progress i {
+    height: 2px;
+    overflow: hidden;
+    background: rgba(255,248,237,.14);
+  }
+
+  .art-mobile-progress b {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #dfa15a, #f4cc7b);
+    transform: scaleX(var(--art-mobile-progress));
+    transform-origin: left;
+  }
+
+  .art-mobile-steps {
+    margin-top: calc((100svh - 70px) * -1);
+    pointer-events: none;
+  }
+
+  .art-mobile-steps > div {
+    height: 64svh;
+  }
+
+  .art-mobile-reduced-list {
+    display: none;
+  }
+
+  @keyframes artMobileCopyIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+
   .catalog-section {
     padding: 76px 0 82px;
   }
@@ -4421,7 +4633,7 @@ img { max-width: 100%; }
 
 @media (max-width: 380px) {
   .lexicon-title-stack {
-    font-size: clamp(4rem, 20vw, 4.75rem);
+    font-size: clamp(3.9rem, 15vw, 4.4rem);
   }
 
   .catalog-rail {
@@ -4430,6 +4642,61 @@ img { max-width: 100%; }
 
   .product-copy a {
     font-size: 8px;
+  }
+}
+
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .art-mobile-story {
+    min-height: 0;
+  }
+
+  .art-mobile-sticky,
+  .art-mobile-steps {
+    display: none;
+  }
+
+  .art-mobile-reduced-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .art-mobile-reduced-list article {
+    padding: 12px 12px 22px;
+    border: 1px solid rgba(255,248,237,.16);
+    background: rgba(35,27,23,.45);
+  }
+
+  .art-mobile-reduced-list img,
+  .art-mobile-placeholder {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: rgba(35,27,23,.72);
+    color: rgba(255,248,237,.62);
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .art-mobile-reduced-list article > span {
+    display: block;
+    margin-top: 16px;
+  }
+
+  .art-mobile-reduced-list h3 {
+    margin: 9px 0 0;
+    font: 500 2rem/1 var(--serif);
+    letter-spacing: -.03em;
+  }
+
+  .art-mobile-reduced-list p {
+    margin: 11px 0 0;
+    color: rgba(255,248,237,.72);
+    font-size: 13px;
+    line-height: 1.55;
   }
 }
 
