@@ -1329,6 +1329,7 @@ img { max-width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .lexicon-section { height: 100svh; }
   .hero-photo,
   .hero-copy,
   .hero-side-notes,
@@ -2365,11 +2366,13 @@ img { max-width: 100%; }
   width: min(100%, 590px);
   padding: clamp(18px, 3vw, 28px);
   background:
-    linear-gradient(135deg, rgba(255,248,237,.55), rgba(222,209,189,.2)),
+    radial-gradient(circle at 52% 43%, rgba(255,248,237,.72), transparent 34%),
+    linear-gradient(135deg, rgba(255,248,237,.58), rgba(222,209,189,.24)),
     rgba(244,239,229,.26);
   border: 1px solid rgba(43,33,28,.16);
   box-shadow: 0 28px 70px rgba(43,33,28,.13);
   overflow: hidden;
+  isolation: isolate;
 }
 
 .regional-map-grid {
@@ -2383,6 +2386,35 @@ img { max-width: 100%; }
   background-size: 12.5% 12.5%;
 }
 
+.regional-map-contours {
+  position: absolute;
+  z-index: 0;
+  inset: 6%;
+  pointer-events: none;
+  opacity: .2;
+  background:
+    repeating-radial-gradient(ellipse at 23% 70%, transparent 0 20px, rgba(67,90,69,.26) 21px 22px, transparent 23px 35px),
+    repeating-radial-gradient(ellipse at 84% 24%, transparent 0 26px, rgba(166,93,72,.2) 27px 28px, transparent 29px 43px);
+  mask-image: linear-gradient(135deg, transparent 4%, #000 28%, #000 72%, transparent 96%);
+}
+
+.map-coordinate {
+  position: absolute;
+  z-index: 3;
+  color: rgba(43,33,28,.43);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.map-coordinate-top { top: 14px; left: 18px; }
+.map-coordinate-side { right: 12px; bottom: 54px; writing-mode: vertical-rl; }
+.map-orientation { position: absolute; z-index: 3; right: 17px; top: 14px; display: grid; justify-items: center; gap: 3px; color: rgba(43,33,28,.58); pointer-events: none; }
+.map-orientation b { font-size: 9px; letter-spacing: .08em; }
+.map-orientation i { width: 1px; height: 25px; background: currentColor; position: relative; }
+.map-orientation i::before { content: ""; position: absolute; top: -1px; left: -3px; width: 7px; height: 7px; border-top: 1px solid currentColor; border-left: 1px solid currentColor; transform: rotate(45deg); }
+
 .regional-map-svg,
 .map-overlays {
   inset: clamp(18px, 3vw, 28px);
@@ -2390,66 +2422,33 @@ img { max-width: 100%; }
   height: calc(100% - clamp(36px, 6vw, 56px));
 }
 
-.map-point-controls {
-  position: absolute;
-  inset: clamp(18px, 3vw, 28px);
-  pointer-events: none;
-}
-
-.map-point-button {
-  position: absolute;
-  translate: -50% -50%;
-  width: 19px;
-  height: 19px;
-  border: 1px solid rgba(255,248,237,.92);
-  border-radius: 50%;
-  background: var(--red);
-  box-shadow: 0 0 0 0 rgba(136,68,63,.24), 0 9px 18px rgba(43,33,28,.18);
-  cursor: pointer;
-  pointer-events: auto;
-  animation: mapPulse 2.8s ease-out infinite;
-}
-
-.map-point-button:nth-child(2) {
-  background: var(--honey);
-  animation-delay: .7s;
-}
-
-.map-point-button span {
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 7px);
-  translate: -50% 0;
-  white-space: nowrap;
-  padding: 5px 7px;
-  background: rgba(43,33,28,.84);
-  color: #fff8ed;
-  font-size: 8px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity .2s ease, transform .2s ease;
-}
-
-.map-point-button:hover span,
-.map-point-button.is-active span {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@keyframes mapPulse {
-  70% { box-shadow: 0 0 0 16px transparent, 0 9px 18px rgba(43,33,28,.18); }
-  100% { box-shadow: 0 0 0 0 transparent, 0 9px 18px rgba(43,33,28,.18); }
-}
+.map-pin-control { pointer-events: auto; cursor: pointer; outline: none; }
+.map-pin-control .pin-hit { fill: transparent; }
+.map-pin-control .pin-outer { transition: r .2s ease, fill .2s ease; }
+.map-pin-control:hover .pin-outer,
+.map-pin-control.is-active .pin-outer,
+.map-pin-control:focus-visible .pin-outer { r: 11px; fill: rgba(255,248,237,.98); }
+.map-pin-control:focus-visible { filter: drop-shadow(0 0 5px rgba(43,33,28,.5)); }
 
 .map-caption {
+  position: relative;
   align-self: center;
   padding: clamp(26px, 4vw, 38px);
-  background: rgba(244,239,229,.74);
+  background:
+    linear-gradient(145deg, rgba(255,252,245,.9), rgba(235,225,209,.76)),
+    rgba(244,239,229,.84);
   border: 1px solid rgba(43,33,28,.14);
-  box-shadow: 0 20px 48px rgba(43,33,28,.08);
+  box-shadow: 0 24px 60px rgba(43,33,28,.12), inset 0 1px rgba(255,255,255,.54);
 }
+.map-caption::before { content: ""; position: absolute; top: -1px; left: 28px; width: 72px; height: 2px; background: linear-gradient(90deg, var(--red), var(--honey)); }
+.map-caption-heading { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 7px 18px; }
+.map-caption-heading small { grid-column: 1 / -1; color: var(--clay); font-size: 8px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.map-caption-heading span { font: 500 clamp(1.8rem, 3vw, 2.35rem)/1 var(--serif); }
+.map-caption-heading b { color: rgba(43,33,28,.28); font: 500 1rem/1 var(--serif); }
+.map-caption-route { display: grid; grid-template-columns: 8px 1fr 8px; align-items: center; gap: 0; margin-top: 24px; }
+.map-caption-route i { width: 8px; height: 8px; border: 2px solid var(--paper); border-radius: 50%; background: var(--red); box-shadow: 0 0 0 1px var(--red); }
+.map-caption-route i:last-child { background: var(--honey); box-shadow: 0 0 0 1px var(--honey); }
+.map-caption-route span { height: 1px; background: repeating-linear-gradient(90deg, rgba(43,33,28,.28) 0 5px, transparent 5px 9px); }
 
 .map-cta {
   display: inline-flex;
@@ -3948,7 +3947,7 @@ img { max-width: 100%; }
   }
 
   .lexicon-section {
-    height: 160svh;
+    height: 150svh;
   }
 
   .lexicon-sticky {
@@ -3956,22 +3955,35 @@ img { max-width: 100%; }
   }
 
   .lexicon-center {
-    width: min(100% - 40px, 560px);
+    top: 48%;
+    width: min(100% - 20px, 560px);
   }
 
   .lexicon-title-stack {
-    font-size: clamp(4.05rem, 18.8vw, 6.35rem);
-    letter-spacing: -.078em;
+    width: 100%;
+    min-height: .8em;
+    font-family: "Anton", var(--sans);
+    font-size: clamp(4.2rem, 20vw, 7.5rem);
+    font-weight: 400;
+    line-height: .78;
+    letter-spacing: -.035em;
   }
 
   .lexicon-title-word {
-    max-width: calc(100vw - 24px);
+    max-width: calc(100vw - 20px);
     white-space: nowrap;
   }
 
   .lexicon-center > span {
+    margin-top: 16px;
     max-width: 27ch;
     font-size: clamp(1rem, 4.1vw, 1.18rem);
+  }
+
+  .lexicon-validation-note {
+    margin-top: 12px;
+    max-width: 34ch;
+    line-height: 1.45;
   }
 
   .lexicon-word.size-sm b { font-size: clamp(1.05rem, 4vw, 1.32rem); }
@@ -4158,12 +4170,11 @@ img { max-width: 100%; }
     width: min(100%, 430px);
     aspect-ratio: 542.76703 / 792;
     padding: clamp(20px, 6vw, 30px);
-    overflow: visible;
+    overflow: hidden;
   }
 
   .regional-map-svg,
-  .map-overlays,
-  .map-point-controls {
+  .map-overlays {
     inset: clamp(20px, 6vw, 30px);
     width: calc(100% - clamp(40px, 12vw, 60px));
     height: calc(100% - clamp(40px, 12vw, 60px));
@@ -4178,6 +4189,8 @@ img { max-width: 100%; }
 
   .map-caption {
     align-self: stretch;
+    width: 100%;
+    max-width: none;
     padding: 22px 18px;
   }
 
@@ -4319,7 +4332,7 @@ img { max-width: 100%; }
 
 @media (max-width: 380px) {
   .lexicon-title-stack {
-    font-size: clamp(3.95rem, 20vw, 5.1rem);
+    font-size: clamp(4rem, 20vw, 4.75rem);
   }
 
   .catalog-rail {

@@ -10,7 +10,10 @@ function getSvgMarkup() {
     .replace(/standalone="no"/g, "")
     .replace(/width="[^"]*"/g, "")
     .replace(/height="[^"]*"/g, "")
-    .replace(/<svg/, '<svg class="peru-map-svg" preserveAspectRatio="xMidYMid meet"');
+    .replace(
+      /<svg/,
+      '<svg class="peru-map-svg" viewBox="0 0 542.76703 792" preserveAspectRatio="xMidYMid meet"',
+    );
 }
 
 export function CulturalMap() {

@@ -52,8 +52,10 @@ export function AyacuchoLexicon() {
       const progress = reduced ? 0.52 : clamp(-rect.top / distance);
       stage.style.setProperty("--lexicon-progress", progress.toFixed(4));
 
-      const huamangaOut = reduced ? 1 : clamp((progress - 0.34) / 0.26);
-      const ayacuchoIn = reduced ? 1 : clamp((progress - 0.29) / 0.3);
+      // Keep the handoff concise: Huamanga remains fully present first, then
+      // Ayacucho takes over without a long interval where both look faint.
+      const huamangaOut = reduced ? 1 : clamp((progress - 0.37) / 0.2);
+      const ayacuchoIn = reduced ? 1 : clamp((progress - 0.34) / 0.21);
       stage.style.setProperty("--lexicon-huamanga-opacity", (1 - huamangaOut).toFixed(4));
       stage.style.setProperty("--lexicon-huamanga-blur", `${(huamangaOut * 6).toFixed(2)}px`);
       stage.style.setProperty("--lexicon-huamanga-y", `${(-10 * huamangaOut).toFixed(2)}px`);

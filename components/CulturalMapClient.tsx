@@ -4,20 +4,27 @@ import { useState } from "react";
 import { documentaryRoute } from "@/data/documentary";
 
 const mapPoints = [
-  { id: "origen", title: "Ayacucho", description: "Origen cultural, lingüístico y documental del proyecto.", coordinates: null, x: 58, y: 75 },
+  {
+    id: "origen",
+    title: "Ayacucho",
+    description: "Origen cultural, ling\u00fc\u00edstico y documental del proyecto.",
+  },
   {
     id: "encuentro",
     title: "Lima",
-    description: "Lugar de encuentro donde las historias se comparten alrededor del café, el arte y los alimentos.",
-    coordinates: null,
-    x: 36,
-    y: 63,
+    description: "Lugar de encuentro donde las historias se comparten alrededor del caf\u00e9, el arte y los alimentos.",
   },
 ];
 
 export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
   const [activeId, setActiveId] = useState(mapPoints[0].id);
   const activePoint = mapPoints.find((point) => point.id === activeId) ?? mapPoints[0];
+
+  const selectPointFromKeyboard = (event: React.KeyboardEvent<SVGGElement>, id: string) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    setActiveId(id);
+  };
 
   return (
     <div className="cultural-map">
@@ -28,13 +35,22 @@ export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
 
       <div
         className="regional-map"
-        role="img"
-        aria-label="Mapa del Perú por regiones, destacando Lima y Ayacucho dentro de una ruta narrativa de origen"
+        role="group"
+        aria-label={"Mapa del Per\u00fa por regiones, destacando Lima y Ayacucho dentro de una ruta narrativa de origen"}
       >
         <div className="regional-map-grid" aria-hidden="true" />
+        <div className="regional-map-contours" aria-hidden="true" />
+        <span className="map-coordinate map-coordinate-top" aria-hidden="true">12.0464{"\u00b0"} S</span>
+        <span className="map-coordinate map-coordinate-side" aria-hidden="true">74.2241{"\u00b0"} O</span>
+        <span className="map-orientation" aria-hidden="true"><b>N</b><i /></span>
         <div className="regional-map-svg" dangerouslySetInnerHTML={{ __html: svgMarkup }} />
 
-        <svg className="map-overlays" viewBox="0 0 542.76703 792" aria-hidden="true">
+        <svg
+          className="map-overlays"
+          viewBox="0 0 542.76703 792"
+          preserveAspectRatio="xMidYMid meet"
+          aria-label="Ruta entre Ayacucho y Lima"
+        >
           <defs>
             <filter id="routeGlow">
               <feGaussianBlur stdDeviation="2.5" result="blur" />
@@ -51,45 +67,53 @@ export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
             filter="url(#routeGlow)"
           />
 
-          <g className="pin-group pin-lima">
+          <g
+            className={`pin-group map-pin-control pin-lima ${activeId === "encuentro" ? "is-active" : ""}`}
+            role="button"
+            tabIndex={0}
+            aria-label="Seleccionar Lima, lugar de encuentro"
+            aria-pressed={activeId === "encuentro"}
+            onClick={() => setActiveId("encuentro")}
+            onKeyDown={(event) => selectPointFromKeyboard(event, "encuentro")}
+          >
+            <circle cx="199" cy="501" r="22" className="pin-hit" />
             <circle cx="199" cy="501" r="7" className="pin pin-outer" />
             <circle cx="199" cy="501" r="4" className="pin pin-inner" />
             <text x="175" y="486">LIMA</text>
           </g>
-          <g className="pin-group pin-ayacucho">
+          <g
+            className={`pin-group map-pin-control pin-ayacucho ${activeId === "origen" ? "is-active" : ""}`}
+            role="button"
+            tabIndex={0}
+            aria-label="Seleccionar Ayacucho, lugar de origen"
+            aria-pressed={activeId === "origen"}
+            onClick={() => setActiveId("origen")}
+            onKeyDown={(event) => selectPointFromKeyboard(event, "origen")}
+          >
+            <circle cx="314" cy="594" r="23" className="pin-hit" />
             <circle cx="314" cy="594" r="8" className="pin pin-outer" />
             <circle cx="314" cy="594" r="4.3" className="pin pin-inner" />
             <text x="324" y="586">AYACUCHO</text>
           </g>
         </svg>
-
-        <div className="map-point-controls" aria-label="Marcadores narrativos del mapa">
-          {mapPoints.map((point) => (
-            <button
-              key={point.id}
-              type="button"
-              className={`map-point-button ${activeId === point.id ? "is-active" : ""}`}
-              style={{ left: `${point.x}%`, top: `${point.y}%` }}
-              onClick={() => setActiveId(point.id)}
-              aria-pressed={activeId === point.id}
-            >
-              <span>{point.title}</span>
-            </button>
-          ))}
-        </div>
       </div>
 
       <div className="map-caption">
-        <span>{activePoint.title}</span>
+        <div className="map-caption-heading">
+          <small>Territorio seleccionado</small>
+          <span>{activePoint.title}</span>
+          <b>0{mapPoints.findIndex((point) => point.id === activePoint.id) + 1}</b>
+        </div>
         <p>{activePoint.description}</p>
+        <div className="map-caption-route" aria-hidden="true"><i /><span /><i /></div>
         <div className="map-legend" aria-label="Leyenda del mapa">
           <span><i className="legend-dot ayacucho" />Origen</span>
           <span><i className="legend-dot lima" />Encuentro</span>
           <span><i className="legend-dot sierra" />Viaje documental</span>
         </div>
-        <p className="map-route-status">Estado del viaje: pendiente de confirmación editorial.</p>
+        <p className="map-route-status">Estado del viaje: pendiente de confirmaci&oacute;n editorial.</p>
         <a className="map-cta" href="https://maps.google.com" target="_blank" rel="noreferrer">
-          Cómo llegar
+          C&oacute;mo llegar
         </a>
       </div>
     </div>
