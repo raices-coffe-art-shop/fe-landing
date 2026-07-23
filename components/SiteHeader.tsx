@@ -55,7 +55,7 @@ export function SiteHeader() {
     <header className={`site-header ${scrolled ? "is-scrolled" : ""} ${open ? "is-open" : ""}`}>
       <div className="header-inner">
         <Link href="/" className="brand" aria-label="Raíces, inicio">
-          <span className="brand-word">Raíces</span>
+          <img className="brand-logo" src="/raices-logo.png" alt="" width={52} height={52} />
           <span className="brand-tag">Café y Cultura</span>
         </Link>
 

@@ -195,8 +195,12 @@ export function LinksHub() {
               <p className="links-kicker">Café · arte · territorio</p>
               <span>Ayacucho en Lima</span>
             </div>
-            <h1>Raíces</h1>
-            <p>Todos los caminos para encontrarnos.</p>
+            <h1 className="links-identity">
+              <img src="/raices-logo-lg.png" alt="Raíces" width={168} height={168} />
+            </h1>
+            <p>
+              Un enlace único para entrar al universo del proyecto: sabores, personas y escenas que siguen contando el origen.
+            </p>
             <div className="links-origin-line"><span>Ayacucho</span><i /><span>Lima</span></div>
             <div className="links-chips" aria-label="Resumen rápido">
               <span>Pedidos por WhatsApp</span>
