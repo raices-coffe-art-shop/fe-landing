@@ -42,18 +42,21 @@ export function AyacuchoLexicon() {
     const stage = stageRef.current;
     if (!section || !stage) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
 
     const update = () => {
       frame = 0;
       const rect = section.getBoundingClientRect();
       const distance = Math.max(1, section.offsetHeight - window.innerHeight);
+      const reduced = reducedQuery.matches;
       const progress = reduced ? 0.52 : clamp(-rect.top / distance);
       stage.style.setProperty("--lexicon-progress", progress.toFixed(4));
 
-      const huamangaOut = reduced ? 1 : clamp((progress - 0.34) / 0.26);
-      const ayacuchoIn = reduced ? 1 : clamp((progress - 0.29) / 0.3);
+      // Keep the handoff concise: Huamanga remains fully present first, then
+      // Ayacucho takes over without a long interval where both look faint.
+      const huamangaOut = reduced ? 1 : clamp((progress - 0.37) / 0.2);
+      const ayacuchoIn = reduced ? 1 : clamp((progress - 0.34) / 0.21);
       stage.style.setProperty("--lexicon-huamanga-opacity", (1 - huamangaOut).toFixed(4));
       stage.style.setProperty("--lexicon-huamanga-blur", `${(huamangaOut * 6).toFixed(2)}px`);
       stage.style.setProperty("--lexicon-huamanga-y", `${(-10 * huamangaOut).toFixed(2)}px`);
@@ -62,6 +65,13 @@ export function AyacuchoLexicon() {
       stage.style.setProperty("--lexicon-ayacucho-y", `${(12 * (1 - ayacuchoIn)).toFixed(2)}px`);
 
       stage.querySelectorAll<HTMLElement>("[data-lexicon-word]").forEach((element) => {
+        if (reduced) {
+          element.style.removeProperty("opacity");
+          element.style.removeProperty("filter");
+          element.style.removeProperty("transform");
+          return;
+        }
+
         const start = Number(element.dataset.start ?? 0.5);
         const spread = 0.19;
         const intensity = clamp(1 - Math.abs(progress - start) / spread);
@@ -82,9 +92,11 @@ export function AyacuchoLexicon() {
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+    reducedQuery.addEventListener("change", onScroll);
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      reducedQuery.removeEventListener("change", onScroll);
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);

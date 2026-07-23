@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import type { CSSProperties } from "react";
 import { people } from "@/data/site";
 
 function Portrait({ initials, tone }: { initials: string; tone: string }) {
@@ -20,6 +21,7 @@ function Portrait({ initials, tone }: { initials: string; tone: string }) {
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 
 export function PeopleStack() {
+  const sectionRef = useRef<HTMLElement>(null);
   const wrappersRef = useRef<Array<HTMLDivElement | null>>([]);
   const cardsRef = useRef<Array<HTMLElement | null>>([]);
 
@@ -29,9 +31,10 @@ export function PeopleStack() {
 
     const update = () => {
       frame = 0;
+      const mobile = window.innerWidth <= 760;
       cardsRef.current.forEach((card, index) => {
         if (!card) return;
-        if (reduced) {
+        if (reduced || mobile) {
           card.style.setProperty("--stack-scale", "1");
           card.style.setProperty("--stack-dim", "0");
           return;
@@ -51,6 +54,25 @@ export function PeopleStack() {
         card.style.setProperty("--stack-scale", String(1 - influence * 0.055));
         card.style.setProperty("--stack-dim", String(influence * 0.18));
       });
+
+      const focusLine = window.innerHeight * 0.22;
+      const activeCard = cardsRef.current.reduce(
+        (best, card, index) => {
+          if (!card) return best;
+          const rect = card.getBoundingClientRect();
+          const containsFocus = rect.top <= focusLine && rect.bottom >= focusLine;
+          if (containsFocus) {
+            return !best.containsFocus || index > best.index ? { index, score: 0, containsFocus } : best;
+          }
+
+          const focusDistance = Math.min(Math.abs(rect.top - focusLine), Math.abs(rect.bottom - focusLine));
+          const centerDistance = Math.abs(rect.top + rect.height * 0.35 - focusLine);
+          const score = focusDistance * 1.8 + centerDistance * 0.2;
+          return !best.containsFocus && score < best.score ? { index, score, containsFocus } : best;
+        },
+        { index: 0, score: Number.POSITIVE_INFINITY, containsFocus: false },
+      );
+      if (sectionRef.current) sectionRef.current.dataset.activeTone = people[activeCard.index]?.portraitTone ?? "green";
     };
 
     const onScroll = () => {
@@ -68,7 +90,7 @@ export function PeopleStack() {
   }, []);
 
   return (
-    <section className="people-stack-section" id="personas">
+    <section ref={sectionRef} className="people-stack-section" id="personas" data-active-tone="green">
       <div className="page-shell people-stack-intro">
         <div>
           <p className="eyebrow">Personas antes que productos</p>
@@ -89,7 +111,7 @@ export function PeopleStack() {
             <article
               ref={(element) => { cardsRef.current[index] = element; }}
               className={`stack-person-card stack-tone-${person.portraitTone} ${index % 2 ? "is-reversed" : ""}`}
-              style={{ top: `${92 + index * 14}px`, zIndex: index + 1 }}
+              style={{ "--stack-top": `${92 + index * 14}px`, zIndex: index + 1 } as CSSProperties}
             >
               <div className="stack-card-shade" aria-hidden="true" />
               <div className="stack-person-copy">

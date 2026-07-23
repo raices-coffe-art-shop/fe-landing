@@ -1,34 +1,167 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { archiveCategories } from "@/data/documentary";
 
-type ArchiveMode = "open" | "canvas";
+type ArchiveMode = "closed" | "open" | "canvas" | "focus";
 
 const tones = ["#b56a4f", "#4f6b50", "#c49449", "#7b5042", "#364b3d", "#8b463f"];
+const tileLayout = [
+  [-4, 8, 16, 29],
+  [28, 3, 17, 27],
+  [67, 7, 15, 30],
+  [7, 51, 13, 26],
+  [34, 39, 15, 31],
+  [58, 43, 14, 25],
+  [88, 48, 13, 28],
+  [47, 76, 15, 28],
+];
+
+function relativeIndex(index: number, active: number) {
+  let delta = (index - active + archiveCategories.length) % archiveCategories.length;
+  return delta > 2 ? delta - archiveCategories.length : delta;
+}
 
 export function DocumentaryArchive() {
-  const [mode, setMode] = useState<ArchiveMode>("open");
+  const [mode, setMode] = useState<ArchiveMode>("closed");
   const [active, setActive] = useState(0);
+  const [selected, setSelected] = useState(0);
+  const [sweeping, setSweeping] = useState(false);
+  const [slideDirection, setSlideDirection] = useState<"next" | "prev">("next");
+  const [mobileActive, setMobileActive] = useState(0);
+  const [mobileEnabled, setMobileEnabled] = useState(false);
+  const mobileStoryRef = useRef<HTMLDivElement>(null);
+  const mobileEnabledRef = useRef(false);
   const viewportRef = useRef<HTMLDivElement>(null);
-  const offsetRef = useRef({ x: 0, y: 0 });
-  const dragRef = useRef<{ pointerId: number; x: number; y: number } | null>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef(0);
+  const positionRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
+  const dragRef = useRef<{ pointerId: number; x: number; y: number; startX: number; startY: number; moved: boolean } | null>(null);
+  const lastDragEndRef = useRef(0);
   const current = archiveCategories[active] ?? archiveCategories[0];
+  const media = current.media;
+  const selectedMedia = media[selected % media.length] ?? media[0];
+  const mobileCurrent = archiveCategories[mobileActive] ?? archiveCategories[0];
+
+  const cells = useMemo(() => {
+    return Array.from({ length: 9 }, (_, cellIndex) => ({
+      id: cellIndex,
+      row: Math.floor(cellIndex / 3),
+      column: cellIndex % 3,
+    }));
+  }, []);
+
+  const applyWorld = (x: number, y: number, targetX = positionRef.current.targetX, targetY = positionRef.current.targetY) => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const width = viewport.clientWidth || 1;
+    const height = viewport.clientHeight || 1;
+
+    while (x <= -width * 2) {
+      x += width;
+      targetX += width;
+    }
+    while (x >= 0) {
+      x -= width;
+      targetX -= width;
+    }
+    while (y <= -height * 2) {
+      y += height;
+      targetY += height;
+    }
+    while (y >= 0) {
+      y -= height;
+      targetY -= height;
+    }
+
+    positionRef.current = { x, y, targetX, targetY };
+    viewport.style.setProperty("--archive-x", `${x}px`);
+    viewport.style.setProperty("--archive-y", `${y}px`);
+  };
+
+  const resetWorld = () => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const x = -(viewport.clientWidth || 1);
+    const y = -(viewport.clientHeight || 1);
+    applyWorld(x, y, x, y);
+  };
+
+  const animateWorld = () => {
+    cancelAnimationFrame(frameRef.current);
+    const tick = () => {
+      const position = positionRef.current;
+      const dx = position.targetX - position.x;
+      const dy = position.targetY - position.y;
+      const nextX = position.x + dx * 0.16;
+      const nextY = position.y + dy * 0.16;
+      applyWorld(nextX, nextY);
+      if (Math.abs(dx) > 0.12 || Math.abs(dy) > 0.12) {
+        frameRef.current = requestAnimationFrame(tick);
+      } else {
+        applyWorld(positionRef.current.targetX, positionRef.current.targetY);
+      }
+    };
+    frameRef.current = requestAnimationFrame(tick);
+  };
+
+  const openCanvas = () => {
+    setSelected(0);
+    setMode("canvas");
+    requestAnimationFrame(resetWorld);
+  };
+
+  const changeActive = (index: number) => {
+    if (index === active) return;
+    setSlideDirection(relativeIndex(index, active) < 0 ? "prev" : "next");
+    setActive(index);
+  };
+
+  const openCategory = (index: number) => {
+    changeActive(index);
+    setMode("open");
+  };
+
+  const returnToInitialCards = () => {
+    setMode("closed");
+    setSelected(0);
+  };
+
+  const openFocus = (index: number) => {
+    const drag = dragRef.current;
+    if (drag?.moved || Date.now() - lastDragEndRef.current < 180) return;
+    setSelected(index % media.length);
+    setSweeping(true);
+    window.setTimeout(() => {
+      setMode("focus");
+      setSweeping(false);
+    }, 760);
+  };
+
+  const goBack = () => {
+    if (mode === "focus") {
+      setMode("canvas");
+      return;
+    }
+    if (mode === "canvas") setMode("open");
+    if (mode === "open") setMode("closed");
+  };
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMode("open");
-      if (event.key === "ArrowRight") setActive((value) => (value + 1) % archiveCategories.length);
-      if (event.key === "ArrowLeft") setActive((value) => (value - 1 + archiveCategories.length) % archiveCategories.length);
-      if (event.key === "Enter" && mode === "open") setMode("canvas");
+      if (event.key === "Escape") goBack();
+      if (mode === "open" && event.key === "ArrowRight") changeActive((active + 1) % archiveCategories.length);
+      if (mode === "open" && event.key === "ArrowLeft") changeActive((active - 1 + archiveCategories.length) % archiveCategories.length);
+      if (mode === "open" && event.key === "Enter") openCanvas();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [mode]);
+  });
 
   useEffect(() => {
-    if (mode !== "canvas") return;
+    if (mode === "closed" || mode === "open") return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
@@ -36,56 +169,81 @@ export function DocumentaryArchive() {
     };
   }, [mode]);
 
-  const setCanvasOffset = (next: { x: number; y: number }) => {
-    offsetRef.current = next;
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    viewport.style.setProperty("--archive-x", `${next.x}px`);
-    viewport.style.setProperty("--archive-y", `${next.y}px`);
-  };
+  useEffect(() => {
+    if (mode === "canvas") resetWorld();
+  }, [mode, active]);
 
   useEffect(() => {
     if (mode !== "canvas") return;
-    setCanvasOffset({ x: 0, y: 0 });
-  }, [mode, active]);
+    const onResize = () => resetWorld();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [mode]);
 
-  const canvasItems = useMemo(() => {
-    const media = current.media.length
-      ? current.media
-      : Array.from({ length: 8 }, (_, index) => ({
-          id: `${current.id}-pending-${index}`,
-          type: "image" as const,
-          src: "",
-          alt: "",
-          caption: "Material en edición",
-          status: current.status,
-        }));
+  useEffect(() => {
+    const story = mobileStoryRef.current;
+    if (!story) return;
+    const mobileQuery = window.matchMedia("(max-width: 760px)");
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    let loopFrame = 0;
 
-    return Array.from({ length: 30 }, (_, index) => {
-      const item = media[index % media.length];
-      const column = index % 6;
-      const row = Math.floor(index / 6);
-      const stagger = row % 2 ? 145 : 0;
+    const update = () => {
+      frame = 0;
+      const isMobile = mobileQuery.matches;
+      if (mobileEnabledRef.current !== isMobile) {
+        mobileEnabledRef.current = isMobile;
+        setMobileEnabled(isMobile);
+      }
+      if (!isMobile || reducedQuery.matches) return;
+      const rect = story.getBoundingClientRect();
+      const distance = Math.max(1, story.offsetHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, -rect.top / distance));
+      const nextActive = Math.min(archiveCategories.length - 1, Math.floor(progress * archiveCategories.length));
+      story.style.setProperty("--archive-mobile-progress", progress.toFixed(4));
+      setMobileActive((currentIndex) => currentIndex === nextActive ? currentIndex : nextActive);
+    };
 
-      return {
-        id: `${current.id}-${item.id}-${index}`,
-        src: item.src,
-        alt: item.alt ?? current.title,
-        caption: item.caption,
-        left: column * 330 + stagger + ((index * 47) % 64),
-        top: row * 290 + ((index * 73) % 96),
-        width: 190 + (index % 4) * 34,
+    const requestUpdate = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    const startLoop = () => {
+      cancelAnimationFrame(loopFrame);
+      const tick = () => {
+        update();
+        if (mobileQuery.matches && !reducedQuery.matches) {
+          loopFrame = requestAnimationFrame(tick);
+        }
       };
-    });
-  }, [current]);
+      loopFrame = requestAnimationFrame(tick);
+    };
 
-  const moveCanvas = (deltaX: number, deltaY: number) => {
-    if (mode !== "canvas") return;
-    setCanvasOffset({
-      x: offsetRef.current.x + deltaX,
-      y: offsetRef.current.y + deltaY,
-    });
-  };
+    const syncMobile = () => {
+      if (mobileEnabledRef.current !== mobileQuery.matches) {
+        mobileEnabledRef.current = mobileQuery.matches;
+        setMobileEnabled(mobileQuery.matches);
+      }
+      requestUpdate();
+      if (mobileQuery.matches && !reducedQuery.matches) startLoop();
+      else cancelAnimationFrame(loopFrame);
+    };
+
+    syncMobile();
+    update();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    mobileQuery.addEventListener("change", syncMobile);
+    reducedQuery.addEventListener("change", syncMobile);
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      mobileQuery.removeEventListener("change", syncMobile);
+      reducedQuery.removeEventListener("change", syncMobile);
+      if (frame) cancelAnimationFrame(frame);
+      if (loopFrame) cancelAnimationFrame(loopFrame);
+    };
+  }, []);
 
   return (
     <section className="documentary-archive-section" id="archivo">
@@ -94,36 +252,49 @@ export function DocumentaryArchive() {
         <h2>Fotografías, conversaciones y procesos registrados donde cada historia comienza.</h2>
       </div>
 
-      <div className="archive-carousel page-shell" data-mode={mode}>
+      <div
+        className="archive-carousel page-shell"
+        data-mode={mode}
+        data-slide={slideDirection}
+        style={{ "--section-tone": tones[active % tones.length] } as CSSProperties}
+      >
         <div className="archive-carousel-bar">
           <span>Categorías documentales</span>
+          <span>{mode === "closed" ? "Hover · memoria de color" : "Las cartas laterales cambian la categoría"}</span>
+          <button type="button" onClick={goBack} aria-hidden={mode === "closed"} tabIndex={mode === "closed" ? -1 : 0}>Volver</button>
         </div>
 
         <div className="archive-card-stage" aria-label="Carrusel del archivo documental">
-          <div className="archive-active-title" aria-hidden="true">{current.title}</div>
+          <div key={current.id} className="archive-active-title" aria-hidden="true">{current.title}</div>
           {archiveCategories.map((category, index) => {
-            const offset = index - active;
-            const normalized = offset < -2 ? offset + archiveCategories.length : offset > 2 ? offset - archiveCategories.length : offset;
+            const delta = relativeIndex(index, active);
+            const positionClass = delta === 0 ? "is-active" : delta === -1 ? "is-prev" : delta === 1 ? "is-next" : delta === -2 ? "is-far-left" : "is-far-right";
+            const closedOffset = (index - (archiveCategories.length - 1) / 2) * 132;
             return (
               <button
                 key={category.id}
                 type="button"
-                className={`archive-carousel-card ${index === active ? "is-active" : ""}`}
+                className={`archive-carousel-card ${positionClass}`}
                 style={{
                   "--tone": tones[index % tones.length],
-                  "--x": `${normalized * 126}px`,
-                  "--z": String(10 - Math.abs(normalized)),
+                  "--x": `${closedOffset}px`,
+                  "--z": String(10 - Math.abs(delta)),
                 } as CSSProperties}
                 onClick={() => {
-                  if (index === active) {
-                    setMode("canvas");
+                  if (mode === "closed") {
+                    openCategory(index);
                     return;
                   }
-                  setActive(index);
+                  if (index === active) {
+                    openCanvas();
+                    return;
+                  }
+                  changeActive(index);
                 }}
               >
                 <span className="archive-card-picture">
                   {category.media[0]?.src ? <img src={category.media[0].src} alt={category.media[0].alt ?? category.title} /> : <i>Material en edición</i>}
+                  <em className="archive-tint" />
                   <em className="archive-color-wipe" />
                 </span>
               </button>
@@ -132,72 +303,210 @@ export function DocumentaryArchive() {
         </div>
 
         <div className="archive-carousel-caption">
-          <button type="button" onClick={() => setActive((active - 1 + archiveCategories.length) % archiveCategories.length)}>Anterior</button>
-          <p>{current.summary}</p>
-          <button type="button" onClick={() => setActive((active + 1) % archiveCategories.length)}>Siguiente</button>
+          <button type="button" onClick={() => changeActive((active - 1 + archiveCategories.length) % archiveCategories.length)}>Anterior</button>
+          <p>{current.summary} <Link href={`/archivo/${current.id}`}>Ver archivo ↗</Link></p>
+          <button type="button" onClick={() => changeActive((active + 1) % archiveCategories.length)}>Siguiente</button>
         </div>
       </div>
 
-      <div className="page-shell archive-mobile-grid" aria-label="Categorías del archivo documental">
-        {archiveCategories.map((category) => (
-          <article key={category.id}>
-            <span>{category.status === "confirmed" ? "Material disponible" : "Material en edición"}</span>
-            <h3>{category.title}</h3>
-            <p>{category.summary}</p>
-          </article>
-        ))}
+      <div
+        ref={mobileStoryRef}
+        className="archive-mobile-story"
+        style={{ "--archive-mobile-scroll": `${archiveCategories.length * 68}svh` } as CSSProperties}
+      >
+        <div className="archive-mobile-sticky">
+          <div className="archive-mobile-visual">
+            {archiveCategories.map((category, index) => {
+              const item = category.media[0];
+              return item?.src ? (
+                <img
+                  key={category.id}
+                  className={index === mobileActive ? "is-active" : ""}
+                  src={mobileEnabled ? item.src : undefined}
+                  alt={item.alt ?? category.title}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              ) : (
+                <span key={category.id} className={index === mobileActive ? "is-active" : ""}>Material en edición</span>
+              );
+            })}
+            <div className="archive-mobile-visual-shade" aria-hidden="true" />
+            <div className="archive-mobile-counter" aria-hidden="true">
+              <b>{String(mobileActive + 1).padStart(2, "0")}</b>
+              <span>/ {String(archiveCategories.length).padStart(2, "0")}</span>
+            </div>
+          </div>
+
+          <div key={mobileCurrent.id} className="archive-mobile-copy">
+            <span>{mobileCurrent.status === "confirmed" ? "Material disponible" : "Material en edición"}</span>
+            <h3>{mobileCurrent.title}</h3>
+            <p>{mobileCurrent.summary}</p>
+            <Link href={`/archivo/${mobileCurrent.id}`}>Ver archivo ↗</Link>
+          </div>
+
+          <div className="archive-mobile-progress" aria-hidden="true">
+            <span>Recorrido documental</span>
+            <i><b /></i>
+          </div>
+        </div>
+
+        <div className="archive-mobile-steps" aria-hidden="true">
+          {archiveCategories.map((category) => <div key={category.id} />)}
+        </div>
+
+        <div className="archive-mobile-reduced-list" aria-label="Categorías del archivo documental">
+          {archiveCategories.map((category) => {
+            const item = category.media[0];
+            return (
+              <article key={category.id}>
+                {item?.src && <img src={mobileEnabled ? item.src : undefined} alt={item.alt ?? category.title} loading="lazy" decoding="async" />}
+                <span>{category.status === "confirmed" ? "Material disponible" : "Material en edición"}</span>
+                <h3>{category.title}</h3>
+                <p>{category.summary}</p>
+                <Link href={`/archivo/${category.id}`}>Ver archivo ↗</Link>
+              </article>
+            );
+          })}
+        </div>
       </div>
 
-      {mode === "canvas" && (
-        <div className="archive-overlay" role="dialog" aria-modal="true" aria-label="Lienzo infinito del archivo documental">
-          <div className="archive-topbar">
+      {mode !== "closed" && mode !== "open" && (
+        <div className="archive-overlay" data-mode={mode} role="dialog" aria-modal="true" aria-label="Lienzo infinito del archivo documental">
+          <div className="archive-band archive-band-top">
             <span>{current.title}</span>
-            <button type="button" onClick={() => setMode("open")}>Volver</button>
+            <span>{mode === "focus" ? "Vista ampliada" : "Lienzo infinito"}</span>
+            <div className="archive-band-actions">
+              <button type="button" onClick={goBack}>Volver</button>
+              <button type="button" onClick={returnToInitialCards}>Vista inicial</button>
+            </div>
           </div>
+
           <div
             ref={viewportRef}
-            className="archive-canvas"
+            className={`archive-canvas ${sweeping ? "is-sweeping" : ""}`}
             onWheel={(event) => {
+              if (mode !== "canvas") return;
               event.preventDefault();
-              moveCanvas(-event.deltaX * 1.1, -event.deltaY * 1.1);
+              const position = positionRef.current;
+              positionRef.current = {
+                ...position,
+                targetX: position.targetX - event.deltaX,
+                targetY: position.targetY - event.deltaY,
+              };
+              animateWorld();
             }}
             onPointerDown={(event) => {
-              dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+              if (mode !== "canvas") return;
+              cancelAnimationFrame(frameRef.current);
+              const position = positionRef.current;
+              dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, startX: position.x, startY: position.y, moved: false };
+              event.currentTarget.classList.add("is-dragging");
               event.currentTarget.setPointerCapture(event.pointerId);
             }}
             onPointerMove={(event) => {
+              const cursor = cursorRef.current;
+              const viewport = viewportRef.current;
+              if (cursor && viewport) {
+                const bounds = viewport.getBoundingClientRect();
+                cursor.style.left = `${event.clientX - bounds.left}px`;
+                cursor.style.top = `${event.clientY - bounds.top}px`;
+                cursor.classList.toggle("is-visible", mode === "canvas" && Boolean((event.target as HTMLElement).closest(".archive-tile")) && !dragRef.current);
+              }
+
               const drag = dragRef.current;
               if (!drag || drag.pointerId !== event.pointerId) return;
-              moveCanvas(event.clientX - drag.x, event.clientY - drag.y);
-              dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+              const dx = event.clientX - drag.x;
+              const dy = event.clientY - drag.y;
+              if (Math.hypot(dx, dy) > 5) drag.moved = true;
+              applyWorld(drag.startX + dx, drag.startY + dy, drag.startX + dx, drag.startY + dy);
             }}
+            onPointerLeave={() => cursorRef.current?.classList.remove("is-visible")}
             onPointerUp={(event) => {
+              const drag = dragRef.current;
+              if (drag?.moved) lastDragEndRef.current = Date.now();
               dragRef.current = null;
-              event.currentTarget.releasePointerCapture(event.pointerId);
+              cursorRef.current?.classList.remove("is-visible");
+              event.currentTarget.classList.remove("is-dragging");
+              if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
             }}
-            onPointerCancel={() => {
+            onPointerCancel={(event) => {
               dragRef.current = null;
+              cursorRef.current?.classList.remove("is-visible");
+              event.currentTarget.classList.remove("is-dragging");
             }}
           >
             <div className="archive-world">
-              {canvasItems.map((item, index) => (
+              {cells.map((cell) => (
+                <div
+                  key={cell.id}
+                  className="archive-world-cell"
+                  style={{
+                    left: `${cell.column * 33.3333}%`,
+                    top: `${cell.row * 33.3333}%`,
+                  }}
+                >
+                  {tileLayout.map(([left, top, width, height], index) => {
+                    const item = media[index % media.length];
+                    return (
+                      <button
+                        key={`${cell.id}-${item.id}-${index}`}
+                        type="button"
+                        className="archive-tile"
+                        style={{
+                          "--left": `${left}%`,
+                          "--top": `${top}%`,
+                          "--width": `${width}%`,
+                          "--height": `${height}%`,
+                          "--tone": tones[active % tones.length],
+                          "--delay": `${index * 46}ms`,
+                        } as CSSProperties}
+                        onClick={() => openFocus(index)}
+                      >
+                        <img src={item.src} alt={item.alt ?? item.caption} />
+                        <em className="archive-color-wipe" />
+                        <span className="archive-corners" aria-hidden="true">
+                          <i className="tl" /><i className="tr" /><i className="bl" /><i className="br" />
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+            <div ref={cursorRef} className="archive-cursor-ring" aria-hidden="true" />
+          </div>
+
+          <div className="archive-focus-viewer">
+            <div className="archive-focus-wrap">
+              {selectedMedia && <img src={selectedMedia.src} alt={selectedMedia.alt ?? selectedMedia.caption} />}
+              <em className="archive-color-wipe" />
+              <div className="archive-focus-caption">
+                <span>{current.title}</span>
+                <span>{String((selected % media.length) + 1).padStart(2, "0")} / {String(media.length).padStart(2, "0")}</span>
+              </div>
+            </div>
+            <div className="archive-preview-rail">
+              {media.map((item, index) => (
                 <button
                   key={item.id}
                   type="button"
-                  className="archive-tile"
-                  style={{
-                    left: `${item.left}px`,
-                    top: `${item.top}px`,
-                    width: `${item.width}px`,
-                    "--tone": tones[index % tones.length],
-                    "--delay": `${(index % 6) * 90}ms`,
-                  } as CSSProperties}
+                  className={index === selected ? "is-active" : ""}
+                  onClick={() => setSelected(index)}
                 >
-                  {item.src ? <img src={item.src} alt={item.alt} /> : <span>Material en edición</span>}
-                  <em className="archive-color-wipe" />
+                  <img src={item.src} alt={item.alt ?? item.caption} />
                 </button>
               ))}
             </div>
+          </div>
+
+          <button type="button" className="archive-return-initial" onClick={returnToInitialCards}>
+            Volver a categorías
+          </button>
+
+          <div className="archive-band archive-band-bottom">
+            <span>{current.summary}</span>
+            <span>Rueda, arrastra o abre una imagen</span>
           </div>
         </div>
       )}

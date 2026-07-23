@@ -40,6 +40,13 @@ export function OriginJourney() {
               )}
             </div>
           ))}
+          <div className="journey-photo-strip" aria-hidden="true">
+            {documentaryStops.map((stage, index) => (
+              <span key={stage.id} className={active === index ? "is-active" : ""}>
+                {stage.coverImage ? <img src={stage.coverImage} alt="" /> : <i />}
+              </span>
+            ))}
+          </div>
           <div className="journey-counter"><span>0{active + 1}</span><i /><span>0{documentaryStops.length}</span></div>
         </div>
 

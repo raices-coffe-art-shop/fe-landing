@@ -1,5 +1,6 @@
 export const artShopSlides = [
   {
+    slug: "pintura-y-creacion",
     number: "01",
     eyebrow: "Pintura y creación",
     title: "La mirada de quien crea dentro del espacio.",
@@ -11,6 +12,7 @@ export const artShopSlides = [
     status: "editorial-reference",
   },
   {
+    slug: "retablo-y-memoria",
     number: "02",
     eyebrow: "Retablo y memoria",
     title: "Una historia que se abre en capas.",
@@ -22,6 +24,7 @@ export const artShopSlides = [
     status: "editorial-reference",
   },
   {
+    slug: "oficio-y-procedencia",
     number: "03",
     eyebrow: "Oficio y procedencia",
     title: "Los objetos también pueden decir quién los hizo.",
@@ -33,6 +36,7 @@ export const artShopSlides = [
     status: "editorial-reference",
   },
   {
+    slug: "piezas-por-fotografiar",
     number: "04",
     eyebrow: "Piezas por fotografiar",
     title: "Dos nuevas imágenes listas para reemplazar por material real.",

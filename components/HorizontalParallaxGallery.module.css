@@ -237,7 +237,7 @@
     overscroll-behavior-inline: contain;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    transform: none !important;
+    transform: none;
   }
 
   .track::-webkit-scrollbar { display: none; }
@@ -250,7 +250,7 @@
   .small {
     width: min(78vw, 340px);
     scroll-snap-align: center;
-    transform: none !important;
+    transform: none;
   }
 
   .endCard {
@@ -262,5 +262,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .track,
-  .card { transform: none !important; }
+  .card { transform: none; }
 }

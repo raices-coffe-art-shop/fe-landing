@@ -12,7 +12,9 @@ export function SocialPurposeSection() {
         </div>
         <div className="impact-list">
           <span>{impactVision.statusLabel}</span>
-          {impactVision.points.map((point) => <p key={point}>{point}</p>)}
+          {impactVision.points.map((point, index) => (
+            <p key={point}><i>{String(index + 1).padStart(2, "0")}</i>{point}</p>
+          ))}
         </div>
       </div>
     </section>

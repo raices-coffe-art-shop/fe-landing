@@ -241,11 +241,11 @@
     min-height: 100svh;
   }
 
-  .satellite { opacity: .8 !important; transform: none !important; }
-  .openingTitle { opacity: 0 !important; }
+  .satellite { opacity: .8; transform: none; }
+  .openingTitle { opacity: 0; }
   .centerImage {
-    width: min(360px, calc(100% - 48px)) !important;
-    height: min(460px, calc(100vh - 180px)) !important;
+    width: min(360px, calc(100% - 48px));
+    height: min(460px, calc(100vh - 180px));
   }
-  .finalCopy { opacity: 1 !important; transform: none !important; }
+  .finalCopy { opacity: 1; transform: none; }
 }

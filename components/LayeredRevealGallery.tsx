@@ -27,9 +27,27 @@ export function LayeredRevealGallery() {
     if (!section || !stage || !center) return;
 
     let frame = 0;
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const update = () => {
       frame = 0;
+      if (reducedQuery.matches) {
+        center.style.removeProperty("width");
+        center.style.removeProperty("height");
+        center.style.removeProperty("border-radius");
+        center.style.removeProperty("transform");
+        center.style.removeProperty("box-shadow");
+        stage.style.setProperty("--layer-title-opacity", "0");
+        stage.style.setProperty("--layer-title-y", "0px");
+        stage.style.setProperty("--layer-copy-opacity", "1");
+        stage.style.setProperty("--layer-copy-y", "0px");
+        stage.querySelectorAll<HTMLElement>("[data-satellite]").forEach((item) => {
+          item.style.removeProperty("opacity");
+          item.style.removeProperty("transform");
+        });
+        return;
+      }
+
       const rect = section.getBoundingClientRect();
       const distance = Math.max(1, section.offsetHeight - window.innerHeight);
       const progress = clamp(-rect.top / distance);
@@ -77,10 +95,12 @@ export function LayeredRevealGallery() {
     update();
     window.addEventListener("scroll", requestUpdate, { passive: true });
     window.addEventListener("resize", requestUpdate);
+    reducedQuery.addEventListener("change", requestUpdate);
 
     return () => {
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
+      reducedQuery.removeEventListener("change", requestUpdate);
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);
