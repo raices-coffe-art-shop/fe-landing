@@ -7374,6 +7374,33 @@ img { max-width: 100%; }
   pointer-events: none;
 }
 
+.lexicon-closing-logo {
+  z-index: 7;
+  grid-row: 2 / span 2;
+  grid-column: 2 / span 2;
+  place-self: center;
+  display: grid;
+  place-items: center;
+  width: clamp(92px, 12vw, 168px);
+  height: clamp(92px, 12vw, 168px);
+  opacity: 0;
+  filter: blur(5px);
+  transform: translate3d(0, 0, -1000px);
+  transform-style: preserve-3d;
+  animation: none;
+  pointer-events: none;
+}
+
+.lexicon-closing-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 18px;
+  background: rgba(246, 239, 227, .95);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .34);
+}
+
 .lexicon-editorial-copy {
   z-index: 6;
   pointer-events: none;
@@ -7420,6 +7447,11 @@ img { max-width: 100%; }
     font-size: clamp(5rem, 14vw, 9rem);
   }
 
+  .lexicon-closing-logo {
+    width: clamp(86px, 13vw, 136px);
+    height: clamp(86px, 13vw, 136px);
+  }
+
   .lexicon-grid-item.size-small b { font-size: clamp(.9rem, 2.1vmin, 1.25rem); }
   .lexicon-grid-item.size-medium b { font-size: clamp(1rem, 2.55vmin, 1.55rem); }
   .lexicon-grid-item.size-large b { font-size: clamp(1.2rem, 3.2vmin, 1.9rem); }
@@ -7429,6 +7461,15 @@ img { max-width: 100%; }
   .lexicon-special {
     font-size: clamp(3.4rem, 15.5vw, 5.4rem);
     letter-spacing: -.045em;
+  }
+
+  .lexicon-closing-logo {
+    width: clamp(78px, 24vw, 104px);
+    height: clamp(78px, 24vw, 104px);
+  }
+
+  .lexicon-closing-logo img {
+    border-radius: 14px;
   }
 
   .lexicon-grid-item small {

@@ -21,12 +21,20 @@ type LexiconWordAppearance = {
   tone: Tone;
 };
 
-type LexiconSpecial = {
-  id: "raices" | "huamanga" | "ayacucho";
-  label: string;
-  start: number;
-  end: number;
-};
+type LexiconClosingStep =
+  | {
+      id: "closing-raices" | "closing-huamanga" | "closing-ayacucho";
+      type: "text";
+      value: string;
+      start: number;
+      end: number;
+    }
+  | {
+      id: "closing-logo";
+      type: "logo";
+      start: number;
+      end: number;
+    };
 
 type AnimatedLexiconElement = {
   element: HTMLElement;
@@ -47,21 +55,22 @@ const cellSequence: Array<[LexiconWordAppearance["row"], LexiconWordAppearance["
 ];
 
 const rangeSequence: Array<[number, number]> = [
-  [0.04, 0.18], [0.11, 0.25], [0.18, 0.32], [0.25, 0.39],
-  [0.07, 0.21], [0.14, 0.28], [0.21, 0.35], [0.28, 0.42],
-  [0.35, 0.49], [0.42, 0.56], [0.49, 0.63], [0.56, 0.70],
-  [0.63, 0.77], [0.70, 0.84], [0.77, 0.91], [0.84, 0.98],
-  [0.32, 0.46], [0.39, 0.53], [0.46, 0.60], [0.53, 0.67],
-  [0.60, 0.74], [0.67, 0.81], [0.74, 0.88], [0.81, 0.95],
-  [0.16, 0.30], [0.23, 0.37], [0.30, 0.44], [0.37, 0.51],
-  [0.58, 0.72], [0.65, 0.79], [0.72, 0.86], [0.79, 0.93],
+  [0.04, 0.16], [0.10, 0.22], [0.16, 0.28], [0.22, 0.34],
+  [0.07, 0.19], [0.13, 0.25], [0.19, 0.31], [0.25, 0.37],
+  [0.31, 0.43], [0.37, 0.49], [0.43, 0.55], [0.49, 0.61],
+  [0.55, 0.67], [0.61, 0.73], [0.67, 0.79], [0.73, 0.85],
+  [0.28, 0.40], [0.34, 0.46], [0.40, 0.52], [0.46, 0.58],
+  [0.52, 0.64], [0.58, 0.70], [0.64, 0.76], [0.70, 0.82],
+  [0.14, 0.26], [0.20, 0.32], [0.26, 0.38], [0.32, 0.44],
+  [0.50, 0.62], [0.56, 0.68], [0.62, 0.74], [0.68, 0.80],
 ];
 
-const specialWords: LexiconSpecial[] = [
-  { id: "raices", label: "RAÍCES", start: 0.07, end: 0.30 },
-  { id: "huamanga", label: "HUAMANGA", start: 0.39, end: 0.63 },
-  { id: "ayacucho", label: "AYACUCHO", start: 0.72, end: 0.98 },
-];
+const closingSequence = [
+  { id: "closing-raices", type: "text", value: "RAÍCES", start: 0.08, end: 0.29 },
+  { id: "closing-huamanga", type: "text", value: "HUAMANGA", start: 0.37, end: 0.58 },
+  { id: "closing-ayacucho", type: "text", value: "AYACUCHO", start: 0.65, end: 0.83 },
+  { id: "closing-logo", type: "logo", start: 0.84, end: 1.00 },
+] satisfies LexiconClosingStep[];
 
 const quechuaToneCycle: Array<Pick<LexiconWordAppearance, "tone" | "size">> = [
   { tone: "clay", size: "large" },
@@ -118,6 +127,21 @@ function createDepthAnimation(element: HTMLElement, depth: number, blur: number)
   return animation;
 }
 
+function createLogoAnimation(element: HTMLElement) {
+  const animation = element.animate(
+    [
+      { transform: "translate3d(0, 14px, 0) scale(.94)", opacity: 0, filter: "blur(4px)" },
+      { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1, filter: "blur(0px)", offset: 0.5 },
+      { transform: "translate3d(0, -10px, 0) scale(.96)", opacity: 0, filter: "blur(5px)" },
+    ],
+    { duration: 1000, fill: "both", easing: "linear" }
+  );
+
+  animation.pause();
+  animation.currentTime = 0;
+  return animation;
+}
+
 export function AyacuchoLexicon() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -146,7 +170,9 @@ export function AyacuchoLexicon() {
       blurRef.current = blurForWidth(window.innerWidth);
       animatedRef.current = Array.from(stage.querySelectorAll<HTMLElement>("[data-lexicon-appearance]")).map((element) => ({
         element,
-        animation: createDepthAnimation(element, depthRef.current, blurRef.current),
+        animation: element.dataset.lexiconAppearance === "logo"
+          ? createLogoAnimation(element)
+          : createDepthAnimation(element, depthRef.current, blurRef.current),
         start: Number(element.dataset.start ?? 0),
         end: Number(element.dataset.end ?? 1),
       }));
@@ -312,7 +338,7 @@ export function AyacuchoLexicon() {
             return (
               <div
                 key={word.id}
-                data-lexicon-appearance
+                data-lexicon-appearance="word"
                 data-start={word.start}
                 data-end={word.end}
                 className={`lexicon-grid-item tone-${word.tone} size-${word.size}`}
@@ -324,15 +350,19 @@ export function AyacuchoLexicon() {
             );
           })}
 
-          {specialWords.map((word) => (
+          {closingSequence.map((step) => (
             <div
-              key={word.id}
-              data-lexicon-appearance
-              data-start={word.start}
-              data-end={word.end}
-              className={`lexicon-special lexicon-special-${word.id}`}
+              key={step.id}
+              data-lexicon-appearance={step.type}
+              data-start={step.start}
+              data-end={step.end}
+              className={step.type === "logo" ? "lexicon-closing-logo" : `lexicon-special lexicon-special-${step.id}`}
             >
-              {word.label}
+              {step.type === "logo" ? (
+                <img src="/raices-logo.png" alt="Raíces" width={168} height={168} />
+              ) : (
+                step.value
+              )}
             </div>
           ))}
         </div>
