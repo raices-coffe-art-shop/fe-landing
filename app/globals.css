@@ -31,6 +31,114 @@ a { color: inherit; text-decoration: none; }
 button, input { font: inherit; }
 img { max-width: 100%; }
 
+.raices-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--ink);
+  opacity: 1;
+  pointer-events: auto;
+  transition:
+    opacity 560ms cubic-bezier(.65, 0, .35, 1),
+    visibility 560ms cubic-bezier(.65, 0, .35, 1);
+}
+
+.raices-preloader.is-exiting {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.raices-preloader-bean {
+  width: clamp(32px, 3vw, 48px);
+  height: auto;
+  overflow: visible;
+  color: #e4bb72;
+  filter: drop-shadow(0 12px 32px rgba(0, 0, 0, .26));
+  transform-origin: center;
+  animation: raices-bean-breathe 2100ms cubic-bezier(.65, 0, .35, 1) 1500ms infinite;
+  transition:
+    opacity 560ms cubic-bezier(.65, 0, .35, 1),
+    transform 560ms cubic-bezier(.65, 0, .35, 1);
+}
+
+.raices-preloader.is-exiting .raices-preloader-bean {
+  opacity: 0;
+  transform: scale(.94);
+}
+
+.raices-preloader-bean-outline,
+.raices-preloader-bean-cleft,
+.raices-preloader-root {
+  stroke: currentColor;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.raices-preloader-bean-outline {
+  fill: rgba(228, 187, 114, 0);
+  animation:
+    raices-draw-path 860ms cubic-bezier(.65, 0, .35, 1) 100ms forwards,
+    raices-bean-glow 540ms cubic-bezier(.65, 0, .35, 1) 1120ms forwards;
+}
+
+.raices-preloader-bean-cleft {
+  stroke-width: 2.45;
+  animation: raices-draw-path 650ms cubic-bezier(.65, 0, .35, 1) 870ms forwards;
+}
+
+.raices-preloader-root {
+  stroke-width: 2.1;
+  opacity: .78;
+  animation: raices-draw-path 360ms cubic-bezier(.65, 0, .35, 1) 1320ms forwards;
+}
+
+@keyframes raices-draw-path {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes raices-bean-glow {
+  to { fill: rgba(228, 187, 114, .08); }
+}
+
+@keyframes raices-bean-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+@media (max-width: 760px) {
+  .raices-preloader-bean {
+    width: clamp(30px, 9vw, 40px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .raices-preloader,
+  .raices-preloader-bean {
+    transition-duration: 420ms;
+    animation: none;
+  }
+
+  .raices-preloader-bean-outline,
+  .raices-preloader-bean-cleft,
+  .raices-preloader-root {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+
+  .raices-preloader-bean-outline {
+    fill: rgba(228, 187, 114, .08);
+  }
+}
+
 .page-shell { width: min(1320px, calc(100% - 64px)); margin-inline: auto; }
 .eyebrow {
   margin: 0 0 18px;

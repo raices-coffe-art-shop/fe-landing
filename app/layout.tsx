@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RaicesPreloader } from "@/components/RaicesPreloader";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
@@ -28,6 +29,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body>
+        <noscript>
+          <style>{".raices-preloader{display:none!important}"}</style>
+        </noscript>
+        <RaicesPreloader />
         <SmoothScroll />
         {children}
       </body>
