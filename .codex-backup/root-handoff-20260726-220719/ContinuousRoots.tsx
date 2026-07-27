@@ -138,6 +138,7 @@ export function ContinuousRoots() {
         { x: width * (compact ? 0.31 : 0.35), y: origin.bottom - 12 },
         { x: width * (compact ? 0.6 : 0.67), y: lexicon.top + 6 },
       ];
+
       const continuationX = compact ? 0.885 : 0.905;
       const continuationInnerX = compact ? 0.84 : 0.865;
       const continuationAnchors: Point[] = [
@@ -325,13 +326,7 @@ export function ContinuousRoots() {
             return (
               <g key={`${path.kind}-${index}`} className={`continuous-root-segment is-${path.kind}`}>
                 <path className="continuous-root-shadow" d={path.d} pathLength="1" style={{ strokeDashoffset: 1 - local }} />
-                <path
-                  className="continuous-root-main"
-                  d={path.d}
-                  pathLength="1"
-                  data-root-handoff-connector={path.kind === "handoff" ? "previous-root-end" : undefined}
-                  style={{ strokeDashoffset: 1 - local }}
-                />
+                <path className="continuous-root-main" d={path.d} pathLength="1" style={{ strokeDashoffset: 1 - local }} />
               </g>
             );
           })}

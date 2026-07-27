@@ -26,11 +26,6 @@ type RootsCanvasProps = {
   showSeed?: boolean;
 };
 
-function cssPixel(element: HTMLElement, name: string) {
-  const value = Number.parseFloat(getComputedStyle(element).getPropertyValue(name));
-  return Number.isFinite(value) ? value : undefined;
-}
-
 export function RootsCanvas({ stage, progress, className = "", showSeed = false }: RootsCanvasProps) {
   const holderRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -54,13 +49,7 @@ export function RootsCanvas({ stage, progress, className = "", showSeed = false 
       frame = 0;
       const rect = holder.getBoundingClientRect();
       if (rect.width < 1 || rect.height < 1) return;
-      const nextLayout = getRootLayout(
-        rect.width,
-        rect.height,
-        stage,
-        stage === "lexicon" ? cssPixel(holder, "--root-handoff-x") : undefined,
-        stage === "lexicon" ? cssPixel(holder, "--root-handoff-y") : undefined,
-      );
+      const nextLayout = getRootLayout(rect.width, rect.height, stage);
       setLayout((current) => {
         if (
           current &&
@@ -80,12 +69,10 @@ export function RootsCanvas({ stage, progress, className = "", showSeed = false 
     const observer = new ResizeObserver(requestResize);
     observer.observe(holder);
     resize();
-    holder.addEventListener("root-handoff:change", requestResize);
     window.addEventListener("orientationchange", requestResize);
     window.visualViewport?.addEventListener("resize", requestResize);
     return () => {
       observer.disconnect();
-      holder.removeEventListener("root-handoff:change", requestResize);
       window.removeEventListener("orientationchange", requestResize);
       window.visualViewport?.removeEventListener("resize", requestResize);
       if (frame) cancelAnimationFrame(frame);

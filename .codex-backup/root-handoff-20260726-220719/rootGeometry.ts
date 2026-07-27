@@ -45,13 +45,13 @@ export function smoothstep(value: number) {
   return t * t * (3 - 2 * t);
 }
 
-export function getRootLayout(width: number, height: number, stage: RootStage, anchorX?: number, anchorY?: number): RootLayout {
+export function getRootLayout(width: number, height: number, stage: RootStage): RootLayout {
   const compact = width <= 760;
   const seedWidth = compact ? clampPixels(width * 0.15, 48, 62) : 76;
   const seedHeight = compact ? clampPixels(width * 0.21, 70, 88) : 106;
   const stageSeedTop = {
     origin: compact ? height * 0.68 : height * 0.55,
-    lexicon: -seedHeight,
+    lexicon: -seedHeight * 0.16,
     network: -seedHeight * 0.58,
     people: -seedHeight * 0.35,
     territory: -seedHeight * 0.3,
@@ -63,12 +63,8 @@ export function getRootLayout(width: number, height: number, stage: RootStage, a
     people: compact ? width * 0.52 : width * 0.46,
     territory: compact ? width * 0.48 : width * 0.42,
   } satisfies Record<RootStage, number>;
-  const seedTop = clampPixels(
-    stage === "lexicon" && anchorY !== undefined ? anchorY - seedHeight * 0.98 : stageSeedTop[stage],
-    stage === "lexicon" ? -seedHeight * 1.08 : -seedHeight,
-    height - seedHeight,
-  );
-  const originX = clampPixels(anchorX ?? stageOriginX[stage], 18, width - 18);
+  const seedTop = clampPixels(stageSeedTop[stage], -seedHeight, height - seedHeight);
+  const originX = clampPixels(stageOriginX[stage], 18, width - 18);
   const originY = seedTop + seedHeight * 0.98;
   const minX = compact ? 10 : -width * 0.08;
   const maxX = compact ? width - 10 : width * 1.08;

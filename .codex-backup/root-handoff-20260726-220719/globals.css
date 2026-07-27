@@ -7567,14 +7567,3 @@ img { max-width: 100%; }
     margin-top: 0;
   }
 }
-
-/* Surgical root handoff alignment between Nuestra historia and the dark lexicon. */
-.lexicon-root-layer {
-  top: 0;
-  transform: none;
-}
-
-.lexicon-root-layer .lexicon-roots {
-  top: 0;
-  mask-image: linear-gradient(180deg, #000 0%, #000 86%, transparent 100%);
-}

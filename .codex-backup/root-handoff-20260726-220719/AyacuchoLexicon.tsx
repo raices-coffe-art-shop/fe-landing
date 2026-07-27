@@ -170,7 +170,6 @@ export function AyacuchoLexicon() {
   const metricsRef = useRef({ distance: 1, stageHeight: 1 });
   const depthRef = useRef(1000);
   const blurRef = useRef(5);
-  const previousConnectorPathRef = useRef<SVGPathElement | null>(null);
 
   const secondaryWords = useMemo(() => wordAppearances, []);
 
@@ -180,8 +179,6 @@ export function AyacuchoLexicon() {
     if (!section || !stage) return;
 
     const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let measureRafA = 0;
-    let measureRafB = 0;
 
     const buildAnimations = () => {
       animatedRef.current.forEach(({ animation }) => animation.cancel());
@@ -195,53 +192,11 @@ export function AyacuchoLexicon() {
       }));
     };
 
-    const measureLexiconMetrics = () => {
+    const measure = () => {
       metricsRef.current = {
         stageHeight: stage.offsetHeight,
         distance: Math.max(1, section.offsetHeight - stage.offsetHeight),
       };
-    };
-
-    function measureRootHandoff() {
-      const connectorPath =
-        document.querySelector<SVGPathElement>('[data-root-handoff-connector="previous-root-end"]');
-      previousConnectorPathRef.current = connectorPath;
-
-      const stickyStage = stageRef.current;
-      if (!connectorPath || !stickyStage) return;
-
-      const svg = connectorPath.ownerSVGElement;
-      const ctm = connectorPath.getScreenCTM();
-      if (!svg || !ctm) return;
-
-      const totalLength = connectorPath.getTotalLength();
-      const localEndPoint = connectorPath.getPointAtLength(totalLength);
-      const svgPoint = svg.createSVGPoint();
-      svgPoint.x = localEndPoint.x;
-      svgPoint.y = localEndPoint.y;
-
-      const screenEndPoint = svgPoint.matrixTransform(ctm);
-      const stageRect = stickyStage.getBoundingClientRect();
-      const relativeX = screenEndPoint.x - stageRect.left;
-      const rawRelativeY = screenEndPoint.y - stageRect.top;
-      const relativeY = Math.min(8, Math.max(-4, rawRelativeY));
-      const safeX = Math.min(stageRect.width - 18, Math.max(18, relativeX));
-
-      stickyStage.style.setProperty("--root-handoff-x", `${safeX.toFixed(2)}px`);
-      stickyStage.style.setProperty("--root-handoff-y", `${relativeY.toFixed(2)}px`);
-      stickyStage.style.setProperty("--lexicon-root-x", `${safeX.toFixed(2)}px`);
-      stickyStage.querySelector<HTMLElement>(".lexicon-roots")?.dispatchEvent(new Event("root-handoff:change"));
-    }
-
-    const scheduleRootHandoffMeasurement = () => {
-      cancelAnimationFrame(measureRafA);
-      cancelAnimationFrame(measureRafB);
-
-      measureRafA = requestAnimationFrame(() => {
-        measureRafB = requestAnimationFrame(() => {
-          measureRootHandoff();
-        });
-      });
     };
 
     const update = () => {
@@ -270,8 +225,8 @@ export function AyacuchoLexicon() {
     };
 
     const onResize = () => {
-      measureLexiconMetrics();
-      scheduleRootHandoffMeasurement();
+      measure();
+      buildAnimations();
       requestUpdate();
     };
 
@@ -284,55 +239,24 @@ export function AyacuchoLexicon() {
       { rootMargin: "100% 0px 100% 0px" }
     );
 
-    const connectorContainer = document.querySelector<HTMLElement>(".continuous-root-trail");
-    const resizeObserver = new ResizeObserver(() => {
-      scheduleRootHandoffMeasurement();
-    });
-    resizeObserver.observe(stage);
-    if (connectorContainer) resizeObserver.observe(connectorContainer);
-
-    const mutationObserver = new MutationObserver(() => {
-      scheduleRootHandoffMeasurement();
-      const connectorSvg = previousConnectorPathRef.current?.ownerSVGElement;
-      if (connectorSvg) resizeObserver.observe(connectorSvg);
-    });
-    if (connectorContainer) mutationObserver.observe(connectorContainer, { childList: true, subtree: true });
-
-    const imageLoadCleanups: Array<() => void> = [];
-    document.querySelectorAll<HTMLImageElement>("img").forEach((image) => {
-      if (image.complete) return;
-      const onImageLoad = () => scheduleRootHandoffMeasurement();
-      image.addEventListener("load", onImageLoad, { once: true });
-      imageLoadCleanups.push(() => image.removeEventListener("load", onImageLoad));
-    });
-
-    measureLexiconMetrics();
+    measure();
     buildAnimations();
     observer.observe(section);
     activeRef.current = true;
-    scheduleRootHandoffMeasurement();
-    document.fonts?.ready.then(scheduleRootHandoffMeasurement).catch(() => undefined);
     update();
 
     window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", onResize, { passive: true });
-    window.addEventListener("orientationchange", onResize, { passive: true });
-    window.visualViewport?.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
     reducedQuery.addEventListener("change", requestUpdate);
 
     return () => {
       observer.disconnect();
-      resizeObserver.disconnect();
-      mutationObserver?.disconnect();
-      imageLoadCleanups.forEach((cleanup) => cleanup());
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("orientationchange", onResize);
-      window.visualViewport?.removeEventListener("resize", onResize);
       reducedQuery.removeEventListener("change", requestUpdate);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      cancelAnimationFrame(measureRafA);
-      cancelAnimationFrame(measureRafB);
       animatedRef.current.forEach(({ animation }) => animation.cancel());
     };
   }, []);
