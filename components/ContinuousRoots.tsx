@@ -19,6 +19,7 @@ type RootLayout = {
 };
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+const ACTIVE_TIP_VIEWPORT_RATIO = 0.52;
 
 function smoothstep(value: number) {
   const t = clamp(value);
@@ -227,14 +228,14 @@ export function ContinuousRoots() {
       setLayout({ width, height, seed, paths, branches });
 
       const absoluteTop = window.scrollY + parentRect.top;
-      start = absoluteTop + seed.y - window.innerHeight * 0.82;
-      end = absoluteTop + revealEndY - window.innerHeight * 0.92;
+      start = absoluteTop + seed.y - window.innerHeight * ACTIVE_TIP_VIEWPORT_RATIO;
+      end = absoluteTop + revealEndY - window.innerHeight * ACTIVE_TIP_VIEWPORT_RATIO;
       if (end <= start) end = start + 1;
     };
 
     const updateRaw = () => {
       const linear = clamp((window.scrollY - start) / Math.max(1, end - start));
-      rawProgressRef.current = reducedQuery.matches ? 1 : 1 - Math.pow(1 - linear, 1.12);
+      rawProgressRef.current = reducedQuery.matches ? 1 : linear;
     };
 
     const tick = () => {
