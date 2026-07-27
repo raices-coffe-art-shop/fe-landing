@@ -7,6 +7,10 @@ const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, v
 
 const heroImages = [
   {
+    src: "/hero-principal.png",
+    alt: "Francisco Arica y Lized en una zona de cultivo vinculada con Raíces",
+  },
+  {
     src: "/ayacucho-sacsamarca.jpg",
     alt: "Paisaje de Sacsamarca en Ayacucho",
   },
