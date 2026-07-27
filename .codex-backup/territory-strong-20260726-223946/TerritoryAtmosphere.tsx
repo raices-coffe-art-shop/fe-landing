@@ -7,21 +7,18 @@ const territoryModules = [
     id: "procedencia",
     title: "Procedencia",
     description: "Cada producto debe mostrar el lugar del que viene, la persona o familia vinculada y la forma en que fue elaborado.",
-    note: "Lugar + proceso",
     icon: "seed",
   },
   {
     id: "relacion-directa",
     title: "Relación directa",
     description: "Las visitas y conversaciones permiten comprender los procesos sin reducirlos a una relación puramente comercial.",
-    note: "Confianza real",
     icon: "hands",
   },
   {
     id: "ayacucho-en-lima",
     title: "Ayacucho en Lima",
     description: "El local reúne sabores, obras e historias de Ayacucho para compartirlos sin separarlos de su origen.",
-    note: "Origen compartido",
     icon: "mountain",
   },
 ];
@@ -82,18 +79,11 @@ export function TerritoryAtmosphere() {
         <span>ENCUENTRO</span>
       </div>
       <div className="territory-modules" aria-label="Capas editables del territorio">
-        {territoryModules.map((item, index) => (
+        {territoryModules.map((item) => (
           <article key={item.id} className="territory-module">
-            <div className="territory-module-top">
-              <span>0{index + 1}</span>
-              <i />
-            </div>
-            <div className="territory-module-icon">
-              <TerritoryIcon icon={item.icon} />
-            </div>
+            <TerritoryIcon icon={item.icon} />
             <h3>{item.title}</h3>
             <p>{item.description}</p>
-            <small>{item.note}</small>
           </article>
         ))}
       </div>

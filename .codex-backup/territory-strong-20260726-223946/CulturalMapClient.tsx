@@ -8,15 +8,11 @@ const mapPoints = [
     id: "origen",
     title: "Ayacucho",
     description: "Origen de productos, personas, lengua, alimentos, arte e historias vinculadas con Raíces.",
-    tags: ["procedencia", "lengua", "oficios"],
-    coordinate: "13.1639 S / 74.2241 O",
   },
   {
     id: "encuentro",
     title: "Lima",
     description: "Lugar de encuentro donde los productos, obras y relatos se comparten dentro del espacio.",
-    tags: ["encuentro", "mesa", "ciudad"],
-    coordinate: "12.0464 S / 77.0428 O",
   },
 ];
 
@@ -35,7 +31,7 @@ export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
       <div className="map-narrative-heading">
         <p className="eyebrow">Del origen al encuentro</p>
         <h3>De {documentaryRoute.origin} a {documentaryRoute.encounter}: el recorrido detrás de lo que llega a Raíces.</h3>
-        <p>Un mapa para leer procedencia, viaje y encuentro como parte de una misma historia.</p>
+        <p>Cada producto comienza en un lugar concreto y llega al local a través de personas, viajes y relaciones reales. Este mapa conecta el territorio donde nace con el espacio donde finalmente se comparte.</p>
       </div>
 
       <div className="cultural-map-body">
@@ -110,15 +106,7 @@ export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
             <span>{activePoint.title}</span>
             <b>0{mapPoints.findIndex((point) => point.id === activePoint.id) + 1}</b>
           </div>
-          <div className="map-caption-meta">
-            <span>{activePoint.coordinate}</span>
-            <i />
-            <span>{activePoint.id === "origen" ? "Origen" : "Encuentro"}</span>
-          </div>
           <p>{activePoint.description}</p>
-          <div className="map-caption-tags" aria-label="Claves del territorio seleccionado">
-            {activePoint.tags.map((tag) => <span key={tag}>{tag}</span>)}
-          </div>
           <div className="map-caption-route" aria-hidden="true"><i /><span /><i /></div>
           <div className="map-legend" aria-label="Leyenda del mapa">
             <span><i className="legend-dot ayacucho" />Origen</span>

@@ -44,15 +44,11 @@ export default function HomePage() {
                   <i />
                 </div>
                 <p className="eyebrow">Ayacucho presente en Lima</p>
-                <h2>Ayacucho no está aquí como decoración. Es origen vivo dentro de Raíces.</h2>
+                <h2>Ayacucho no está aquí como decoración. Está en el origen de lo que servimos, en las historias que contamos y en las relaciones que cuidamos.</h2>
               </div>
               <div className="territory-text" aria-label="Territorio como origen vivo">
-                <p>Todo lo que llega al local debe poder responder de dónde viene, quién lo hizo y qué relación sostiene su proceso.</p>
-                <ul className="territory-highlights">
-                  <li><b>Procedencia</b><span>lugares, cultivos y oficios reconocibles.</span></li>
-                  <li><b>Memoria</b><span>lengua, recetas y relatos que no se separan del producto.</span></li>
-                  <li><b>Encuentro</b><span>Lima como mesa donde Ayacucho se comparte sin perder origen.</span></li>
-                </ul>
+                <p>Raíces busca que cada producto pueda responder tres preguntas: de dónde viene, quién lo hizo y qué proceso existe detrás. Por eso el territorio no se reduce a una fotografía; aparece en la lengua, los cultivos, las recetas, los oficios y las personas.</p>
+                <p>Lima es el lugar donde esas historias se encuentran y se comparten. Ayacucho continúa siendo el origen.</p>
               </div>
               <TerritoryAtmosphere />
               <CulturalMap />

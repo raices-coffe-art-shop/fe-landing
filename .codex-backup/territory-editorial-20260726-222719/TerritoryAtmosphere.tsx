@@ -7,21 +7,18 @@ const territoryModules = [
     id: "procedencia",
     title: "Procedencia",
     description: "Cada producto debe mostrar el lugar del que viene, la persona o familia vinculada y la forma en que fue elaborado.",
-    note: "Lugar + proceso",
     icon: "seed",
   },
   {
     id: "relacion-directa",
     title: "Relación directa",
     description: "Las visitas y conversaciones permiten comprender los procesos sin reducirlos a una relación puramente comercial.",
-    note: "Confianza real",
     icon: "hands",
   },
   {
     id: "ayacucho-en-lima",
     title: "Ayacucho en Lima",
     description: "El local reúne sabores, obras e historias de Ayacucho para compartirlos sin separarlos de su origen.",
-    note: "Origen compartido",
     icon: "mountain",
   },
 ];
@@ -73,8 +70,12 @@ export function TerritoryAtmosphere() {
 
   return (
     <div ref={rootRef} className="territory-atmosphere">
-      <svg className="territory-contours" viewBox="0 0 180 640" preserveAspectRatio="none" aria-hidden="true">
-        <path className="territory-route-line" d="M 118 -18 C 120 132, 108 238, 113 356 C 117 470, 104 552, 91 664" />
+      <svg className="territory-contours" viewBox="0 0 960 360" aria-hidden="true">
+        <path d="M-30 252C126 184 186 314 322 238c124-70 156-166 320-126 132 32 196 3 348-84" />
+        <path d="M-18 298C116 236 206 332 342 270c142-64 167-158 310-120 133 35 202 15 332-48" />
+        <path d="M18 174C154 112 247 225 374 166c132-61 164-130 284-102 142 33 202-4 284-43" />
+        <path d="M54 105c122-47 214 42 327-6 111-48 168-88 270-62 109 28 178 8 247-24" />
+        <path d="M-10 66C94 24 194 68 288 38c97-31 181-42 278-14 118 34 226 10 348-42" />
       </svg>
       <div className="territory-coordinate" aria-hidden="true">
         <span>ORIGEN</span>
@@ -82,18 +83,11 @@ export function TerritoryAtmosphere() {
         <span>ENCUENTRO</span>
       </div>
       <div className="territory-modules" aria-label="Capas editables del territorio">
-        {territoryModules.map((item, index) => (
+        {territoryModules.map((item) => (
           <article key={item.id} className="territory-module">
-            <div className="territory-module-top">
-              <span>0{index + 1}</span>
-              <i />
-            </div>
-            <div className="territory-module-icon">
-              <TerritoryIcon icon={item.icon} />
-            </div>
+            <TerritoryIcon icon={item.icon} />
             <h3>{item.title}</h3>
             <p>{item.description}</p>
-            <small>{item.note}</small>
           </article>
         ))}
       </div>
