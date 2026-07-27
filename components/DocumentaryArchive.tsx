@@ -30,10 +30,6 @@ export function DocumentaryArchive() {
   const [selected, setSelected] = useState(0);
   const [sweeping, setSweeping] = useState(false);
   const [slideDirection, setSlideDirection] = useState<"next" | "prev">("next");
-  const [mobileActive, setMobileActive] = useState(0);
-  const [mobileEnabled, setMobileEnabled] = useState(false);
-  const mobileStoryRef = useRef<HTMLDivElement>(null);
-  const mobileEnabledRef = useRef(false);
   const viewportRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef(0);
@@ -43,7 +39,7 @@ export function DocumentaryArchive() {
   const current = archiveCategories[active] ?? archiveCategories[0];
   const media = current.media;
   const selectedMedia = media[selected % media.length] ?? media[0];
-  const mobileCurrent = archiveCategories[mobileActive] ?? archiveCategories[0];
+  const mobileCurrent = archiveCategories[0];
 
   const cells = useMemo(() => {
     return Array.from({ length: 9 }, (_, cellIndex) => ({
@@ -184,71 +180,6 @@ export function DocumentaryArchive() {
     return () => window.removeEventListener("resize", onResize);
   }, [mode]);
 
-  useEffect(() => {
-    const story = mobileStoryRef.current;
-    if (!story) return;
-    const mobileQuery = window.matchMedia("(max-width: 760px)");
-    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let frame = 0;
-    let loopFrame = 0;
-
-    const update = () => {
-      frame = 0;
-      const isMobile = mobileQuery.matches;
-      if (mobileEnabledRef.current !== isMobile) {
-        mobileEnabledRef.current = isMobile;
-        setMobileEnabled(isMobile);
-      }
-      if (!isMobile || reducedQuery.matches) return;
-      const rect = story.getBoundingClientRect();
-      const distance = Math.max(1, story.offsetHeight - window.innerHeight);
-      const progress = Math.min(1, Math.max(0, -rect.top / distance));
-      const nextActive = Math.min(archiveCategories.length - 1, Math.floor(progress * archiveCategories.length));
-      story.style.setProperty("--archive-mobile-progress", progress.toFixed(4));
-      setMobileActive((currentIndex) => currentIndex === nextActive ? currentIndex : nextActive);
-    };
-
-    const requestUpdate = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-
-    const startLoop = () => {
-      cancelAnimationFrame(loopFrame);
-      const tick = () => {
-        update();
-        if (mobileQuery.matches && !reducedQuery.matches) {
-          loopFrame = requestAnimationFrame(tick);
-        }
-      };
-      loopFrame = requestAnimationFrame(tick);
-    };
-
-    const syncMobile = () => {
-      if (mobileEnabledRef.current !== mobileQuery.matches) {
-        mobileEnabledRef.current = mobileQuery.matches;
-        setMobileEnabled(mobileQuery.matches);
-      }
-      requestUpdate();
-      if (mobileQuery.matches && !reducedQuery.matches) startLoop();
-      else cancelAnimationFrame(loopFrame);
-    };
-
-    syncMobile();
-    update();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
-    mobileQuery.addEventListener("change", syncMobile);
-    reducedQuery.addEventListener("change", syncMobile);
-    return () => {
-      window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
-      mobileQuery.removeEventListener("change", syncMobile);
-      reducedQuery.removeEventListener("change", syncMobile);
-      if (frame) cancelAnimationFrame(frame);
-      if (loopFrame) cancelAnimationFrame(loopFrame);
-    };
-  }, []);
-
   return (
     <section className="documentary-archive-section" id="archivo">
       <div className="page-shell documentary-archive-heading">
@@ -304,11 +235,7 @@ export function DocumentaryArchive() {
         </div>
       </div>
 
-      <div
-        ref={mobileStoryRef}
-        className="archive-mobile-story"
-        style={{ "--archive-mobile-scroll": `${archiveCategories.length * 68}svh` } as CSSProperties}
-      >
+      <div className="archive-mobile-story">
         <div className="archive-mobile-sticky">
           <div className="archive-mobile-visual">
             {archiveCategories.map((category, index) => {
@@ -316,19 +243,19 @@ export function DocumentaryArchive() {
               return item?.src ? (
                 <img
                   key={category.id}
-                  className={index === mobileActive ? "is-active" : ""}
-                  src={mobileEnabled ? item.src : undefined}
+                  className={index === 0 ? "is-active" : ""}
+                  src={item.src}
                   alt={item.alt ?? category.title}
                   loading={index === 0 ? "eager" : "lazy"}
                   decoding="async"
                 />
               ) : (
-                <span key={category.id} className={index === mobileActive ? "is-active" : ""}>{category.title}</span>
+                <span key={category.id} className={index === 0 ? "is-active" : ""}>{category.title}</span>
               );
             })}
             <div className="archive-mobile-visual-shade" aria-hidden="true" />
             <div className="archive-mobile-counter" aria-hidden="true">
-              <b>{String(mobileActive + 1).padStart(2, "0")}</b>
+              <b>01</b>
               <span>/ {String(archiveCategories.length).padStart(2, "0")}</span>
             </div>
           </div>
@@ -354,13 +281,13 @@ export function DocumentaryArchive() {
           {archiveCategories.map((category) => {
             const item = category.media[0];
             return (
-              <article key={category.id}>
-                {item?.src && <img src={mobileEnabled ? item.src : undefined} alt={item.alt ?? category.title} loading="lazy" decoding="async" />}
+              <Link key={category.id} className="archive-mobile-card" href={`/archivo/${category.id}`}>
+                {item?.src && <img src={item.src} alt={item.alt ?? category.title} loading="lazy" decoding="async" />}
                 <span>Archivo de origen</span>
                 <h3>{category.title}</h3>
                 <p>{category.summary}</p>
-                <Link href={`/archivo/${category.id}`}>Ver archivo ↗</Link>
-              </article>
+                <strong>Ver archivo ↗</strong>
+              </Link>
             );
           })}
         </div>
