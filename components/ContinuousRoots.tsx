@@ -115,29 +115,43 @@ export function ContinuousRoots() {
 
       if (!origin || !lexicon || !people || !territory || !archive || !visit) return;
 
-      const seed = photo
+      const lexiconFirst = lexicon.top < origin.top;
+      const seed = lexiconFirst
         ? {
-            x: compact ? 26 : clamp(photo.left - 58, width * 0.075, width * 0.22),
-            y: photo.top + Math.min(compact ? 62 : 74, photo.height * 0.18),
+            x: width * (compact ? 0.48 : 0.66),
+            y: Math.max(lexicon.top + 8, lexicon.top + window.innerHeight * 0.08),
           }
-        : { x: width * (compact ? 0.12 : 0.16), y: origin.top + origin.height * 0.62 };
+        : photo
+          ? {
+              x: compact ? 26 : clamp(photo.left - 58, width * 0.075, width * 0.22),
+              y: photo.top + Math.min(compact ? 62 : 74, photo.height * 0.18),
+            }
+          : { x: width * (compact ? 0.12 : 0.16), y: origin.top + origin.height * 0.62 };
 
       const revealEndY = Math.max(seed.y + 1, Math.min(visit.top + visit.height * 0.28, height - 16));
       const ratioAt = (y: number) => clamp((y - seed.y) / Math.max(1, revealEndY - seed.y));
 
-      const originPathPoints: Point[] = [
-        seed,
-        { x: seed.x - (compact ? 3 : 7), y: seed.y + (compact ? 82 : 104) },
-        { x: width * (compact ? 0.095 : 0.145), y: origin.bottom - (compact ? 205 : 225) },
-        { x: width * (compact ? 0.085 : 0.13), y: origin.bottom - (compact ? 96 : 112) },
-        { x: width * (compact ? 0.1 : 0.145), y: origin.bottom - 32 },
-      ];
+      const originPathPoints: Point[] = lexiconFirst
+        ? [
+            seed,
+            { x: width * (compact ? 0.58 : 0.72), y: lexicon.top + lexicon.height * 0.22 },
+            { x: width * (compact ? 0.75 : 0.79), y: lexicon.bottom - 10 },
+          ]
+        : [
+            seed,
+            { x: seed.x - (compact ? 3 : 7), y: seed.y + (compact ? 82 : 104) },
+            { x: width * (compact ? 0.095 : 0.145), y: origin.bottom - (compact ? 205 : 225) },
+            { x: width * (compact ? 0.085 : 0.13), y: origin.bottom - (compact ? 96 : 112) },
+            { x: width * (compact ? 0.1 : 0.145), y: origin.bottom - 32 },
+          ];
 
-      const handoffPathPoints: Point[] = [
-        originPathPoints[originPathPoints.length - 1],
-        { x: width * (compact ? 0.31 : 0.35), y: origin.bottom - 12 },
-        { x: width * (compact ? 0.6 : 0.67), y: lexicon.top + 6 },
-      ];
+      const handoffPathPoints: Point[] = lexiconFirst
+        ? []
+        : [
+            originPathPoints[originPathPoints.length - 1],
+            { x: width * (compact ? 0.31 : 0.35), y: origin.bottom - 12 },
+            { x: width * (compact ? 0.6 : 0.67), y: lexicon.top + 6 },
+          ];
       const continuationX = compact ? 0.885 : 0.905;
       const continuationInnerX = continuationX;
       const continuationAnchors: Point[] = [
@@ -187,10 +201,14 @@ export function ContinuousRoots() {
         });
       }
 
-      const originEnd = ratioAt(origin.bottom - 32);
+      const originEnd = ratioAt(lexiconFirst ? lexicon.bottom - 10 : origin.bottom - 32);
       const paths: RootPath[] = [
         { d: catmullRomPath(originPathPoints), start: 0, end: originEnd, kind: "origin" },
-        { d: catmullRomPath(handoffPathPoints), start: Math.max(0, originEnd - 0.004), end: ratioAt(lexicon.top + 6), kind: "handoff" },
+        ...(
+          lexiconFirst
+            ? []
+            : [{ d: catmullRomPath(handoffPathPoints), start: Math.max(0, originEnd - 0.004), end: ratioAt(lexicon.top + 6), kind: "handoff" } satisfies RootPath]
+        ),
         ...continuationSegments,
       ];
 
@@ -212,8 +230,10 @@ export function ContinuousRoots() {
         });
       };
 
-      addBranch(originPathPoints[1], compact ? 0.035 : 0.075, compact ? 92 : 126, 1.9, 0.62, "origin");
-      addBranch(originPathPoints[2], compact ? 0.18 : 0.225, compact ? 84 : 118, 1.55, 0.48, "origin");
+      if (!lexiconFirst) {
+        addBranch(originPathPoints[1], compact ? 0.035 : 0.075, compact ? 92 : 126, 1.9, 0.62, "origin");
+        addBranch(originPathPoints[2], compact ? 0.18 : 0.225, compact ? 84 : 118, 1.55, 0.48, "origin");
+      }
       if (journey) {
         addBranch({ x: width * continuationX, y: journey.top + 24 }, compact ? 0.79 : 0.85, compact ? 124 : 188, 1.45, 0.32, "continuation");
       }

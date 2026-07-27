@@ -24,9 +24,9 @@ export default function HomePage() {
         <div className="narrative-wrap">
           <ContinuousRoots />
 
-          <HumanOriginSection />
           <AyacuchoLexicon />
           <PeopleStack />
+          <HumanOriginSection />
 
           <section className="territory-section" id="territorio">
             <div className="territory-photo">
