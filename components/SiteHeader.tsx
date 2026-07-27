@@ -18,27 +18,24 @@ type WindowWithLenis = Window & {
 
 const desktopLinks: NavLink[] = [
   { label: "Inicio", href: "/#inicio", icon: "home" },
-  { label: "Historia", href: "/#historia", icon: "story" },
+  { label: "Nuestra historia", href: "/#historia", icon: "story" },
   { label: "Personas", href: "/#personas", icon: "people" },
   { label: "Territorio", href: "/#territorio", icon: "territory" },
-  { label: "Archivo", href: "/#archivo", icon: "story" },
-  { label: "Arte", href: "/#arte", icon: "art" },
-  { label: "Catálogo", href: "/#catalogo", icon: "catalog" },
-  { label: "Visítanos", href: "/#visita", icon: "visit" },
-  { label: "Enlaces", href: "/links", icon: "links" }
+  { label: "Arte", href: "/arte", icon: "art" },
+  { label: "Catálogo", href: "/catalogo", icon: "catalog" },
+  { label: "Comunidad", href: "/#comunidad", icon: "people" },
+  { label: "Visítanos", href: "/#visita", icon: "visit" }
 ];
 
 const mobileLinks: NavLink[] = [
   { label: "Inicio", href: "/#inicio", icon: "home" },
-  { label: "Historia", href: "/#historia", icon: "story" },
-  { label: "Raíces vivas", href: "/#raices-vivas", icon: "story" },
+  { label: "Nuestra historia", href: "/#historia", icon: "story" },
   { label: "Personas", href: "/#personas", icon: "people" },
   { label: "Territorio", href: "/#territorio", icon: "territory" },
-  { label: "Archivo documental", href: "/#archivo", icon: "story" },
-  { label: "Arte", href: "/#arte", icon: "art" },
-  { label: "Catálogo", href: "/#catalogo", icon: "catalog" },
-  { label: "Visítanos", href: "/#visita", icon: "visit" },
-  { label: "Enlaces", href: "/links", icon: "links" }
+  { label: "Arte", href: "/arte", icon: "art" },
+  { label: "Catálogo", href: "/catalogo", icon: "catalog" },
+  { label: "Comunidad", href: "/#comunidad", icon: "people" },
+  { label: "Visítanos", href: "/#visita", icon: "visit" }
 ];
 
 function NavSvg({ icon }: { icon: NavIcon }) {
@@ -184,7 +181,7 @@ export function SiteHeader() {
       <div className="header-inner">
         <Link href="/" className="brand" aria-label="Raíces, inicio">
           <img className="brand-logo" src="/raices-logo.png" alt="" width={52} height={52} />
-          <span className="brand-tag">Café y Cultura</span>
+          <span className="brand-tag">Café y cultura</span>
         </Link>
 
         <nav className="desktop-nav" aria-label="Navegación principal">

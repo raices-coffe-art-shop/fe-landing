@@ -5,7 +5,7 @@ import { products } from "@/data/site";
 import { contactChannels } from "@/data/social";
 import { EditorialImage } from "./EditorialImage";
 
-const filters = ["Todo", "Café", "Miel", "Cacao", "Quesos", "Arte", "Regalos"];
+const filters = ["Todo", "Café y cacao", "Alimentos", "Arte"];
 
 export function CatalogPreview() {
   const [filter, setFilter] = useState("Todo");
@@ -16,9 +16,9 @@ export function CatalogPreview() {
       <div className="catalog-title page-shell">
         <div>
           <p className="eyebrow">Catálogo visual</p>
-          <h2>Productos con procedencia.</h2>
+          <h2>Productos con nombre, procedencia y una historia detrás.</h2>
         </div>
-        <p>No es un e-commerce todavía. Es una selección que permite descubrir el origen y luego consultar por WhatsApp.</p>
+        <p>Explora cafés, alimentos, postres, pinturas y piezas seleccionadas. Cada ficha indica qué es, de dónde viene, quién está relacionado con su elaboración y cómo puedes conseguirlo.</p>
       </div>
 
       <div className="catalog-filters page-shell" role="group" aria-label="Filtrar productos">
@@ -37,11 +37,14 @@ export function CatalogPreview() {
               <span className="product-number">0{index + 1}</span>
             </div>
             <div className="product-copy">
-              <div><span>{product.category}</span><span>{product.region}</span></div>
+              <div><span>{product.category}</span><span>{product.procedencia}</span></div>
               <h3>{product.name}</h3>
               <p>{product.note}</p>
               <a href={`${contactChannels.whatsappHref}?text=${encodeURIComponent(`Hola, quisiera consultar por ${product.name}.`)}`} target="_blank" rel="noreferrer">
                 Consultar <span>↗</span>
+              </a>
+              <a href={`/catalogo/${product.slug}`}>
+                Ver ficha <span>↗</span>
               </a>
             </div>
           </article>

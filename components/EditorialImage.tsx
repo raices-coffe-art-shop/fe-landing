@@ -26,7 +26,7 @@ export function EditorialImage({ src, alt, className = "", position = "center", 
         />
       )}
       <span className="image-grain" aria-hidden="true" />
-      {failed && <span className="fallback-label">Fotografía por incorporar</span>}
+      {failed && <span className="fallback-label">Imagen no disponible</span>}
     </div>
   );
 }

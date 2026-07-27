@@ -30,12 +30,17 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
               <blockquote>{person.quote}</blockquote>
             </div>
             <div className="large-portrait">
-              <span className="portrait-sun" />
-              <span className="portrait-mountain one" />
-              <span className="portrait-mountain two" />
-              <span className="portrait-body" />
-              <strong>{person.initials}</strong>
-              <small>Retrato documental pendiente</small>
+              {person.portraitGallery?.[0]?.src ? (
+                <img src={person.portraitGallery[0].src} alt={person.portraitGallery[0].alt} />
+              ) : (
+                <>
+                  <span className="portrait-sun" />
+                  <span className="portrait-mountain one" />
+                  <span className="portrait-mountain two" />
+                  <span className="portrait-body" />
+                  <strong>{person.initials}</strong>
+                </>
+              )}
             </div>
           </div>
         </section>
@@ -48,29 +53,25 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
                 <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>
               ))}
             </dl>
-            <div className={`editorial-status ${person.status}`}>
-              {person.status === "documentada" ? "Base verificada; entrevista y material visual pendientes." : "Contenido reservado hasta completar entrevista y autorización."}
-            </div>
-            <div className="editorial-status">
-              Entrevista: {person.interviewStatus === "published" ? "publicada" : person.interviewStatus === "edited" ? "en edición" : person.interviewStatus === "recorded" ? "registrada" : "pendiente"}.
-              Audio, video, transcripción y galería se añadirán solo con autorización.
-            </div>
           </aside>
 
           <article>
             <p className="lead-story">{person.summary}</p>
             {person.story.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             <div className="story-principle">
-              <span>Principio editorial</span>
-              <p>No inventamos detalles para completar una página. La historia crecerá con la voz y autorización de su protagonista.</p>
+              <span>Relación con Raíces</span>
+              <p>Esta historia se publica con información reconocida por el proyecto y puede ampliarse con nuevos registros autorizados.</p>
             </div>
           </article>
         </section>
 
         <section className="person-gallery page-shell">
-          <div className="gallery-placeholder wide"><span>01</span><p>Retrato en su entorno</p></div>
-          <div className="gallery-placeholder"><span>02</span><p>Manos y proceso</p></div>
-          <div className="gallery-placeholder"><span>03</span><p>Territorio de origen</p></div>
+          {(person.portraitGallery ?? []).map((photo, index) => (
+            <figure key={photo.src} className={index === 0 ? "gallery-placeholder wide" : "gallery-placeholder"}>
+              <img src={photo.src} alt={photo.alt} />
+              <figcaption>{String(index + 1).padStart(2, "0")}</figcaption>
+            </figure>
+          ))}
         </section>
 
         <section className="next-story">

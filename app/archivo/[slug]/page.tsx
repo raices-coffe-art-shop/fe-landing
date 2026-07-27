@@ -15,7 +15,7 @@ export default async function ArchiveCategoryPage({ params }: { params: Promise<
   if (!category) notFound();
 
   const nextCategory = archiveCategories[(index + 1) % archiveCategories.length];
-  const statusLabel = category.status === "confirmed" ? "Material disponible" : "Material por completar";
+  const statusLabel = "Archivo de origen";
 
   return (
     <>
@@ -25,17 +25,13 @@ export default async function ArchiveCategoryPage({ params }: { params: Promise<
           <div className="detail-hero-pattern" aria-hidden="true" />
           <div className="page-shell detail-hero-grid">
             <div>
-              <Link href="/#archivo" className="back-link">← Volver al archivo</Link>
+              <Link href="/#archivo" className="back-link">← Volver al archivo de origen</Link>
               <p className="eyebrow light">{statusLabel}</p>
               <h1>{category.title}</h1>
               <p className="detail-lead">{category.summary}</p>
             </div>
             <div className="detail-media-stack">
-              {category.media[0]?.src ? (
-                <img src={category.media[0].src} alt={category.media[0].alt ?? category.title} />
-              ) : (
-                <span>Material en edición</span>
-              )}
+              {category.media[0]?.src && <img src={category.media[0].src} alt={category.media[0].alt ?? category.title} />}
             </div>
           </div>
         </section>
@@ -45,32 +41,30 @@ export default async function ArchiveCategoryPage({ params }: { params: Promise<
             <p className="eyebrow">Ficha documental</p>
             <dl>
               <div><dt>Categoría</dt><dd>{category.title}</dd></div>
-              <div><dt>Estado</dt><dd>{statusLabel}</dd></div>
-              <div><dt>Fotografías</dt><dd>{category.media.length ? `${category.media.length} registradas` : "Pendientes"}</dd></div>
+              <div><dt>Registro</dt><dd>{statusLabel}</dd></div>
+              <div><dt>Fotografías</dt><dd>{category.media.length} registradas</dd></div>
             </dl>
           </aside>
           <article>
-            <p>Esta página reúne el material documental asociado a {category.title.toLowerCase()} y deja claro qué está disponible y qué todavía debe completarse con fotografías, entrevistas o autorización.</p>
-            <p>Cuando el archivo crezca, este espacio podrá alojar notas de campo, pies de foto, rutas de procedencia y vínculos con personas o productos relacionados.</p>
+            <p>Esta página reúne material visual asociado a {category.title.toLowerCase()} dentro del recorrido de Raíces.</p>
+            <p>El archivo puede alojar notas de campo, pies de foto, rutas de procedencia y vínculos con personas o productos relacionados.</p>
           </article>
         </section>
 
         <section className="page-shell detail-gallery">
-          {category.media.length ? category.media.map((media, mediaIndex) => (
+          {category.media.map((media, mediaIndex) => (
             <figure key={media.id}>
               <img src={media.src} alt={media.alt ?? media.caption} />
               <figcaption><span>{String(mediaIndex + 1).padStart(2, "0")}</span>{media.caption}</figcaption>
             </figure>
-          )) : (
-            <div className="detail-placeholder">Fotografías por incorporar</div>
-          )}
+          ))}
         </section>
 
         <section className="next-story">
           <div className="page-shell">
             <p>Siguiente archivo</p>
             <Link href={`/archivo/${nextCategory.id}`}>
-              <span>Archivo documental</span>
+              <span>Archivo de origen</span>
               <h2>{nextCategory.title}</h2>
               <i>↗</i>
             </Link>

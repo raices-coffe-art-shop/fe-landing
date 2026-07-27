@@ -15,7 +15,7 @@ export default async function ArtShopPage({ params }: { params: Promise<{ slug: 
   if (!item) notFound();
 
   const nextItem = artShopSlides[(index + 1) % artShopSlides.length];
-  const statusLabel = item.status === "pending" ? "Piezas por fotografiar" : "Referencia editorial";
+  const statusLabel = item.eyebrow;
 
   return (
     <>
@@ -25,14 +25,14 @@ export default async function ArtShopPage({ params }: { params: Promise<{ slug: 
           <div className="detail-hero-pattern" aria-hidden="true" />
           <div className="page-shell detail-hero-grid">
             <div>
-              <Link href="/#arte" className="back-link">← Volver al Art Shop</Link>
+              <Link href="/arte" className="back-link">← Volver a Arte</Link>
               <p className="eyebrow light">{item.eyebrow}</p>
               <h1>{item.title}</h1>
               <p className="detail-lead">{item.text}</p>
             </div>
             <div className="detail-media-duo">
-              {item.status === "pending" ? <span>Fotografía por incorporar</span> : <img src={item.left} alt={item.leftAlt} />}
-              {item.status === "pending" ? <span>Fotografía por incorporar</span> : <img src={item.right} alt={item.rightAlt} />}
+              <img src={item.left} alt={item.leftAlt} />
+              <img src={item.right} alt={item.rightAlt} />
             </div>
           </div>
         </section>
@@ -42,23 +42,23 @@ export default async function ArtShopPage({ params }: { params: Promise<{ slug: 
             <p className="eyebrow">Ficha de pieza</p>
             <dl>
               <div><dt>Capítulo</dt><dd>{item.number}</dd></div>
-              <div><dt>Estado</dt><dd>{statusLabel}</dd></div>
-              <div><dt>Registro</dt><dd>Autoría, técnica y procedencia por completar</dd></div>
+              <div><dt>Bloque</dt><dd>{statusLabel}</dd></div>
+              <div><dt>Catálogo</dt><dd><Link href={`/catalogo/${item.catalogSlug}`}>Ver ficha vinculada</Link></dd></div>
             </dl>
           </aside>
           <article>
-            <p>Esta página reserva un espacio propio para que cada capítulo del Art Shop pueda crecer con obra real, fotografía, técnica, procedencia y relato de autoría.</p>
-            <p>La información pendiente queda marcada como tal para evitar presentar piezas anónimas o datos inventados antes de la documentación final.</p>
+            <p>La sección de arte comienza con el trabajo de Lized y organiza cada obra alrededor de autoría, técnica, proceso, historia y disponibilidad.</p>
+            <p>Las obras invitadas podrán aparecer dentro de las fichas de pieza, identificando siempre a su creador.</p>
           </article>
         </section>
 
         <section className="page-shell detail-gallery detail-gallery-two">
           <figure>
-            {item.status === "pending" ? <div className="detail-placeholder">Fotografía por incorporar</div> : <img src={item.left} alt={item.leftAlt} />}
+            <img src={item.left} alt={item.leftAlt} />
             <figcaption><span>01</span>{item.leftAlt}</figcaption>
           </figure>
           <figure>
-            {item.status === "pending" ? <div className="detail-placeholder">Fotografía por incorporar</div> : <img src={item.right} alt={item.rightAlt} />}
+            <img src={item.right} alt={item.rightAlt} />
             <figcaption><span>02</span>{item.rightAlt}</figcaption>
           </figure>
         </section>
@@ -67,7 +67,7 @@ export default async function ArtShopPage({ params }: { params: Promise<{ slug: 
           <div className="page-shell">
             <p>Siguiente capítulo</p>
             <Link href={`/arte/${nextItem.slug}`}>
-              <span>Art Shop</span>
+              <span>Arte en Raíces</span>
               <h2>{nextItem.eyebrow}</h2>
               <i>↗</i>
             </Link>

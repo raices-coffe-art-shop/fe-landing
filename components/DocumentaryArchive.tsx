@@ -107,10 +107,14 @@ export function DocumentaryArchive() {
     frameRef.current = requestAnimationFrame(tick);
   };
 
-  const openCanvas = () => {
+  const openCanvas = (index = active) => {
+    if (index !== active) {
+      setSlideDirection(relativeIndex(index, active) < 0 ? "prev" : "next");
+      setActive(index);
+    }
     setSelected(0);
     setMode("canvas");
-    requestAnimationFrame(resetWorld);
+    requestAnimationFrame(() => requestAnimationFrame(resetWorld));
   };
 
   const changeActive = (index: number) => {
@@ -248,8 +252,9 @@ export function DocumentaryArchive() {
   return (
     <section className="documentary-archive-section" id="archivo">
       <div className="page-shell documentary-archive-heading">
-        <p className="eyebrow">Archivo de campo</p>
-        <h2>Fotografías, conversaciones y procesos registrados donde cada historia comienza.</h2>
+        <p className="eyebrow">Archivo de origen</p>
+        <h2>Personas, lugares y procesos registrados en el camino.</h2>
+        <p>Una colección visual de visitas, productos, paisajes, conversaciones y procesos vinculados con Raíces.</p>
       </div>
 
       <div
@@ -259,7 +264,7 @@ export function DocumentaryArchive() {
         style={{ "--section-tone": tones[active % tones.length] } as CSSProperties}
       >
         <div className="archive-carousel-bar">
-          <span>Categorías documentales</span>
+          <span>Categorías</span>
           <span>{mode === "closed" ? "Hover · memoria de color" : "Las cartas laterales cambian la categoría"}</span>
           <button type="button" onClick={goBack} aria-hidden={mode === "closed"} tabIndex={mode === "closed" ? -1 : 0}>Volver</button>
         </div>
@@ -280,20 +285,10 @@ export function DocumentaryArchive() {
                   "--x": `${closedOffset}px`,
                   "--z": String(10 - Math.abs(delta)),
                 } as CSSProperties}
-                onClick={() => {
-                  if (mode === "closed") {
-                    openCategory(index);
-                    return;
-                  }
-                  if (index === active) {
-                    openCanvas();
-                    return;
-                  }
-                  changeActive(index);
-                }}
+                onClick={() => openCanvas(index)}
               >
                 <span className="archive-card-picture">
-                  {category.media[0]?.src ? <img src={category.media[0].src} alt={category.media[0].alt ?? category.title} /> : <i>Material en edición</i>}
+                  {category.media[0]?.src ? <img src={category.media[0].src} alt={category.media[0].alt ?? category.title} /> : <i>{category.title}</i>}
                   <em className="archive-tint" />
                   <em className="archive-color-wipe" />
                 </span>
@@ -304,7 +299,7 @@ export function DocumentaryArchive() {
 
         <div className="archive-carousel-caption">
           <button type="button" onClick={() => changeActive((active - 1 + archiveCategories.length) % archiveCategories.length)}>Anterior</button>
-          <p>{current.summary} <Link href={`/archivo/${current.id}`}>Ver archivo ↗</Link></p>
+          <p>{current.summary} <button type="button" onClick={() => openCanvas(active)}>Entrar al lienzo ↗</button></p>
           <button type="button" onClick={() => changeActive((active + 1) % archiveCategories.length)}>Siguiente</button>
         </div>
       </div>
@@ -328,7 +323,7 @@ export function DocumentaryArchive() {
                   decoding="async"
                 />
               ) : (
-                <span key={category.id} className={index === mobileActive ? "is-active" : ""}>Material en edición</span>
+                <span key={category.id} className={index === mobileActive ? "is-active" : ""}>{category.title}</span>
               );
             })}
             <div className="archive-mobile-visual-shade" aria-hidden="true" />
@@ -339,7 +334,7 @@ export function DocumentaryArchive() {
           </div>
 
           <div key={mobileCurrent.id} className="archive-mobile-copy">
-            <span>{mobileCurrent.status === "confirmed" ? "Material disponible" : "Material en edición"}</span>
+            <span>Archivo de origen</span>
             <h3>{mobileCurrent.title}</h3>
             <p>{mobileCurrent.summary}</p>
             <Link href={`/archivo/${mobileCurrent.id}`}>Ver archivo ↗</Link>
@@ -361,7 +356,7 @@ export function DocumentaryArchive() {
             return (
               <article key={category.id}>
                 {item?.src && <img src={mobileEnabled ? item.src : undefined} alt={item.alt ?? category.title} loading="lazy" decoding="async" />}
-                <span>{category.status === "confirmed" ? "Material disponible" : "Material en edición"}</span>
+                <span>Archivo de origen</span>
                 <h3>{category.title}</h3>
                 <p>{category.summary}</p>
                 <Link href={`/archivo/${category.id}`}>Ver archivo ↗</Link>

@@ -1,11 +1,68 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { people } from "@/data/site";
+import { PERSON_CARD_ROTATION_MS, type PersonCardPhoto } from "@/data/peopleMedia";
 
-function Portrait({ initials, tone }: { initials: string; tone: string }) {
+function Portrait({
+  initials,
+  tone,
+  photos,
+}: {
+  initials: string;
+  tone: string;
+  photos?: PersonCardPhoto[];
+}) {
+  const gallery = useMemo(() => photos?.filter((photo) => photo.src) ?? [], [photos]);
+  const [activePhoto, setActivePhoto] = useState(0);
+
+  useEffect(() => {
+    setActivePhoto(0);
+    if (gallery.length < 2) return;
+
+    const timer = window.setInterval(() => {
+      setActivePhoto((current) => (current + 1) % gallery.length);
+    }, PERSON_CARD_ROTATION_MS);
+
+    return () => window.clearInterval(timer);
+  }, [gallery]);
+
+  if (gallery.length) {
+    return (
+      <figure className={`stack-portrait stack-photo tone-${tone}`}>
+        <div className="stack-photo-frame">
+          {gallery.map((photo, index) => (
+            <img
+              key={`${photo.src}-${index}`}
+              className={`stack-photo-media ${index === activePhoto ? "is-active" : ""}`}
+              src={photo.src}
+              alt={photo.alt}
+              style={{ objectPosition: photo.position ?? "center" }}
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
+            />
+          ))}
+        </div>
+        {gallery.length > 1 && (
+          <div className="stack-photo-dots" aria-label={`Fotografía ${activePhoto + 1} de ${gallery.length}`}>
+            {gallery.map((photo, index) => (
+              <button
+                key={`${photo.src}-dot`}
+                type="button"
+                className={index === activePhoto ? "is-active" : ""}
+                aria-label={`Mostrar fotografía ${index + 1}`}
+                onClick={() => setActivePhoto(index)}
+              />
+            ))}
+          </div>
+        )}
+        <span className="stack-photo-grain" aria-hidden="true" />
+      </figure>
+    );
+  }
+
   return (
     <div className={`stack-portrait portrait-placeholder tone-${tone}`}>
       <span className="portrait-sun" />
@@ -13,7 +70,6 @@ function Portrait({ initials, tone }: { initials: string; tone: string }) {
       <span className="portrait-mountain two" />
       <span className="portrait-body" />
       <strong>{initials}</strong>
-      <small>Retrato por incorporar</small>
     </div>
   );
 }
@@ -94,10 +150,10 @@ export function PeopleStack() {
       <div className="page-shell people-stack-intro">
         <div>
           <p className="eyebrow">Personas antes que productos</p>
-          <h2>El origen tiene rostro,<br />nombre y memoria.</h2>
+          <h2>Las personas detrás de Raíces</h2>
         </div>
         <p>
-          Cada tarjeta abre una historia propia. Las fichas pendientes no se rellenan con frases genéricas: esperan la voz y las fotografías reales de sus protagonistas.
+          Detrás de cada producto hay una persona, una familia y una forma de trabajo. Esta sección reúne a quienes cultivan, producen, transforman o hacen posible lo que llega a Raíces.
         </p>
       </div>
 
@@ -125,13 +181,13 @@ export function PeopleStack() {
                   <p className="stack-person-summary">{person.summary}</p>
                 </div>
                 <div className="stack-card-footer">
-                  <span>{person.status === "documentada" ? "Historia base documentada" : "Entrevista pendiente"}</span>
+                  <span>{person.product}</span>
                   <Link href={`/personas/${person.slug}`}>Abrir su historia <b>↗</b></Link>
                 </div>
               </div>
               <div className="stack-person-visual">
-                <Portrait initials={person.initials} tone={person.portraitTone} />
-                <blockquote>“{person.quote}”</blockquote>
+                <Portrait initials={person.initials} tone={person.portraitTone} photos={person.portraitGallery} />
+                <blockquote>{person.quote ? `“${person.quote}”` : person.product}</blockquote>
               </div>
             </article>
           </div>

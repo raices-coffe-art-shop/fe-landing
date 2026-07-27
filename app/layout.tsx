@@ -3,14 +3,14 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Raíces — Café y Cultura",
+  title: "Raíces — Café y cultura",
   description:
-    "Raíces Coffee-Art Shop conecta Ayacucho con Lima a través del café, el arte, los alimentos y las historias de las personas que los hacen posibles.",
+    "Raíces conecta Ayacucho con Lima a través de productos, alimentos, arte e historias de las personas que los hacen posibles.",
   metadataBase: new URL("https://raices-cafe-cultura.example"),
   openGraph: {
-    title: "Raíces — Café y Cultura",
+    title: "Raíces — Café y cultura",
     description:
-      "Café, arte, alimentos y archivo documental para conectar Ayacucho con Lima a través de las personas.",
+      "Productos, alimentos, arte e historias para compartir Ayacucho en Lima a través de las personas.",
     type: "website",
     locale: "es_PE"
   }

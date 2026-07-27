@@ -4,22 +4,22 @@ import { useEffect, useRef } from "react";
 
 const territoryModules = [
   {
-    id: "origen",
-    title: "Origen",
-    description: "Ayacucho aparece en el idioma, la memoria y las relaciones que sostienen cada producto.",
+    id: "procedencia",
+    title: "Procedencia",
+    description: "Cada producto debe mostrar el lugar del que viene, la persona o familia vinculada y la forma en que fue elaborado.",
     icon: "seed",
   },
   {
-    id: "paisaje",
-    title: "Paisaje",
-    description: "El territorio se registra con cuidado, sin convertirlo en fondo decorativo ni postal turística.",
-    icon: "mountain",
+    id: "relacion-directa",
+    title: "Relación directa",
+    description: "Las visitas y conversaciones permiten comprender los procesos sin reducirlos a una relación puramente comercial.",
+    icon: "hands",
   },
   {
-    id: "productores",
-    title: "Trabajo con productores",
-    description: "Las historias crecerán con entrevistas, autorización y material documental propio.",
-    icon: "hands",
+    id: "ayacucho-en-lima",
+    title: "Ayacucho en Lima",
+    description: "El local reúne sabores, obras e historias de Ayacucho para compartirlos sin separarlos de su origen.",
+    icon: "mountain",
   },
 ];
 
@@ -49,7 +49,8 @@ export function TerritoryAtmosphere() {
       const rect = (section ?? root).getBoundingClientRect();
       const progress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / (rect.height + window.innerHeight)));
       root.style.setProperty("--territory-progress", reduced ? "0.45" : progress.toFixed(4));
-      section?.style.setProperty("--territory-parallax", reduced ? "0" : progress.toFixed(4));
+      section?.style.setProperty("--territory-parallax", reduced ? "0.5" : progress.toFixed(4));
+      section?.style.setProperty("--territory-photo-y", reduced ? "0px" : `${((progress - 0.5) * -34).toFixed(2)}px`);
     };
 
     const requestUpdate = () => {

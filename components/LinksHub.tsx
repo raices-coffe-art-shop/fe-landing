@@ -179,6 +179,35 @@ export function LinksHub() {
 
   return (
     <main className="links-page">
+      <div className="links-load-atmosphere" aria-hidden="true">
+        <svg className="links-load-roots" viewBox="0 0 1200 1800" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="linksRootGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#e0ad5f" />
+              <stop offset="48%" stopColor="#9c6b43" />
+              <stop offset="100%" stopColor="#63754d" />
+            </linearGradient>
+          </defs>
+          <path pathLength="1" className="links-root-path links-root-main" d="M778 -30 C756 110 810 213 748 344 C684 483 708 626 650 768 C586 924 624 1070 553 1217 C495 1336 446 1458 420 1835" />
+          <path pathLength="1" className="links-root-path links-root-branch branch-one" d="M748 344 C868 368 956 462 1032 602" />
+          <path pathLength="1" className="links-root-path links-root-branch branch-two" d="M650 768 C518 748 414 684 304 566" />
+          <path pathLength="1" className="links-root-path links-root-branch branch-three" d="M553 1217 C690 1252 794 1348 875 1499" />
+          <path pathLength="1" className="links-root-path links-root-branch branch-four" d="M473 1403 C332 1433 232 1520 142 1674" />
+          <path pathLength="1" className="links-root-path links-root-branch branch-five" d="M707 582 C818 607 894 690 966 820" />
+          <path pathLength="1" className="links-root-path links-root-branch branch-six" d="M611 922 C487 912 390 864 286 760" />
+          <path pathLength="1" className="links-root-path links-root-branch branch-seven" d="M520 1324 C625 1342 706 1409 770 1518" />
+          <path pathLength="1" className="links-root-path links-root-branch branch-eight" d="M442 1542 C332 1560 256 1618 188 1716" />
+        </svg>
+        <div className="links-background-words">
+          <span className="word-willakuy">Willakuy</span>
+          <span className="word-kawsay">Kawsay</span>
+          <span className="word-territorio">Territorio</span>
+          <span className="word-memoria">Memoria</span>
+          <span className="word-cafe">Café</span>
+          <span className="word-arte">Arte</span>
+          <span className="word-ayacucho">Ayacucho</span>
+        </div>
+      </div>
       <div className="links-shell">
         <div className="links-topbar">
           <Link className="links-home" href="/">Volver al sitio</Link>

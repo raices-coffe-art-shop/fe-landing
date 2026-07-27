@@ -7,12 +7,12 @@ const mapPoints = [
   {
     id: "origen",
     title: "Ayacucho",
-    description: "Origen cultural, ling\u00fc\u00edstico y documental del proyecto.",
+    description: "Origen de productos, personas, lengua, alimentos, arte e historias vinculadas con Raíces.",
   },
   {
     id: "encuentro",
     title: "Lima",
-    description: "Lugar de encuentro donde las historias se comparten alrededor del caf\u00e9, el arte y los alimentos.",
+    description: "Lugar de encuentro donde los productos, obras y relatos se comparten dentro del espacio.",
   },
 ];
 
@@ -30,7 +30,8 @@ export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
     <div className="cultural-map">
       <div className="map-narrative-heading">
         <p className="eyebrow">Del origen al encuentro</p>
-        <h3>Una ruta visual entre {documentaryRoute.origin} y {documentaryRoute.encounter}, sin inventar paradas ni coordenadas.</h3>
+        <h3>De {documentaryRoute.origin} a {documentaryRoute.encounter}: el recorrido detrás de lo que llega a Raíces.</h3>
+        <p>Cada producto comienza en un lugar concreto y llega al local a través de personas, viajes y relaciones reales. Este mapa conecta el territorio donde nace con el espacio donde finalmente se comparte.</p>
       </div>
 
       <div
@@ -111,10 +112,6 @@ export function CulturalMapClient({ svgMarkup }: { svgMarkup: string }) {
           <span><i className="legend-dot lima" />Encuentro</span>
           <span><i className="legend-dot sierra" />Viaje documental</span>
         </div>
-        <p className="map-route-status">Estado del viaje: pendiente de confirmaci&oacute;n editorial.</p>
-        <a className="map-cta" href="https://maps.google.com" target="_blank" rel="noreferrer">
-          C&oacute;mo llegar
-        </a>
       </div>
     </div>
   );

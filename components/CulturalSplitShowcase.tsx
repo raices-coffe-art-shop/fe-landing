@@ -80,7 +80,7 @@ export function CulturalSplitShowcase() {
     <div className="cultural-split-showcase page-shell">
       <div className="split-stage" key={slide.number}>
         <div className="split-panel split-panel-left">
-          {slide.status === "pending" ? <div className="art-photo-placeholder">Fotografía por incorporar</div> : <EditorialImage src={slide.left} alt={slide.leftAlt} />}
+          <EditorialImage src={slide.left} alt={slide.leftAlt} />
           <div className="split-panel-copy">
             <span>{slide.number}</span>
             <p>{slide.eyebrow}</p>
@@ -88,16 +88,15 @@ export function CulturalSplitShowcase() {
           </div>
         </div>
         <div className="split-panel split-panel-right">
-          {slide.status === "pending" ? <div className="art-photo-placeholder">Fotografía por incorporar</div> : <EditorialImage src={slide.right} alt={slide.rightAlt} />}
+          <EditorialImage src={slide.right} alt={slide.rightAlt} />
           <div className="split-panel-text">
             <p>{slide.text}</p>
-            <Link href={`/arte/${slide.slug}`}>Ver capítulo ↗</Link>
-            <small>Fotografías referenciales · reemplazar por material de Raíces</small>
+            <Link href={`/catalogo/${slide.catalogSlug}`}>Ver en catálogo ↗</Link>
           </div>
         </div>
       </div>
 
-      <div className="split-pagination" role="tablist" aria-label="Capítulos del Art Shop">
+      <div className="split-pagination" role="tablist" aria-label="Bloques de arte en Raíces">
         {slides.map((item, index) => (
           <button
             key={item.number}
@@ -108,17 +107,8 @@ export function CulturalSplitShowcase() {
           >
             <span className="split-nav-number">{item.number}</span>
             <span className="split-nav-preview" aria-hidden="true">
-              {item.status === "pending" ? (
-                <>
-                  <span />
-                  <span />
-                </>
-              ) : (
-                <>
-                  <img src={item.left} alt="" />
-                  <img src={item.right} alt="" />
-                </>
-              )}
+              <img src={item.left} alt="" />
+              <img src={item.right} alt="" />
             </span>
             <b>{item.eyebrow}</b>
           </button>
@@ -132,20 +122,14 @@ export function CulturalSplitShowcase() {
       >
         <div className="art-mobile-sticky">
           <div className="art-mobile-visual" aria-label={`Obra ${mobileSlide.number}: ${mobileSlide.eyebrow}`}>
-            {slides.map((item, index) =>
-              item.status === "pending" ? (
-                <span key={item.number} className={mobileActive === index ? "is-active" : ""}>
-                  Fotografía por incorporar
-                </span>
-              ) : (
-                <img
-                  key={item.number}
-                  src={item.left}
-                  alt={item.leftAlt}
-                  className={mobileActive === index ? "is-active" : ""}
-                />
-              ),
-            )}
+            {slides.map((item, index) => (
+              <img
+                key={item.number}
+                src={item.left}
+                alt={item.leftAlt}
+                className={mobileActive === index ? "is-active" : ""}
+              />
+            ))}
             <div className="art-mobile-counter" aria-hidden="true">
               <b>{mobileSlide.number}</b>
               <span>/ {slides.length.toString().padStart(2, "0")}</span>
@@ -156,25 +140,25 @@ export function CulturalSplitShowcase() {
             <span>{mobileSlide.eyebrow}</span>
             <h3>{mobileSlide.title}</h3>
             <p>{mobileSlide.text}</p>
-            <Link href={`/arte/${mobileSlide.slug}`}>Ver capítulo ↗</Link>
+            <Link href={`/catalogo/${mobileSlide.catalogSlug}`}>Ver en catálogo ↗</Link>
           </div>
 
           <div className="art-mobile-progress" aria-hidden="true">
-            <span>Art Shop</span>
+            <span>Arte en Raíces</span>
             <i><b /></i>
           </div>
         </div>
         <div className="art-mobile-steps" aria-hidden="true">
           {slides.map((item) => <div key={item.number} />)}
         </div>
-        <div className="art-mobile-reduced-list" aria-label="Capítulos del Art Shop">
+        <div className="art-mobile-reduced-list" aria-label="Bloques de arte en Raíces">
           {slides.map((item) => (
             <article key={item.number}>
-              {item.status === "pending" ? <span className="art-mobile-placeholder">Fotografía por incorporar</span> : <img src={item.left} alt={item.leftAlt} />}
+              <img src={item.left} alt={item.leftAlt} />
               <span>{item.number} · {item.eyebrow}</span>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
-              <Link href={`/arte/${item.slug}`}>Ver capítulo ↗</Link>
+              <Link href={`/catalogo/${item.catalogSlug}`}>Ver en catálogo ↗</Link>
             </article>
           ))}
         </div>

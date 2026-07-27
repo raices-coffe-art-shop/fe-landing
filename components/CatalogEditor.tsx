@@ -2,18 +2,29 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { products } from "@/data/site";
+import { contactChannels } from "@/data/social";
 import { EditorialImage } from "./EditorialImage";
 
 const STORAGE_KEY = "raices-catalogo-demo-v1";
-const filters = ["Todo", "Café", "Miel", "Cacao", "Quesos", "Arte", "Regalos"];
+const filters = ["Todo", "Café y cacao", "Alimentos", "Arte"];
 
 const defaultPrices: Record<string, string> = {
-  "Café Ayacuchano": "38.00",
-  "Miel de floración": "28.00",
-  "Cacao de origen": "32.00",
-  "Quesos regionales": "26.00",
-  "Retablos y nacimientos": "120.00",
-  "Selección Raíces": "95.00"
+  "Café preparado": "12.00",
+  "Granos de café": "38.00",
+  "Café molido": "38.00",
+  "Cacao": "32.00",
+  "Chocolate con panela": "18.00",
+  "Miel": "28.00",
+  "Polen": "24.00",
+  "Arándanos": "18.00",
+  "Mermeladas": "22.00",
+  "Pan chapla": "6.00",
+  "Postres": "12.00",
+  "Queso": "26.00",
+  "Cuadros de Lized": "120.00",
+  "Retablos": "120.00",
+  "Toritos de Ayacucho": "45.00",
+  "Manualidades": "35.00"
 };
 
 type CatalogItem = {
@@ -22,6 +33,8 @@ type CatalogItem = {
   category: string;
   region: string;
   note: string;
+  procedencia: string;
+  subcategory: string;
   tone: string;
   image: string;
   price: string;
@@ -32,6 +45,8 @@ const seed: CatalogItem[] = products.map((product) => ({
   name: product.name,
   category: product.category,
   region: product.region,
+  procedencia: product.procedencia,
+  subcategory: product.subcategory,
   note: product.note,
   tone: product.tone,
   image: product.image,
@@ -125,11 +140,10 @@ export function CatalogEditor() {
       <section className="catalogo-hero">
         <div className="catalogo-hero-pattern" aria-hidden="true" />
         <div className="page-shell">
-          <p className="eyebrow light">Catálogo · Vista de demostración</p>
-          <h1>Productos con procedencia y precio.</h1>
+          <p className="eyebrow light">Catálogo</p>
+          <h1>Productos con nombre, procedencia y una historia detrás.</h1>
           <p className="catalogo-hero-note">
-            Esta vista permite al equipo de Raíces actualizar precios y fotografías sin tocar el
-            código. Los cambios de esta demo se guardan solo en este navegador.
+            Explora cafés, alimentos, postres, pinturas y piezas seleccionadas. Cada ficha indica qué es, de dónde viene, quién está relacionado con su elaboración y cómo puedes conseguirlo.
           </p>
         </div>
       </section>
@@ -138,7 +152,7 @@ export function CatalogEditor() {
         <div className="editor-bar page-shell">
           <div className="editor-bar-copy">
             <span className={`editor-dot ${editing ? "is-on" : ""}`} aria-hidden="true" />
-            <p>{editing ? "Modo edición activo: toca un precio, un texto o una foto." : "Vista tal como la vería un cliente."}</p>
+            <p>{editing ? "Edita precio, descripción o fotografía." : "Consulta productos disponibles y sus procedencias."}</p>
           </div>
           <div className="editor-bar-actions">
             {editing && (
@@ -189,8 +203,9 @@ export function CatalogEditor() {
               <div className="product-copy">
                 <div>
                   <span>{product.category}</span>
-                  <span>{product.region}</span>
+                  <span>{product.procedencia}</span>
                 </div>
+                <p className="product-subcategory">{product.subcategory}</p>
                 {editing ? (
                   <input
                     className="edit-field edit-name"
@@ -229,7 +244,7 @@ export function CatalogEditor() {
                   )}
                 </div>
                 <a
-                  href={`https://wa.me/51999999999?text=${encodeURIComponent(
+                  href={`${contactChannels.whatsappHref}?text=${encodeURIComponent(
                     `Hola, quisiera consultar por ${product.name} (S/ ${product.price}).`
                   )}`}
                   target="_blank"

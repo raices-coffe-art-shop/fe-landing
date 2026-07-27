@@ -26,7 +26,8 @@ export function OriginJourney() {
     <section className="journey section-dark" id="origen">
       <div className="page-shell journey-heading">
         <p className="eyebrow light">Cuaderno de campo</p>
-        <h2>Un viaje para escuchar antes de contar.</h2>
+        <h2>Antes de contar una historia, Raíces va, pregunta y escucha.</h2>
+        <p>Las visitas permiten conocer cultivos, talleres, alimentos, familias y formas de trabajo. Este cuaderno reúne imágenes y apuntes de esos encuentros antes de convertirlos en una historia pública.</p>
       </div>
 
       <div className="journey-layout page-shell">
@@ -36,7 +37,7 @@ export function OriginJourney() {
               {stage.coverImage ? (
                 <EditorialImage src={stage.coverImage} alt={`${stage.title}: paisaje documental de referencia`} />
               ) : (
-                <div className="journey-image-placeholder"><span>Fotografía por incorporar</span></div>
+                <div className="journey-image-placeholder"><span>{stage.title}</span></div>
               )}
             </div>
           ))}
@@ -61,7 +62,7 @@ export function OriginJourney() {
               <div className="stage-top"><span>{String(stage.order).padStart(2, "0")}</span><span>{stage.productOrCraft}</span></div>
               <h3>{stage.title}</h3>
               <p>{stage.summary}</p>
-              <small>{stage.location ?? "Ubicación por confirmar"} · {stage.status === "planned" ? "conversación pendiente" : stage.status}</small>
+              <small>{stage.location ?? "Ayacucho"} · registro de campo</small>
             </article>
           ))}
         </div>

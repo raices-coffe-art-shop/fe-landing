@@ -183,14 +183,18 @@ export function Hero() {
         <div className={styles.ambient} aria-hidden="true" />
 
         <div className={`${styles.copy} page-shell`}>
-          <p className="eyebrow light">Raíces · Café y Cultura</p>
-          <h1>Todos volvemos a nuestras raíces.</h1>
+          <p className="eyebrow light">Ayacucho y cultura</p>
+          <h1>Raíces</h1>
           <p className={styles.lead}>
-            Un espacio en Lima donde el café, el arte y los alimentos conservan el nombre, el territorio y la historia de quienes los hicieron posibles.
+            Un espacio en Lima donde Ayacucho se comparte a través de sus sabores, sus personas, su arte y sus historias.
+          </p>
+          <p className={styles.lead}>
+            Raíces reúne productos, alimentos, obras y relatos vinculados con Ayacucho. Cada elemento del espacio busca conservar su procedencia y reconocer a las personas que lo producen, elaboran o crean.
           </p>
           <div className={styles.actions}>
-            <a className="button button-light" href="#historia">Conocer la historia</a>
-            <a className="text-link light-link" href="#catalogo">Explorar productos <span>↘</span></a>
+            <a className="button button-light" href="/catalogo">Ver catálogo</a>
+            <a className="text-link light-link" href="#historia">Conocer nuestra historia <span>↘</span></a>
+            <a className="text-link light-link" href="#visita">Cómo llegar <span>↘</span></a>
           </div>
         </div>
 
