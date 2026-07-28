@@ -141,12 +141,13 @@ export function ContinuousRoots() {
       ];
       const continuationX = compact ? 0.885 : 0.905;
       const continuationInnerX = continuationX;
+      const territoryHandoffY = territory.top + 4;
       const continuationAnchors: Point[] = [
         { x: width * (compact ? 0.75 : 0.79), y: lexicon.bottom - 10 },
         { x: width * continuationX, y: people.top + 18 },
         { x: width * (compact ? 0.892 : 0.916), y: people.top + people.height * 0.24 },
         { x: width * continuationInnerX, y: people.bottom - 68 },
-        { x: width * continuationX, y: territory.top + 12 },
+        { x: width * continuationX, y: territoryHandoffY },
         { x: width * (compact ? 0.902 : 0.918), y: territory.top + territory.height * 0.13 },
         { x: width * continuationInnerX, y: territory.bottom - 62 },
       ];
