@@ -5515,7 +5515,7 @@ img { max-width: 100%; }
 
 .continuous-root-segment.is-continuation .continuous-root-shadow {
   stroke-width: 5.8;
-  opacity: .14;
+  opacity: 0;
 }
 
 .continuous-root-segment.is-continuation .continuous-root-main {
@@ -5972,7 +5972,7 @@ img { max-width: 100%; }
   .continuous-root-shadow { stroke-width: 6.2; opacity: .2; }
   .continuous-root-segment.is-handoff .continuous-root-main { stroke-width: 2.15; opacity: .58; }
   .continuous-root-segment.is-continuation .continuous-root-main { stroke-width: 2; opacity: .5; }
-  .continuous-root-segment.is-continuation .continuous-root-shadow { opacity: .1; }
+  .continuous-root-segment.is-continuation .continuous-root-shadow { opacity: 0; }
 
   .human-origin-section {
     padding-top: 110px;
