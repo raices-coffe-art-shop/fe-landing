@@ -214,9 +214,21 @@ export function ContinuousRoots() {
         kind: "continuation",
       };
 
-      const afterArchiveAnchors: Point[] = [
+      const artContinuationPoints: Point[] = [
         journeyArchiveArtPoints[journeyArchiveArtPoints.length - 1],
         { x: width * continuationInnerX, y: art.top + art.height * 0.44 },
+      ];
+
+      const artContinuationPath: RootPath = {
+        id: "art-continuation",
+        d: catmullRomPath(artContinuationPoints),
+        start: ratioAt(artContinuationPoints[0].y),
+        end: Math.max(ratioAt(artContinuationPoints[0].y) + 0.025, ratioAt(artContinuationPoints[1].y)),
+        kind: "continuation",
+      };
+
+      const afterArchiveAnchors: Point[] = [
+        artContinuationPoints[artContinuationPoints.length - 1],
       ];
       if (catalog) afterArchiveAnchors.push({ x: width * continuationInnerX, y: catalog.top + catalog.height * 0.48 });
       if (purpose) afterArchiveAnchors.push({ x: width * continuationX, y: purpose.top + purpose.height * 0.52 });
@@ -260,6 +272,7 @@ export function ContinuousRoots() {
       const continuationSegments = [
         ...buildContinuationSegments(beforeArchiveAnchors, "before-archive"),
         journeyArchiveArtPath,
+        artContinuationPath,
         ...buildContinuationSegments(afterArchiveAnchors, "after-archive"),
       ];
 
