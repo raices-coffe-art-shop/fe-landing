@@ -6,14 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "lenis": "^1.3.25",
     "next": "16.2.10",
+    "next-sanity": "^13.2.3",
     "qrcode": "^1.5.4",
     "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "react-dom": "19.2.7",
+    "sanity": "^6.8.0",
+    "styled-components": "^6.4.4"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",

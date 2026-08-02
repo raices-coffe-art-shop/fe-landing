@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { contactChannels } from "@/data/social";
+import type { BrandLogo, SocialLink, SocialPlatform } from "@/sanity/lib/siteSettings";
 
 type LinkItem = {
   id: string;
@@ -13,25 +13,12 @@ type LinkItem = {
   meta: string;
   tone: "honey" | "green" | "red" | "ink" | "clay" | "coffee";
   external?: boolean;
-  icon: "whatsapp" | "catalog" | "people" | "story" | "maps" | "instagram";
+  icon: "whatsapp" | "catalog" | "people" | "story" | "maps" | "instagram" | "facebook" | "tiktok" | "youtube" | "email" | "other";
   qrCode: string;
   qrImage: string;
 };
 
-const primaryLinks: LinkItem[] = [
-  {
-    id: "whatsapp",
-    label: "WhatsApp",
-    action: "Abrir WhatsApp",
-    note: "Pedidos, consultas y visitas al espacio.",
-    href: `${contactChannels.whatsappHref}?text=Hola%2C%20quiero%20conocer%20Ra%C3%ADces.`,
-    meta: "Atención directa",
-    tone: "honey",
-    external: true,
-    icon: "whatsapp",
-    qrCode: "/qr-codes/whatsapp.svg",
-    qrImage: "/qr/andes.svg",
-  },
+const editorialLinks: LinkItem[] = [
   {
     id: "catalogo",
     label: "Carta y catálogo",
@@ -68,25 +55,22 @@ const primaryLinks: LinkItem[] = [
     qrCode: "/qr-codes/historia.svg",
     qrImage: "/qr/ceramica.svg",
   },
-  {
-    id: "maps",
-    label: "Google Maps",
-    action: "Ver ubicación",
-    note: "Ubicación y visita al espacio en Lima.",
-    href: "https://maps.google.com",
-    meta: "Ruta al local",
-    tone: "clay",
+];
+
+const socialMeta: Record<SocialPlatform, Omit<LinkItem, "id" | "label" | "href">> = {
+  whatsapp: {
+    action: "Abrir WhatsApp",
+    note: "Pedidos, consultas y visitas al espacio.",
+    meta: "Atención directa",
+    tone: "honey",
     external: true,
-    icon: "maps",
-    qrCode: "/qr-codes/maps.svg",
-    qrImage: "/qr/plaza.svg",
+    icon: "whatsapp",
+    qrCode: "/qr-codes/whatsapp.svg",
+    qrImage: "/qr/andes.svg",
   },
-  {
-    id: "instagram",
-    label: "Instagram",
+  instagram: {
     action: "Visitar Instagram",
     note: "Sigue la bitácora y conoce nuevos relatos en Instagram.",
-    href: contactChannels.instagram,
     meta: "Lo que estamos haciendo",
     tone: "coffee",
     external: true,
@@ -94,7 +78,65 @@ const primaryLinks: LinkItem[] = [
     qrCode: "/qr-codes/instagram.svg",
     qrImage: "/qr/cafe.svg",
   },
-];
+  facebook: {
+    action: "Visitar Facebook",
+    note: "Actualizaciones, anuncios y publicaciones de Raíces.",
+    meta: "Comunidad",
+    tone: "green",
+    external: true,
+    icon: "facebook",
+    qrCode: "/qr-codes/instagram.svg",
+    qrImage: "/qr/textil.svg",
+  },
+  tiktok: {
+    action: "Visitar TikTok",
+    note: "Videos breves y momentos del espacio.",
+    meta: "Video social",
+    tone: "red",
+    external: true,
+    icon: "tiktok",
+    qrCode: "/qr-codes/instagram.svg",
+    qrImage: "/qr/retablo.svg",
+  },
+  youtube: {
+    action: "Visitar YouTube",
+    note: "Videos, entrevistas y registros del proyecto.",
+    meta: "Archivo audiovisual",
+    tone: "clay",
+    external: true,
+    icon: "youtube",
+    qrCode: "/qr-codes/instagram.svg",
+    qrImage: "/qr/ceramica.svg",
+  },
+  email: {
+    action: "Escribir correo",
+    note: "Consultas, colaboraciones y mensajes directos.",
+    meta: "Correo directo",
+    tone: "ink",
+    icon: "email",
+    qrCode: "/qr-codes/whatsapp.svg",
+    qrImage: "/qr/plaza.svg",
+  },
+  other: {
+    action: "Abrir enlace",
+    note: "Otro canal oficial de Raíces.",
+    meta: "Canal oficial",
+    tone: "clay",
+    external: true,
+    icon: "other",
+    qrCode: "/qr-codes/catalogo.svg",
+    qrImage: "/qr/cafe.svg",
+  },
+};
+
+function socialLinksToItems(links: SocialLink[]): LinkItem[] {
+  return links.map((link) => ({
+    id: `social-${link.platform}-${link.order}`,
+    label: link.label,
+    href: link.url,
+    ...socialMeta[link.platform],
+  }));
+}
 
 function LinkIcon({ type }: { type: LinkItem["icon"] }) {
   return (
@@ -138,6 +180,11 @@ function LinkIcon({ type }: { type: LinkItem["icon"] }) {
           <path d="M41.5 22.5h.1" />
         </>
       )}
+      {type === "facebook" && <><path d="M36 18h8v-8h-8c-7 0-12 5-12 12v7h-7v8h7v17h9V37h8l2-8H33v-7c0-2.4 1.2-4 3-4Z" /></>}
+      {type === "tiktok" && <><path d="M35 12v25.5A11.5 11.5 0 1 1 25.5 26" /><path d="M35 12c2.2 7 6.9 11.1 14 12" /></>}
+      {type === "youtube" && <><path d="M14 24c0-5 3-7 18-7s18 2 18 7v16c0 5-3 7-18 7s-18-2-18-7V24Z" /><path d="m29 27 10 5-10 5V27Z" /></>}
+      {type === "email" && <><path d="M13 19h38v26H13V19Z" /><path d="m15 21 17 14 17-14" /></>}
+      {type === "other" && <><path d="M24 20h-3a10 10 0 0 0 0 20h8" /><path d="M40 20h3a10 10 0 0 1 0 20h-8" /><path d="M25 32h14" /></>}
     </svg>
   );
 }
@@ -153,7 +200,17 @@ function LinkQr({ item }: { item: LinkItem }) {
   );
 }
 
-export function LinksHub() {
+type LinksHubProps = {
+  brandLogo: BrandLogo;
+  socialLinks: SocialLink[];
+};
+
+function isExternalLink(url: string) {
+  return url.startsWith("http://") || url.startsWith("https://");
+}
+
+export function LinksHub({ brandLogo, socialLinks }: LinksHubProps) {
+  const primaryLinks = [...socialLinksToItems(socialLinks), ...editorialLinks];
   const [shared, setShared] = useState(false);
   const [openId, setOpenId] = useState(primaryLinks[0].id);
 
@@ -225,7 +282,7 @@ export function LinksHub() {
               <span>Ayacucho en Lima</span>
             </div>
             <h1 className="links-identity">
-              <img src="/raices-logo-lg.png" alt="Raíces" width={168} height={168} />
+              <img src={brandLogo.src} alt={brandLogo.alt} width={168} height={168} />
             </h1>
             <p>
               Un enlace único para entrar al universo del proyecto: sabores, personas y escenas que siguen contando el origen.
@@ -275,8 +332,8 @@ export function LinksHub() {
                     <a
                       className="link-card-action"
                       href={item.href}
-                      target={item.external ? "_blank" : undefined}
-                      rel={item.external ? "noreferrer" : undefined}
+                      target={item.external || isExternalLink(item.href) ? "_blank" : undefined}
+                      rel={item.external || isExternalLink(item.href) ? "noreferrer" : undefined}
                     >
                       {item.action}
                     </a>

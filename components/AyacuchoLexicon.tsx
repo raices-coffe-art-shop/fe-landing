@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import type { CSSProperties } from "react";
 import { RootsStageCanvas } from "@/components/roots/RootsStageCanvas";
-import { quechuaTerms } from "@/data/documentary";
+import { culturalWords } from "@/data/culturalWords";
 
 type Tone = "clay" | "green" | "honey" | "neutral";
 type Size = "small" | "medium" | "large";
@@ -12,6 +12,7 @@ type LexiconWordAppearance = {
   id: string;
   label: string;
   translation?: string;
+  language?: string;
   row: 1 | 2 | 3 | 4;
   column: 1 | 2 | 3 | 4;
   start: number;
@@ -20,12 +21,20 @@ type LexiconWordAppearance = {
   tone: Tone;
 };
 
-type LexiconSpecial = {
-  id: "raices" | "huamanga" | "ayacucho";
-  label: string;
-  start: number;
-  end: number;
-};
+type LexiconClosingStep =
+  | {
+      id: "closing-raices" | "closing-huamanga" | "closing-ayacucho";
+      type: "text";
+      value: string;
+      start: number;
+      end: number;
+    }
+  | {
+      id: "closing-logo";
+      type: "logo";
+      start: number;
+      end: number;
+    };
 
 type AnimatedLexiconElement = {
   element: HTMLElement;
@@ -39,65 +48,29 @@ const cellSequence: Array<[LexiconWordAppearance["row"], LexiconWordAppearance["
   [2, 1], [2, 2], [2, 3], [2, 4],
   [3, 1], [3, 2], [3, 3], [3, 4],
   [4, 1], [4, 2], [4, 3], [4, 4],
-  [2, 1], [2, 2], [2, 3], [2, 4],
-  [3, 1], [3, 2], [3, 3], [3, 4],
-  [1, 1], [1, 2], [1, 3], [1, 4],
-  [4, 1], [4, 2], [4, 3], [4, 4],
-  [2, 1], [2, 2], [2, 3], [2, 4],
-  [3, 1], [3, 2], [3, 3], [3, 4],
-  [1, 1], [1, 2], [1, 3], [1, 4],
-  [4, 1], [4, 2], [4, 3], [4, 4],
-  [3, 1], [3, 2],
+  [2, 4], [2, 3], [2, 2], [2, 1],
+  [3, 4], [3, 3], [3, 2], [3, 1],
+  [1, 4], [1, 3], [1, 2], [1, 1],
+  [4, 4], [4, 3], [4, 2], [4, 1],
 ];
 
 const rangeSequence: Array<[number, number]> = [
-  [0.40, 0.50], [0.20, 0.30], [0.52, 0.62], [0.50, 0.60],
-  [0.45, 0.55], [0.10, 0.20], [0.90, 1.00], [0.30, 0.40],
-  [0.80, 0.90], [0.70, 0.80], [0.00, 0.50], [0.52, 0.62],
-  [0.15, 0.25], [0.07, 0.17], [0.75, 0.85], [0.03, 0.13],
-  [0.87, 0.97], [0.42, 0.52], [0.57, 0.67], [0.37, 0.47],
-  [0.12, 0.22], [0.08, 0.18], [0.84, 0.94], [0.33, 0.43],
-  [0.48, 0.58], [0.13, 0.23], [0.78, 0.88], [0.62, 0.72],
-  [0.31, 0.41], [0.08, 0.18], [0.04, 0.14], [0.74, 0.84],
-  [0.61, 0.71], [0.26, 0.36], [0.63, 0.73], [0.11, 0.21],
-  [0.89, 0.99], [0.33, 0.43], [0.88, 0.98], [0.22, 0.32],
-  [0.16, 0.26], [0.26, 0.36], [0.66, 0.76], [0.03, 0.13],
-  [0.44, 0.54], [0.11, 0.21], [0.23, 0.33], [0.39, 0.49],
-  [0.59, 0.69], [0.06, 0.16],
+  [0.04, 0.16], [0.10, 0.22], [0.16, 0.28], [0.22, 0.34],
+  [0.07, 0.19], [0.13, 0.25], [0.19, 0.31], [0.25, 0.37],
+  [0.31, 0.43], [0.37, 0.49], [0.43, 0.55], [0.49, 0.61],
+  [0.55, 0.67], [0.61, 0.73], [0.67, 0.79], [0.73, 0.85],
+  [0.28, 0.40], [0.34, 0.46], [0.40, 0.52], [0.46, 0.58],
+  [0.52, 0.64], [0.58, 0.70], [0.64, 0.76], [0.70, 0.82],
+  [0.14, 0.26], [0.20, 0.32], [0.26, 0.38], [0.32, 0.44],
+  [0.50, 0.62], [0.56, 0.68], [0.62, 0.74], [0.68, 0.80],
 ];
 
-const specialWords: LexiconSpecial[] = [
-  { id: "raices", label: "RAÍCES", start: 0.06, end: 0.29 },
-  { id: "huamanga", label: "HUAMANGA", start: 0.36, end: 0.61 },
-  { id: "ayacucho", label: "AYACUCHO", start: 0.68, end: 0.93 },
-];
-
-const editorialTerms: Array<Pick<LexiconWordAppearance, "label" | "tone" | "size"> & { translation?: string }> = [
-  { label: "Ayni", tone: "honey", size: "large" },
-  { label: "Yachay", tone: "green", size: "large" },
-  { label: "Tinkuy", tone: "clay", size: "large" },
-  { label: "Memoria", tone: "neutral", size: "small" },
-  { label: "Territorio", tone: "green", size: "small" },
-  { label: "Familia", tone: "honey", size: "medium" },
-  { label: "Encuentro", tone: "honey", size: "small" },
-  { label: "Café", tone: "clay", size: "medium" },
-  { label: "Cacao", tone: "clay", size: "small" },
-  { label: "Semilla", tone: "green", size: "medium" },
-  { label: "Pan chapla", tone: "honey", size: "medium" },
-  { label: "Miel", tone: "honey", size: "small" },
-  { label: "Cosecha", tone: "green", size: "medium" },
-  { label: "Origen", tone: "honey", size: "medium" },
-  { label: "Comunidad", tone: "neutral", size: "medium" },
-  { label: "Arte", tone: "neutral", size: "small" },
-  { label: "Quechua", tone: "honey", size: "medium" },
-  { label: "Chacra", tone: "green", size: "small" },
-  { label: "Oficio", tone: "clay", size: "small" },
-  { label: "Historia", tone: "clay", size: "small" },
-  { label: "Montaña", tone: "neutral", size: "medium" },
-  { label: "Siembra", tone: "green", size: "medium" },
-  { label: "Retablo", tone: "honey", size: "small" },
-  { label: "Taller", tone: "green", size: "small" },
-];
+const closingSequence = [
+  { id: "closing-raices", type: "text", value: "RAÍCES", start: 0.08, end: 0.29 },
+  { id: "closing-huamanga", type: "text", value: "HUAMANGA", start: 0.37, end: 0.58 },
+  { id: "closing-ayacucho", type: "text", value: "AYACUCHO", start: 0.65, end: 0.83 },
+  { id: "closing-logo", type: "logo", start: 0.84, end: 1.00 },
+] satisfies LexiconClosingStep[];
 
 const quechuaToneCycle: Array<Pick<LexiconWordAppearance, "tone" | "size">> = [
   { tone: "clay", size: "large" },
@@ -108,25 +81,18 @@ const quechuaToneCycle: Array<Pick<LexiconWordAppearance, "tone" | "size">> = [
   { tone: "neutral", size: "large" },
 ];
 
-const baseTerms: Array<Pick<LexiconWordAppearance, "label" | "tone" | "size" | "translation">> = [
-  ...quechuaTerms.map((term, index) => ({
-    label: term.term,
-    ...quechuaToneCycle[index % quechuaToneCycle.length],
-  })),
-  ...editorialTerms,
-];
-
-const wordAppearances: LexiconWordAppearance[] = Array.from({ length: 50 }, (_, index) => {
-  const term = baseTerms[index % baseTerms.length];
+const wordAppearances: LexiconWordAppearance[] = culturalWords.map((word, index) => {
+  const tone = quechuaToneCycle[index % quechuaToneCycle.length];
   const [row, column] = cellSequence[index];
   const [start, end] = rangeSequence[index];
 
   return {
-    id: `${term.label.toLowerCase().replace(/\s+/g, "-")}-${index + 1}`,
-    label: term.label,
-    translation: term.translation,
-    tone: term.tone,
-    size: term.size,
+    id: word.id,
+    label: word.word,
+    translation: word.translation,
+    language: word.language,
+    tone: tone.tone,
+    size: tone.size,
     row,
     column,
     start,
@@ -152,6 +118,21 @@ function createDepthAnimation(element: HTMLElement, depth: number, blur: number)
       { transform: `translate3d(0, 0, ${-depth}px)`, opacity: 0, filter: `blur(${blur}px)` },
       { transform: "translate3d(0, 0, 0)", opacity: 1, filter: "blur(0px)", offset: 0.5 },
       { transform: `translate3d(0, 0, ${depth}px)`, opacity: 0, filter: `blur(${blur}px)` },
+    ],
+    { duration: 1000, fill: "both", easing: "linear" }
+  );
+
+  animation.pause();
+  animation.currentTime = 0;
+  return animation;
+}
+
+function createLogoAnimation(element: HTMLElement) {
+  const animation = element.animate(
+    [
+      { transform: "translate3d(0, 14px, 0) scale(.94)", opacity: 0, filter: "blur(4px)" },
+      { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1, filter: "blur(0px)", offset: 0.5 },
+      { transform: "translate3d(0, -10px, 0) scale(.96)", opacity: 0, filter: "blur(5px)" },
     ],
     { duration: 1000, fill: "both", easing: "linear" }
   );
@@ -189,7 +170,9 @@ export function AyacuchoLexicon() {
       blurRef.current = blurForWidth(window.innerWidth);
       animatedRef.current = Array.from(stage.querySelectorAll<HTMLElement>("[data-lexicon-appearance]")).map((element) => ({
         element,
-        animation: createDepthAnimation(element, depthRef.current, blurRef.current),
+        animation: element.dataset.lexiconAppearance === "logo"
+          ? createLogoAnimation(element)
+          : createDepthAnimation(element, depthRef.current, blurRef.current),
         start: Number(element.dataset.start ?? 0),
         end: Number(element.dataset.end ?? 1),
       }));
@@ -355,27 +338,31 @@ export function AyacuchoLexicon() {
             return (
               <div
                 key={word.id}
-                data-lexicon-appearance
+                data-lexicon-appearance="word"
                 data-start={word.start}
                 data-end={word.end}
                 className={`lexicon-grid-item tone-${word.tone} size-${word.size}`}
                 style={style}
               >
                 <b>{word.label}</b>
-                {word.translation && <small>{word.translation}</small>}
+                {word.translation && <small>{word.translation} · {word.language}</small>}
               </div>
             );
           })}
 
-          {specialWords.map((word) => (
+          {closingSequence.map((step) => (
             <div
-              key={word.id}
-              data-lexicon-appearance
-              data-start={word.start}
-              data-end={word.end}
-              className={`lexicon-special lexicon-special-${word.id}`}
+              key={step.id}
+              data-lexicon-appearance={step.type}
+              data-start={step.start}
+              data-end={step.end}
+              className={step.type === "logo" ? "lexicon-closing-logo" : `lexicon-special lexicon-special-${step.id}`}
             >
-              {word.label}
+              {step.type === "logo" ? (
+                <img src="/raices-logo.png" alt="Raíces" width={168} height={168} />
+              ) : (
+                step.value
+              )}
             </div>
           ))}
         </div>

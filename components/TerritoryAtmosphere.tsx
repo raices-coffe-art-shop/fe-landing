@@ -50,6 +50,9 @@ export function TerritoryAtmosphere() {
       frame = 0;
       const section = root.closest<HTMLElement>(".territory-section");
       const rect = (section ?? root).getBoundingClientRect();
+      const nearViewport = rect.bottom > -window.innerHeight * 0.25 && rect.top < window.innerHeight * 1.35;
+      if (!nearViewport) return;
+
       const progress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / (rect.height + window.innerHeight)));
       root.style.setProperty("--territory-progress", reduced ? "0.45" : progress.toFixed(4));
       section?.style.setProperty("--territory-parallax", reduced ? "0.5" : progress.toFixed(4));

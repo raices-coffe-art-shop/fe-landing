@@ -753,6 +753,29 @@ img { max-width: 100%; }
 .footer-grid p { margin: 20px 0 0; font-size: clamp(14px, .95vw, 16px); line-height: 1.85; color: rgba(238,229,216,.65); }
 .footer-grid a { display: inline-block; padding: 2px 0; transition: color .2s ease, transform .2s ease; }
 .footer-grid a:hover { color: #fff; transform: translateX(3px); }
+.footer-social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.footer-social-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 9px;
+  border: 1px solid rgba(238,229,216,.18);
+  color: rgba(238,229,216,.72);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.footer-social-links span {
+  display: inline-block;
+  font: 700 8px/1 var(--sans);
+  color: #d0a65e;
+}
 .footer-bottom { display: flex; justify-content: space-between; gap: 28px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.1); font-size: clamp(9px, .78vw, 11px); line-height: 1.6; letter-spacing: .14em; text-transform: uppercase; color: rgba(238,229,216,.42); }
 
 .editorial-image { position: relative; overflow: hidden; background: linear-gradient(135deg, #9a6a53, #3d513f); isolation: isolate; }
@@ -5479,7 +5502,8 @@ img { max-width: 100%; }
 
 .continuous-root-main,
 .continuous-root-shadow,
-.continuous-root-branch {
+.continuous-root-branch,
+.continuous-root-child-branch {
   fill: none;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -5515,7 +5539,7 @@ img { max-width: 100%; }
 
 .continuous-root-segment.is-continuation .continuous-root-shadow {
   stroke-width: 5.8;
-  opacity: .14;
+  opacity: 0;
 }
 
 .continuous-root-segment.is-continuation .continuous-root-main {
@@ -5526,11 +5550,29 @@ img { max-width: 100%; }
 
 .continuous-root-branch {
   stroke: url(#continuousRootGradient);
+  filter: drop-shadow(0 2px 3px rgba(35, 24, 15, .18));
 }
 
 .continuous-root-branch.is-continuation {
   stroke: url(#continuousRootQuietGradient);
   opacity: .46;
+}
+
+.continuous-root-branch[data-root-branch-id*="-mini-"] {
+  stroke: rgba(178, 130, 70, .92);
+  filter: drop-shadow(0 2px 4px rgba(35, 24, 15, .24));
+}
+
+.continuous-root-child-branch {
+  stroke: rgba(206, 160, 88, .9);
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 2px rgba(35, 24, 15, .18));
+  will-change: stroke-dashoffset;
 }
 
 .continuous-root-seed {
@@ -5972,7 +6014,7 @@ img { max-width: 100%; }
   .continuous-root-shadow { stroke-width: 6.2; opacity: .2; }
   .continuous-root-segment.is-handoff .continuous-root-main { stroke-width: 2.15; opacity: .58; }
   .continuous-root-segment.is-continuation .continuous-root-main { stroke-width: 2; opacity: .5; }
-  .continuous-root-segment.is-continuation .continuous-root-shadow { opacity: .1; }
+  .continuous-root-segment.is-continuation .continuous-root-shadow { opacity: 0; }
 
   .human-origin-section {
     padding-top: 110px;
@@ -7374,6 +7416,33 @@ img { max-width: 100%; }
   pointer-events: none;
 }
 
+.lexicon-closing-logo {
+  z-index: 7;
+  grid-row: 2 / span 2;
+  grid-column: 2 / span 2;
+  place-self: center;
+  display: grid;
+  place-items: center;
+  width: clamp(92px, 12vw, 168px);
+  height: clamp(92px, 12vw, 168px);
+  opacity: 0;
+  filter: blur(5px);
+  transform: translate3d(0, 0, -1000px);
+  transform-style: preserve-3d;
+  animation: none;
+  pointer-events: none;
+}
+
+.lexicon-closing-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 18px;
+  background: rgba(246, 239, 227, .95);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .34);
+}
+
 .lexicon-editorial-copy {
   z-index: 6;
   pointer-events: none;
@@ -7420,6 +7489,11 @@ img { max-width: 100%; }
     font-size: clamp(5rem, 14vw, 9rem);
   }
 
+  .lexicon-closing-logo {
+    width: clamp(86px, 13vw, 136px);
+    height: clamp(86px, 13vw, 136px);
+  }
+
   .lexicon-grid-item.size-small b { font-size: clamp(.9rem, 2.1vmin, 1.25rem); }
   .lexicon-grid-item.size-medium b { font-size: clamp(1rem, 2.55vmin, 1.55rem); }
   .lexicon-grid-item.size-large b { font-size: clamp(1.2rem, 3.2vmin, 1.9rem); }
@@ -7429,6 +7503,15 @@ img { max-width: 100%; }
   .lexicon-special {
     font-size: clamp(3.4rem, 15.5vw, 5.4rem);
     letter-spacing: -.045em;
+  }
+
+  .lexicon-closing-logo {
+    width: clamp(78px, 24vw, 104px);
+    height: clamp(78px, 24vw, 104px);
+  }
+
+  .lexicon-closing-logo img {
+    border-radius: 14px;
   }
 
   .lexicon-grid-item small {

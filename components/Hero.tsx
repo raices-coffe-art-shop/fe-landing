@@ -64,6 +64,7 @@ export function Hero() {
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
+    let lastProgress = -1;
 
     const fitWord = () => {
       const probe = document.createElement("div");
@@ -104,6 +105,11 @@ export function Hero() {
       const rect = section.getBoundingClientRect();
       const distance = Math.max(1, section.offsetHeight - window.innerHeight);
       const progress = reducedMotion.matches ? 0.62 : clamp(-rect.top / distance);
+      const nearViewport = rect.bottom > -window.innerHeight * 0.15 && rect.top < window.innerHeight * 1.15;
+      if (!nearViewport && Math.abs(progress - lastProgress) < 0.001) return;
+      if (Math.abs(progress - lastProgress) < 0.0008) return;
+      lastProgress = progress;
+
       const mobile = window.innerWidth <= 760;
 
       const sceneX = progress * (mobile ? -28 : -88);
