@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 type Point = { x: number; y: number };
 type RootPath = {
+  id: string;
   d: string;
   start: number;
   end: number;
@@ -61,6 +62,10 @@ function progressFor(progress: number, start: number, end: number) {
   return smoothstep((progress - start) / Math.max(0.001, end - start));
 }
 
+function linearProgressFor(progress: number, start: number, end: number) {
+  return clamp((progress - start) / Math.max(0.001, end - start));
+}
+
 export function ContinuousRoots() {
   const holderRef = useRef<HTMLDivElement>(null);
   const pathRefs = useRef<Array<{ main: SVGPathElement | null; shadow: SVGPathElement | null }>>([]);
@@ -77,7 +82,9 @@ export function ContinuousRoots() {
     if (!nextLayout) return;
 
     nextLayout.paths.forEach((path, index) => {
-      const local = progressFor(nextProgress, path.start, path.end);
+      const local = path.kind === "continuation"
+        ? linearProgressFor(nextProgress, path.start, path.end)
+        : progressFor(nextProgress, path.start, path.end);
       const dashOffset = String(1 - local);
       const refs = pathRefs.current[index];
       if (refs?.shadow) refs.shadow.style.strokeDashoffset = dashOffset;
@@ -136,7 +143,7 @@ export function ContinuousRoots() {
       const purpose = relativeBox("#comunidad");
       const visit = relativeBox("#visita");
 
-      if (!origin || !lexicon || !people || !territory || !archive || !visit) return;
+      if (!origin || !lexicon || !people || !territory || !archive || !art || !visit) return;
 
       const seed = photo
         ? {
@@ -163,72 +170,108 @@ export function ContinuousRoots() {
       ];
       const continuationX = compact ? 0.885 : 0.905;
       const continuationInnerX = continuationX;
-      const continuationAnchors: Point[] = [
+      const territoryHandoffY = territory.top + 2;
+      const beforeArchiveAnchors: Point[] = [
         { x: width * (compact ? 0.75 : 0.79), y: lexicon.bottom - 10 },
         { x: width * continuationX, y: people.top + 18 },
         { x: width * (compact ? 0.892 : 0.916), y: people.top + people.height * 0.24 },
         { x: width * continuationInnerX, y: people.bottom - 68 },
+        { x: width * continuationX, y: territoryHandoffY },
         { x: width * (compact ? 0.902 : 0.918), y: territory.top + territory.height * 0.13 },
         { x: width * continuationInnerX, y: territory.bottom - 62 },
       ];
 
+      const journeyBridgeStart = journey
+        ? {
+            x: width * (compact ? 0.89 : 0.91),
+            y: journey.top + journey.height * 0.4,
+          }
+        : { x: width * continuationInnerX, y: territory.bottom - 62 };
+
       if (journey) {
-        continuationAnchors.push(
+        beforeArchiveAnchors.push(
           { x: width * continuationX, y: journey.top + 24 },
-          { x: width * (compact ? 0.89 : 0.91), y: journey.top + journey.height * 0.4 },
-          { x: width * continuationInnerX, y: journey.bottom - 74 },
+          journeyBridgeStart,
         );
       }
 
-      continuationAnchors.push(
+      const journeyArchiveArtPoints: Point[] = [
+        journeyBridgeStart,
+        { x: width * continuationInnerX, y: journey ? journey.bottom - 74 : archive.top + 28 },
         { x: width * continuationX, y: archive.top + 28 },
-        { x: width * continuationInnerX, y: archive.top + archive.height * 0.42 },
-      );
+        { x: width * (compact ? 0.89 : 0.912), y: archive.top + archive.height * 0.28 },
+        { x: width * continuationInnerX, y: archive.top + archive.height * 0.56 },
+        { x: width * continuationX, y: archive.bottom - (compact ? 48 : 76) },
+        { x: width * continuationInnerX, y: art.top + (compact ? 34 : 54) },
+        { x: width * continuationX, y: art.top + art.height * 0.24 },
+      ];
 
-      if (art) continuationAnchors.push({ x: width * continuationX, y: art.top + art.height * 0.44 });
-      if (catalog) continuationAnchors.push({ x: width * continuationInnerX, y: catalog.top + catalog.height * 0.48 });
-      if (purpose) continuationAnchors.push({ x: width * continuationX, y: purpose.top + purpose.height * 0.52 });
+      const journeyArchiveArtPath: RootPath = {
+        id: "journey-archive-art",
+        d: catmullRomPath(journeyArchiveArtPoints),
+        start: ratioAt(journeyArchiveArtPoints[0].y),
+        end: ratioAt(journeyArchiveArtPoints[journeyArchiveArtPoints.length - 1].y),
+        kind: "continuation",
+      };
 
-      continuationAnchors.push(
+      const afterArchiveAnchors: Point[] = [
+        journeyArchiveArtPoints[journeyArchiveArtPoints.length - 1],
+        { x: width * continuationInnerX, y: art.top + art.height * 0.44 },
+      ];
+      if (catalog) afterArchiveAnchors.push({ x: width * continuationInnerX, y: catalog.top + catalog.height * 0.48 });
+      if (purpose) afterArchiveAnchors.push({ x: width * continuationX, y: purpose.top + purpose.height * 0.52 });
+
+      afterArchiveAnchors.push(
         { x: width * continuationInnerX, y: visit.top + visit.height * 0.54 },
         { x: width * (compact ? 0.8 : 0.82), y: visit.bottom - 8 },
       );
 
-      const continuationSegments: RootPath[] = [];
-      for (let index = 0; index < continuationAnchors.length - 1; index += 2) {
-        const a = continuationAnchors[Math.max(0, index)];
-        const b = continuationAnchors[index + 1];
-        const c = continuationAnchors[Math.min(continuationAnchors.length - 1, index + 2)] ?? b;
-        if (a.y < territory.top && c.y > territory.top) {
+      const buildContinuationSegments = (anchors: Point[], idPrefix: string) => {
+        const segments: RootPath[] = [];
+        for (let index = 0; index < anchors.length - 1; index += 2) {
+          const a = anchors[Math.max(0, index)];
+          const b = anchors[index + 1];
+          const c = anchors[Math.min(anchors.length - 1, index + 2)] ?? b;
+          if (a.y < territory.top && c.y > territory.top) {
+            const startRatio = ratioAt(a.y);
+            const endRatio = ratioAt(b.y);
+            segments.push({
+              id: `${idPrefix}-${segments.length + 1}`,
+              d: catmullRomPath([a, b]),
+              start: startRatio,
+              end: Math.max(startRatio + 0.025, endRatio),
+              kind: "continuation",
+            });
+            continue;
+          }
           const startRatio = ratioAt(a.y);
-          const endRatio = ratioAt(b.y);
-          continuationSegments.push({
-            d: catmullRomPath([a, b]),
+          const endRatio = ratioAt(c.y);
+          segments.push({
+            id: `${idPrefix}-${segments.length + 1}`,
+            d: catmullRomPath([a, b, c]),
             start: startRatio,
             end: Math.max(startRatio + 0.025, endRatio),
             kind: "continuation",
           });
-          continue;
         }
-        const startRatio = ratioAt(a.y);
-        const endRatio = ratioAt(c.y);
-        continuationSegments.push({
-          d: catmullRomPath([a, b, c]),
-          start: startRatio,
-          end: Math.max(startRatio + 0.025, endRatio),
-          kind: "continuation",
-        });
-      }
+        return segments;
+      };
+
+      const continuationSegments = [
+        ...buildContinuationSegments(beforeArchiveAnchors, "before-archive"),
+        journeyArchiveArtPath,
+        ...buildContinuationSegments(afterArchiveAnchors, "after-archive"),
+      ];
 
       const originEnd = ratioAt(origin.bottom - 32);
       const paths: RootPath[] = [
-        { d: catmullRomPath(originPathPoints), start: 0, end: originEnd, kind: "origin" },
-        { d: catmullRomPath(handoffPathPoints), start: Math.max(0, originEnd - 0.004), end: ratioAt(lexicon.top + 6), kind: "handoff" },
+        { id: "origin-seed", d: catmullRomPath(originPathPoints), start: 0, end: originEnd, kind: "origin" },
+        { id: "history-to-lexicon", d: catmullRomPath(handoffPathPoints), start: Math.max(0, originEnd - 0.004), end: ratioAt(lexicon.top + 6), kind: "handoff" },
         ...continuationSegments,
       ];
 
       const branches: Branch[] = [];
-      const addBranch = (from: Point, toXRatio: number, yOffset: number, widthPx: number, opacity: number, kind: RootPath["kind"]) => {
+      const addBranch = (id: string, from: Point, toXRatio: number, yOffset: number, widthPx: number, opacity: number, kind: RootPath["kind"]) => {
         const direction: -1 | 1 = toXRatio < from.x / width ? -1 : 1;
         const to = {
           x: clamp(width * toXRatio, compact ? 12 : 16, width - (compact ? 12 : 16)),
@@ -236,6 +279,7 @@ export function ContinuousRoots() {
         };
         const startRatio = ratioAt(from.y);
         branches.push({
+          id,
           d: branchPath(from, to, direction),
           start: Math.max(0, startRatio - 0.006),
           end: Math.min(1, startRatio + (kind === "origin" ? 0.055 : 0.04)),
@@ -245,19 +289,21 @@ export function ContinuousRoots() {
         });
       };
 
-      addBranch(originPathPoints[1], compact ? 0.035 : 0.075, compact ? 92 : 126, 1.9, 0.62, "origin");
-      addBranch(originPathPoints[2], compact ? 0.18 : 0.225, compact ? 84 : 118, 1.55, 0.48, "origin");
+      addBranch("origin-branch-one", originPathPoints[1], compact ? 0.035 : 0.075, compact ? 92 : 126, 1.9, 0.62, "origin");
+      addBranch("origin-branch-two", originPathPoints[2], compact ? 0.18 : 0.225, compact ? 84 : 118, 1.55, 0.48, "origin");
       if (journey) {
-        addBranch({ x: width * continuationX, y: journey.top + 24 }, compact ? 0.79 : 0.85, compact ? 124 : 188, 1.45, 0.32, "continuation");
+        addBranch("journey-branch", { x: width * continuationX, y: journey.top + 24 }, compact ? 0.79 : 0.85, compact ? 124 : 188, 1.45, 0.32, "continuation");
       }
       if (archive) {
-        addBranch({ x: width * continuationX, y: archive.top + 28 }, compact ? 0.8 : 0.86, compact ? 132 : 190, 1.38, 0.26, "continuation");
+        addBranch("archive-branch", { x: width * continuationX, y: archive.top + 28 }, compact ? 0.8 : 0.86, compact ? 132 : 190, 1.38, 0.26, "continuation");
       }
       if (catalog) {
-        addBranch({ x: width * continuationInnerX, y: catalog.top + catalog.height * 0.48 }, compact ? 0.77 : 0.83, compact ? 142 : 205, 1.3, 0.22, "continuation");
+        addBranch("catalog-branch", { x: width * continuationInnerX, y: catalog.top + catalog.height * 0.48 }, compact ? 0.77 : 0.83, compact ? 142 : 205, 1.3, 0.22, "continuation");
       }
 
       const nextLayout = { width, height, seed, paths, branches };
+      pathRefs.current.length = nextLayout.paths.length;
+      branchRefs.current.length = nextLayout.branches.length;
       layoutRef.current = nextLayout;
       setLayout(nextLayout);
       syncRootProgress(visualProgressRef.current, nextLayout);
@@ -371,7 +417,7 @@ export function ContinuousRoots() {
 
           {layout.paths.map((path, index) => {
             return (
-              <g key={`${path.kind}-${index}`} className={`continuous-root-segment is-${path.kind}`}>
+              <g key={path.id} data-root-path-id={path.id} className={`continuous-root-segment is-${path.kind}`}>
                 <path
                   ref={(node) => {
                     pathRefs.current[index] = { ...pathRefs.current[index], shadow: node };
@@ -398,7 +444,7 @@ export function ContinuousRoots() {
           {layout.branches.map((branch, index) => {
             return (
               <path
-                key={`${branch.kind}-${branch.start}-${index}`}
+                key={branch.id}
                 ref={(node) => {
                   branchRefs.current[index] = node;
                 }}
