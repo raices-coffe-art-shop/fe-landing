@@ -68,3 +68,32 @@ temp/
 *.pem
 *.key
 *.crt
+
+# ─────────────────────────────────────────────────────
+# QA screenshots and recordings generated in repo root
+# Las barras iniciales limitan estas reglas a la raíz.
+# ─────────────────────────────────────────────────────
+
+/qa-*.png
+/qa-*.jpg
+/qa-*.jpeg
+/qa-*.webp
+/qa-*.gif
+/qa-*.mp4
+/qa-*.mov
+
+/root-*.png
+/root-*.jpg
+/root-*.jpeg
+/root-*.webp
+/root-*.gif
+/root-*.mp4
+/root-*.mov
+
+/raices-*.png
+/raices-*.jpg
+/raices-*.jpeg
+/raices-*.webp
+/raices-*.gif
+/raices-*.mp4
+/raices-*.mov
