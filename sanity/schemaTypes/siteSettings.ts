@@ -10,6 +10,15 @@ const socialPlatforms = [
   { title: "Otra", value: "other" },
 ];
 
+function hasProtocol(value: string, protocols: string[]) {
+  try {
+    const url = new URL(value);
+    return protocols.includes(url.protocol);
+  } catch {
+    return false;
+  }
+}
+
 export const siteSettings = defineType({
   name: "siteSettings",
   title: "Configuración del sitio",
@@ -73,6 +82,7 @@ export const siteSettings = defineType({
       name: "socialLinks",
       title: "Redes sociales",
       type: "array",
+      options: { sortable: true },
       of: [
         defineField({
           name: "socialLink",
@@ -112,10 +122,22 @@ export const siteSettings = defineType({
               title: "URL",
               type: "url",
               validation: (Rule) =>
-                Rule.required().uri({
-                  scheme: ["http", "https", "mailto", "tel"],
-                  allowRelative: false,
-                }),
+                Rule.required()
+                  .uri({
+                    scheme: ["http", "https", "mailto", "tel"],
+                    allowRelative: false,
+                  })
+                  .custom((value, context) => {
+                    const parent = context.parent as { platform?: string } | undefined;
+                    if (!value?.trim()) return "Indica una URL.";
+                    if (parent?.platform === "email" && !hasProtocol(value, ["mailto:"])) {
+                      return "Usa un enlace de correo con formato mailto:correo@dominio.com.";
+                    }
+                    if (parent?.platform === "whatsapp" && !hasProtocol(value, ["https:", "tel:"])) {
+                      return "Usa un enlace de WhatsApp https://wa.me/... o un enlace tel:.";
+                    }
+                    return true;
+                  }),
             }),
             defineField({
               name: "isVisible",

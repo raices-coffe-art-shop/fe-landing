@@ -5,6 +5,8 @@ import { sanityClient } from "./client";
 import { urlForImage } from "./image";
 import { siteSettingsQuery } from "./queries";
 
+export const SITE_SETTINGS_TAG = "siteSettings";
+
 export type SocialPlatform = "instagram" | "facebook" | "tiktok" | "youtube" | "whatsapp" | "email" | "other";
 
 export type BrandLogo = {
@@ -123,7 +125,7 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   if (!sanityClient) return normalizeSettings(null);
 
   try {
-    const settings = await sanityClient.fetch<SanitySiteSettings>(siteSettingsQuery, {}, { next: { revalidate: 300 } });
+    const settings = await sanityClient.fetch<SanitySiteSettings>(siteSettingsQuery, {}, { next: { revalidate: 300, tags: [SITE_SETTINGS_TAG] } });
     return normalizeSettings(settings);
   } catch {
     return normalizeSettings(null);
