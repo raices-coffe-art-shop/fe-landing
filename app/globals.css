@@ -5526,11 +5526,17 @@ img { max-width: 100%; }
 
 .continuous-root-branch {
   stroke: url(#continuousRootGradient);
+  filter: drop-shadow(0 2px 3px rgba(35, 24, 15, .18));
 }
 
 .continuous-root-branch.is-continuation {
   stroke: url(#continuousRootQuietGradient);
   opacity: .46;
+}
+
+.continuous-root-branch[data-root-branch-id*="-mini-"] {
+  stroke: rgba(178, 130, 70, .92);
+  filter: drop-shadow(0 2px 4px rgba(35, 24, 15, .24));
 }
 
 .continuous-root-seed {

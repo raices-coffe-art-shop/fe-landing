@@ -94,7 +94,7 @@ export function ContinuousRoots() {
     nextLayout.branches.forEach((branch, index) => {
       const local = progressFor(nextProgress, branch.start, branch.end);
       const ref = branchRefs.current[index];
-      if (ref) ref.style.strokeDashoffset = String(1 - local);
+      if (ref) ref.style.strokeDashoffset = (1 - local).toFixed(6);
     });
   };
 
@@ -317,37 +317,37 @@ export function ContinuousRoots() {
         branches.push({
           id,
           d: branchPath(from, to, direction),
-          start: Math.max(0, startRatio - 0.003),
-          end: Math.min(1, startRatio + (compact ? 0.026 : 0.022)),
-          width: compact ? widthPx * 0.82 : widthPx,
-          opacity,
+          start: Math.max(0, startRatio - (compact ? 0.026 : 0.022)),
+          end: Math.min(1, startRatio + (compact ? 0.03 : 0.026)),
+          width: compact ? widthPx : widthPx * 1.25,
+          opacity: Math.min(0.7, opacity + 0.12),
           kind,
         });
       };
 
       addBranch("origin-branch-one", originPathPoints[1], compact ? 0.035 : 0.075, compact ? 92 : 126, 1.9, 0.62, "origin");
       addBranch("origin-branch-two", originPathPoints[2], compact ? 0.18 : 0.225, compact ? 84 : 118, 1.55, 0.48, "origin");
-      addMiniBranch("origin-mini-one", originPathPoints[3], compact ? 30 : 46, compact ? 54 : 72, 0.95, 0.28, "origin");
-      addMiniBranch("lexicon-mini-one", beforeArchiveAnchors[0], compact ? -34 : -54, compact ? 58 : 78, 0.9, 0.24, "continuation");
-      addMiniBranch("people-mini-one", beforeArchiveAnchors[2], compact ? 28 : 42, compact ? 50 : 68, 0.86, 0.22, "continuation");
-      addMiniBranch("territory-mini-one", beforeArchiveAnchors[5], compact ? -30 : -48, compact ? 54 : 76, 0.88, 0.24, "continuation");
+      addMiniBranch("origin-mini-one", originPathPoints[3], compact ? 62 : 106, compact ? 96 : 148, 2.15, 0.58, "origin");
+      addMiniBranch("lexicon-mini-one", beforeArchiveAnchors[0], compact ? -68 : -118, compact ? 98 : 148, 1.95, 0.5, "continuation");
+      addMiniBranch("people-mini-one", beforeArchiveAnchors[2], compact ? 60 : 104, compact ? 92 : 142, 1.85, 0.48, "continuation");
+      addMiniBranch("territory-mini-one", beforeArchiveAnchors[5], compact ? -66 : -116, compact ? 102 : 154, 1.95, 0.52, "continuation");
       if (journey) {
         addBranch("journey-branch", { x: width * continuationX, y: journey.top + 24 }, compact ? 0.79 : 0.85, compact ? 124 : 188, 1.45, 0.32, "continuation");
-        addMiniBranch("journey-mini-one", journeyArchiveArtPoints[1], compact ? 30 : 48, compact ? 58 : 82, 0.82, 0.2, "continuation");
+        addMiniBranch("journey-mini-one", journeyArchiveArtPoints[1], compact ? 64 : 112, compact ? 104 : 158, 1.8, 0.46, "continuation");
       }
       if (archive) {
         addBranch("archive-branch", { x: width * continuationX, y: archive.top + 28 }, compact ? 0.8 : 0.86, compact ? 132 : 190, 1.38, 0.26, "continuation");
-        addMiniBranch("archive-mini-one", journeyArchiveArtPoints[3], compact ? -28 : -44, compact ? 48 : 66, 0.78, 0.18, "continuation");
-        addMiniBranch("archive-mini-two", journeyArchiveArtPoints[5], compact ? 26 : 40, compact ? 52 : 74, 0.82, 0.2, "continuation");
+        addMiniBranch("archive-mini-one", journeyArchiveArtPoints[3], compact ? -60 : -104, compact ? 92 : 138, 1.74, 0.44, "continuation");
+        addMiniBranch("archive-mini-two", journeyArchiveArtPoints[5], compact ? 58 : 100, compact ? 96 : 146, 1.82, 0.46, "continuation");
       }
       if (catalog) {
         addBranch("catalog-branch", { x: width * continuationInnerX, y: catalog.top + catalog.height * 0.48 }, compact ? 0.77 : 0.83, compact ? 142 : 205, 1.3, 0.22, "continuation");
       }
-      addMiniBranch("art-mini-one", artToEndPoints[1], compact ? -28 : -42, compact ? 44 : 66, 0.8, 0.18, "continuation");
-      addMiniBranch("art-mini-two", artToEndPoints[2], compact ? 28 : 46, compact ? 50 : 72, 0.84, 0.2, "continuation");
-      addMiniBranch("catalog-mini-one", artToEndPoints[5], compact ? -30 : -50, compact ? 56 : 80, 0.78, 0.18, "continuation");
-      addMiniBranch("community-mini-one", artToEndPoints[8], compact ? 26 : 44, compact ? 50 : 72, 0.76, 0.17, "continuation");
-      addMiniBranch("visit-mini-one", artToEndPoints[11], compact ? -26 : -42, compact ? 42 : 64, 0.74, 0.16, "continuation");
+      addMiniBranch("art-mini-one", artToEndPoints[1], compact ? -62 : -110, compact ? 90 : 142, 1.8, 0.46, "continuation");
+      addMiniBranch("art-mini-two", artToEndPoints[2], compact ? 64 : 116, compact ? 96 : 148, 1.88, 0.48, "continuation");
+      addMiniBranch("catalog-mini-one", artToEndPoints[5], compact ? -66 : -122, compact ? 106 : 162, 1.76, 0.44, "continuation");
+      addMiniBranch("community-mini-one", artToEndPoints[8], compact ? 58 : 104, compact ? 96 : 146, 1.68, 0.42, "continuation");
+      addMiniBranch("visit-mini-one", artToEndPoints[11], compact ? -52 : -96, compact ? 84 : 132, 1.6, 0.4, "continuation");
 
       const nextLayout = { width, height, seed, paths, branches };
       pathRefs.current.length = nextLayout.paths.length;
