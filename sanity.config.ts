@@ -17,12 +17,39 @@ if (!dataset) {
 
 export default defineConfig({
   name: "default",
-  title: "Raices - Cafe y Cultura",
+  title: "Raíces — Café y Cultura",
   basePath: "/studio",
   projectId,
   dataset,
-  plugins: [structureTool()],
+  plugins: [
+    structureTool({
+      structure: (S) =>
+        S.list()
+          .title("Contenido")
+          .items([
+            S.listItem()
+              .id("siteSettings")
+              .title("Configuración del sitio")
+              .schemaType("siteSettings")
+              .child(
+                S.document()
+                  .id("siteSettings")
+                  .schemaType("siteSettings")
+                  .documentId("siteSettings")
+                  .title("Configuración del sitio"),
+              ),
+            ...S.documentTypeListItems().filter((item) => item.getId() !== "siteSettings"),
+          ]),
+    }),
+  ],
+  document: {
+    actions: (previous, context) =>
+      context.schemaType === "siteSettings"
+        ? previous.filter(({ action }) => action !== "delete" && action !== "duplicate")
+        : previous,
+  },
   schema: {
     types: schemaTypes,
+    templates: (previous) => previous.filter((template) => template.id !== "siteSettings"),
   },
 });
