@@ -13,11 +13,13 @@ dist/
 coverage/
 
 # Environment variables
+*.env
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.example
 
 # Mantener disponible el ejemplo de variables
 !.env.example
