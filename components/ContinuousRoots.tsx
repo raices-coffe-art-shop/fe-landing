@@ -141,7 +141,7 @@ export function ContinuousRoots() {
       ];
       const continuationX = compact ? 0.885 : 0.905;
       const continuationInnerX = continuationX;
-      const territoryHandoffY = territory.top + 4;
+      const territoryHandoffY = territory.top + 2;
       const continuationAnchors: Point[] = [
         { x: width * (compact ? 0.75 : 0.79), y: lexicon.bottom - 10 },
         { x: width * continuationX, y: people.top + 18 },
