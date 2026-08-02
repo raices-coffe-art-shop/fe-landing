@@ -63,11 +63,33 @@ function progressFor(progress: number, start: number, end: number) {
 
 export function ContinuousRoots() {
   const holderRef = useRef<HTMLDivElement>(null);
+  const pathRefs = useRef<Array<{ main: SVGPathElement | null; shadow: SVGPathElement | null }>>([]);
+  const branchRefs = useRef<Array<SVGPathElement | null>>([]);
+  const layoutRef = useRef<RootLayout | null>(null);
   const rawProgressRef = useRef(0);
   const visualProgressRef = useRef(0);
   const frameRef = useRef(0);
-  const [progress, setProgress] = useState(0);
+  const lastScrollYRef = useRef(0);
+  const scrollSettleFramesRef = useRef(0);
   const [layout, setLayout] = useState<RootLayout | null>(null);
+
+  const syncRootProgress = (nextProgress: number, nextLayout = layoutRef.current) => {
+    if (!nextLayout) return;
+
+    nextLayout.paths.forEach((path, index) => {
+      const local = progressFor(nextProgress, path.start, path.end);
+      const dashOffset = String(1 - local);
+      const refs = pathRefs.current[index];
+      if (refs?.shadow) refs.shadow.style.strokeDashoffset = dashOffset;
+      if (refs?.main) refs.main.style.strokeDashoffset = dashOffset;
+    });
+
+    nextLayout.branches.forEach((branch, index) => {
+      const local = progressFor(nextProgress, branch.start, branch.end);
+      const ref = branchRefs.current[index];
+      if (ref) ref.style.strokeDashoffset = String(1 - local);
+    });
+  };
 
   useEffect(() => {
     const holder = holderRef.current;
@@ -226,7 +248,10 @@ export function ContinuousRoots() {
         addBranch({ x: width * continuationInnerX, y: catalog.top + catalog.height * 0.48 }, compact ? 0.77 : 0.83, compact ? 142 : 205, 1.3, 0.22, "continuation");
       }
 
-      setLayout({ width, height, seed, paths, branches });
+      const nextLayout = { width, height, seed, paths, branches };
+      layoutRef.current = nextLayout;
+      setLayout(nextLayout);
+      syncRootProgress(visualProgressRef.current, nextLayout);
 
       const absoluteTop = window.scrollY + parentRect.top;
       start = absoluteTop + seed.y - window.innerHeight * ACTIVE_TIP_VIEWPORT_RATIO;
@@ -242,15 +267,26 @@ export function ContinuousRoots() {
     const tick = () => {
       frameRef.current = 0;
       updateRaw();
+      const scrollDelta = Math.abs(window.scrollY - lastScrollYRef.current);
+      lastScrollYRef.current = window.scrollY;
+      if (scrollDelta > 0.05) {
+        scrollSettleFramesRef.current = 8;
+      } else if (scrollSettleFramesRef.current > 0) {
+        scrollSettleFramesRef.current -= 1;
+      }
+
       const delta = rawProgressRef.current - visualProgressRef.current;
       visualProgressRef.current += delta * (reducedQuery.matches ? 1 : 0.42);
       if (Math.abs(delta) < 0.0006) visualProgressRef.current = rawProgressRef.current;
-      setProgress((current) => Math.abs(current - visualProgressRef.current) < 0.0007 ? current : visualProgressRef.current);
+      syncRootProgress(visualProgressRef.current);
       parent.style.setProperty("--narrative-root-progress", visualProgressRef.current.toFixed(4));
-      if (Math.abs(rawProgressRef.current - visualProgressRef.current) > 0.0007) frameRef.current = requestAnimationFrame(tick);
+      if (Math.abs(rawProgressRef.current - visualProgressRef.current) > 0.0007 || scrollSettleFramesRef.current > 0) {
+        frameRef.current = requestAnimationFrame(tick);
+      }
     };
 
     const requestTick = () => {
+      scrollSettleFramesRef.current = 8;
       if (!frameRef.current) frameRef.current = requestAnimationFrame(tick);
     };
 
@@ -269,10 +305,12 @@ export function ContinuousRoots() {
 
     measure();
     updateRaw();
+    lastScrollYRef.current = window.scrollY;
     visualProgressRef.current = rawProgressRef.current;
-    setProgress(rawProgressRef.current);
+    syncRootProgress(rawProgressRef.current);
 
     window.addEventListener("scroll", requestTick, { passive: true });
+    window.addEventListener("raices:smooth-scroll", requestTick);
     window.addEventListener("resize", requestMeasure);
     window.addEventListener("orientationchange", requestMeasure);
     window.visualViewport?.addEventListener("resize", requestMeasure);
@@ -281,6 +319,7 @@ export function ContinuousRoots() {
     return () => {
       resizeObserver.disconnect();
       window.removeEventListener("scroll", requestTick);
+      window.removeEventListener("raices:smooth-scroll", requestTick);
       window.removeEventListener("resize", requestMeasure);
       window.removeEventListener("orientationchange", requestMeasure);
       window.visualViewport?.removeEventListener("resize", requestMeasure);
@@ -289,6 +328,10 @@ export function ContinuousRoots() {
       if (resizeFrame) cancelAnimationFrame(resizeFrame);
     };
   }, []);
+
+  useEffect(() => {
+    syncRootProgress(visualProgressRef.current, layout);
+  }, [layout]);
 
   return (
     <div ref={holderRef} className="continuous-root-trail" aria-hidden="true">
@@ -318,30 +361,42 @@ export function ContinuousRoots() {
           </defs>
 
           {layout.paths.map((path, index) => {
-            const local = progressFor(progress, path.start, path.end);
             return (
               <g key={`${path.kind}-${index}`} className={`continuous-root-segment is-${path.kind}`}>
-                <path className="continuous-root-shadow" d={path.d} pathLength="1" style={{ strokeDashoffset: 1 - local }} />
                 <path
+                  ref={(node) => {
+                    pathRefs.current[index] = { ...pathRefs.current[index], shadow: node };
+                  }}
+                  className="continuous-root-shadow"
+                  d={path.d}
+                  pathLength="1"
+                  style={{ strokeDashoffset: 1 }}
+                />
+                <path
+                  ref={(node) => {
+                    pathRefs.current[index] = { ...pathRefs.current[index], main: node };
+                  }}
                   className="continuous-root-main"
                   d={path.d}
                   pathLength="1"
                   data-root-handoff-connector={path.kind === "handoff" ? "previous-root-end" : undefined}
-                  style={{ strokeDashoffset: 1 - local }}
+                  style={{ strokeDashoffset: 1 }}
                 />
               </g>
             );
           })}
 
           {layout.branches.map((branch, index) => {
-            const local = progressFor(progress, branch.start, branch.end);
             return (
               <path
                 key={`${branch.kind}-${branch.start}-${index}`}
+                ref={(node) => {
+                  branchRefs.current[index] = node;
+                }}
                 className={`continuous-root-branch is-${branch.kind}`}
                 d={branch.d}
                 pathLength="1"
-                style={{ strokeDashoffset: 1 - local, strokeWidth: branch.width, opacity: branch.opacity }}
+                style={{ strokeDashoffset: 1, strokeWidth: branch.width, opacity: branch.opacity }}
               />
             );
           })}

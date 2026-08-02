@@ -87,6 +87,13 @@ export function PeopleStack() {
 
     const update = () => {
       frame = 0;
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const sectionRect = section.getBoundingClientRect();
+      const nearViewport = sectionRect.bottom > -window.innerHeight * 0.25 && sectionRect.top < window.innerHeight * 1.35;
+      if (!nearViewport) return;
+
       const mobile = window.innerWidth <= 760;
       cardsRef.current.forEach((card, index) => {
         if (!card) return;
@@ -128,7 +135,7 @@ export function PeopleStack() {
         },
         { index: 0, score: Number.POSITIVE_INFINITY, containsFocus: false },
       );
-      if (sectionRef.current) sectionRef.current.dataset.activeTone = people[activeCard.index]?.portraitTone ?? "green";
+      section.dataset.activeTone = people[activeCard.index]?.portraitTone ?? "green";
     };
 
     const onScroll = () => {

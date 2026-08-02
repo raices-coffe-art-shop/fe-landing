@@ -21,6 +21,9 @@ export function SmoothScroll() {
       },
       infinite: false,
     });
+    const notifySmoothScroll = () => {
+      window.dispatchEvent(new Event("raices:smooth-scroll"));
+    };
 
     let frame = 0;
     const raf = (time: number) => {
@@ -28,9 +31,11 @@ export function SmoothScroll() {
       frame = requestAnimationFrame(raf);
     };
 
+    lenis.on("scroll", notifySmoothScroll);
     frame = requestAnimationFrame(raf);
 
     return () => {
+      lenis.off("scroll", notifySmoothScroll);
       cancelAnimationFrame(frame);
       lenis.destroy();
     };
