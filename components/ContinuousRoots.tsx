@@ -52,12 +52,48 @@ function catmullRomPath(points: Point[]) {
   return d;
 }
 
-function branchPath(from: Point, to: Point, direction: -1 | 1) {
+function stableUnit(value: string) {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0) / 4294967295;
+}
+
+function organicBranchPath(from: Point, to: Point, direction: -1 | 1, seed: number, scale = 1) {
   const dx = to.x - from.x;
   const dy = to.y - from.y;
-  const c1 = { x: from.x + dx * 0.22 + direction * Math.min(32, Math.abs(dx) * 0.08), y: from.y + dy * 0.27 };
-  const c2 = { x: to.x - dx * 0.14, y: to.y - dy * 0.2 };
-  return `M ${from.x.toFixed(1)} ${from.y.toFixed(1)} C ${c1.x.toFixed(1)} ${c1.y.toFixed(1)}, ${c2.x.toFixed(1)} ${c2.y.toFixed(1)}, ${to.x.toFixed(1)} ${to.y.toFixed(1)}`;
+  const absDx = Math.max(12, Math.abs(dx));
+  const absDy = Math.max(24, Math.abs(dy));
+  const sway = (10 + seed * 18) * scale;
+  const counterSway = (6 + (1 - seed) * 13) * scale;
+  const mid = {
+    x: from.x + dx * (0.44 + (seed - 0.5) * 0.16) + direction * sway,
+    y: from.y + dy * (0.42 + (0.5 - seed) * 0.08),
+  };
+  const c1 = {
+    x: from.x + dx * 0.12 - direction * Math.min(18, absDx * 0.2) * scale,
+    y: from.y + dy * (0.2 + seed * 0.08),
+  };
+  const c2 = {
+    x: mid.x - dx * (0.16 + seed * 0.08) + direction * counterSway,
+    y: mid.y - absDy * (0.14 + seed * 0.06),
+  };
+  const c3 = {
+    x: mid.x + dx * (0.12 + seed * 0.08) + direction * Math.min(20, absDx * 0.22) * scale,
+    y: mid.y + absDy * (0.1 + (1 - seed) * 0.08),
+  };
+  const c4 = {
+    x: to.x - dx * (0.16 + (1 - seed) * 0.06) - direction * Math.min(14, absDx * 0.16) * scale,
+    y: to.y - absDy * (0.16 + seed * 0.06),
+  };
+
+  return [
+    `M ${from.x.toFixed(1)} ${from.y.toFixed(1)}`,
+    `C ${c1.x.toFixed(1)} ${c1.y.toFixed(1)}, ${c2.x.toFixed(1)} ${c2.y.toFixed(1)}, ${mid.x.toFixed(1)} ${mid.y.toFixed(1)}`,
+    `C ${c3.x.toFixed(1)} ${c3.y.toFixed(1)}, ${c4.x.toFixed(1)} ${c4.y.toFixed(1)}, ${to.x.toFixed(1)} ${to.y.toFixed(1)}`,
+  ].join(" ");
 }
 
 function progressFor(progress: number, start: number, end: number) {
@@ -294,16 +330,18 @@ export function ContinuousRoots() {
       const branches: RenderBranch[] = [];
       const addBranch = (id: string, from: Point, toXRatio: number, yOffset: number, widthPx: number, opacity: number, kind: RootPath["kind"]) => {
         const direction: -1 | 1 = toXRatio < from.x / width ? -1 : 1;
+        const variant = stableUnit(id);
         const to = {
           x: clamp(width * toXRatio, compact ? 12 : 16, width - (compact ? 12 : 16)),
           y: clamp(from.y + yOffset, from.y + 58, height - 8),
         };
         const startRatio = ratioAt(from.y);
+        const branchStart = Math.min(1, startRatio + (kind === "origin" ? 0.002 : 0.004 + variant * 0.004));
         const branch: RenderBranch = {
           id,
-          d: branchPath(from, to, direction),
-          start: Math.max(0, startRatio - 0.006),
-          end: Math.min(1, startRatio + (kind === "origin" ? 0.055 : 0.04)),
+          d: organicBranchPath(from, to, direction, variant, compact ? 0.74 : 1),
+          start: branchStart,
+          end: Math.min(1, branchStart + (kind === "origin" ? 0.056 : 0.04 + variant * 0.008)),
           width: compact ? widthPx * 0.78 : widthPx,
           opacity,
           kind,
@@ -314,18 +352,20 @@ export function ContinuousRoots() {
       };
       const addMiniBranch = (id: string, from: Point, xOffset: number, yOffset: number, widthPx: number, opacity: number, kind: RootPath["kind"]) => {
         const direction: -1 | 1 = xOffset < 0 ? -1 : 1;
+        const variant = stableUnit(id);
         const to = {
           x: clamp(from.x + xOffset, compact ? 12 : 16, width - (compact ? 12 : 16)),
           y: clamp(from.y + yOffset, from.y + 24, height - 8),
         };
         const startRatio = ratioAt(from.y);
+        const branchStart = Math.min(1, startRatio + (compact ? 0.005 : 0.004) + variant * (compact ? 0.008 : 0.007));
         const branch: RenderBranch = {
           id,
-          d: branchPath(from, to, direction),
-          start: Math.max(0, startRatio - (compact ? 0.026 : 0.022)),
-          end: Math.min(1, startRatio + (compact ? 0.03 : 0.026)),
-          width: compact ? widthPx : widthPx * 1.25,
-          opacity: Math.min(0.7, opacity + 0.12),
+          d: organicBranchPath(from, to, direction, variant, compact ? 0.7 : 1),
+          start: branchStart,
+          end: Math.min(1, branchStart + (compact ? 0.032 : 0.028) + variant * 0.01),
+          width: compact ? Math.max(1.24, widthPx * 0.9) : Math.min(1.8, Math.max(1.45, widthPx * 1.1)),
+          opacity: compact ? Math.min(0.8, opacity + 0.2) : Math.min(0.9, opacity + 0.34),
           kind,
           level: "primary",
         };
@@ -346,6 +386,7 @@ export function ContinuousRoots() {
         const parentLength = probe.getTotalLength();
         if (parentLength < 1) return;
 
+        const variant = stableUnit(id);
         const anchorLength = parentLength * clamp(anchorFraction, 0.48, 0.72);
         const origin = probe.getPointAtLength(anchorLength);
         const before = probe.getPointAtLength(Math.max(0, anchorLength - 1.5));
@@ -357,26 +398,26 @@ export function ContinuousRoots() {
         const forward = { x: tangentX / tangentLength, y: tangentY / tangentLength };
         const scaledLength = compact ? lengthPx * 0.72 : lengthPx;
         const to = {
-          x: clamp(origin.x + normal.x * scaledLength + forward.x * scaledLength * 0.34, compact ? 12 : 16, width - (compact ? 12 : 16)),
-          y: clamp(origin.y + normal.y * scaledLength + forward.y * scaledLength * 0.34 + scaledLength * 0.18, origin.y + 8, height - 8),
-        };
-        const c1 = {
-          x: origin.x + normal.x * scaledLength * 0.16 + forward.x * scaledLength * curvature,
-          y: origin.y + normal.y * scaledLength * 0.16 + forward.y * scaledLength * curvature,
-        };
-        const c2 = {
-          x: to.x - normal.x * scaledLength * 0.12,
-          y: to.y - normal.y * scaledLength * 0.12,
+          x: clamp(
+            origin.x + normal.x * scaledLength * (0.82 + variant * 0.28) + forward.x * scaledLength * (0.22 + curvature * 0.24),
+            compact ? 12 : 16,
+            width - (compact ? 12 : 16),
+          ),
+          y: clamp(
+            origin.y + normal.y * scaledLength * (0.62 + variant * 0.18) + forward.y * scaledLength * 0.28 + scaledLength * (0.16 + variant * 0.12),
+            origin.y + 8,
+            height - 8,
+          ),
         };
         const childStart = parentBranch.start + (parentBranch.end - parentBranch.start) * anchorFraction + startDelay;
         branches.push({
           id,
           parentBranchId: parentBranch.id,
-          d: `M ${origin.x.toFixed(1)} ${origin.y.toFixed(1)} C ${c1.x.toFixed(1)} ${c1.y.toFixed(1)}, ${c2.x.toFixed(1)} ${c2.y.toFixed(1)}, ${to.x.toFixed(1)} ${to.y.toFixed(1)}`,
-          start: Math.min(1, childStart),
-          end: Math.min(1, childStart + (compact ? 0.026 : 0.022)),
-          width: compact ? 1.05 : 1.22,
-          opacity: compact ? 0.64 : 0.72,
+          d: organicBranchPath({ x: origin.x, y: origin.y }, to, side, variant, compact ? 0.45 : 0.62),
+          start: Math.min(1, Math.max(parentBranch.start, childStart)),
+          end: Math.min(1, childStart + (compact ? 0.028 : 0.024) + variant * 0.006),
+          width: compact ? 1.08 : 1.24,
+          opacity: compact ? 0.68 : 0.76,
           kind: parentBranch.kind,
           level: "secondary",
         });
