@@ -5479,7 +5479,8 @@ img { max-width: 100%; }
 
 .continuous-root-main,
 .continuous-root-shadow,
-.continuous-root-branch {
+.continuous-root-branch,
+.continuous-root-child-branch {
   fill: none;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -5537,6 +5538,18 @@ img { max-width: 100%; }
 .continuous-root-branch[data-root-branch-id*="-mini-"] {
   stroke: rgba(178, 130, 70, .92);
   filter: drop-shadow(0 2px 4px rgba(35, 24, 15, .24));
+}
+
+.continuous-root-child-branch {
+  stroke: rgba(206, 160, 88, .9);
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 2px rgba(35, 24, 15, .18));
+  will-change: stroke-dashoffset;
 }
 
 .continuous-root-seed {
