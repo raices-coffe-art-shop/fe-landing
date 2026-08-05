@@ -44,6 +44,7 @@ export function RootsCanvas({ stage, progress, className = "", showSeed = false 
     dpr: number;
   } | null>(null);
   const [layout, setLayout] = useState<RootLayout | null>(null);
+  const lastDrawProgressRef = useRef(-1);
 
   useEffect(() => {
     const holder = holderRef.current;
@@ -97,7 +98,8 @@ export function RootsCanvas({ stage, progress, className = "", showSeed = false 
     if (!canvas || !layout) return;
     const context = canvas.getContext("2d");
     if (!context) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.65);
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, coarse ? 1.25 : 1.55);
 
     canvas.width = Math.max(1, Math.round(layout.width * dpr));
     canvas.height = Math.max(1, Math.round(layout.height * dpr));
@@ -133,6 +135,7 @@ export function RootsCanvas({ stage, progress, className = "", showSeed = false 
     const staticContext = staticCanvas.getContext("2d");
     if (!staticContext) return;
     staticContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+    lastDrawProgressRef.current = -1;
     staticLayerRef.current = {
       canvas: staticCanvas,
       context: staticContext,
@@ -149,7 +152,10 @@ export function RootsCanvas({ stage, progress, className = "", showSeed = false 
     const staticLayer = staticLayerRef.current;
     if (!staticLayer) return;
     const safeProgress = clamp(progress);
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.65);
+    if (Math.abs(lastDrawProgressRef.current - safeProgress) < 0.0012) return;
+    lastDrawProgressRef.current = safeProgress;
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, coarse ? 1.25 : 1.55);
 
     const drawRaster = (target: CanvasRenderingContext2D, index: number) => {
       const raster = rastersRef.current[index];

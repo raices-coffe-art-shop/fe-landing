@@ -97,3 +97,39 @@ temp/
 /raices-*.gif
 /raices-*.mp4
 /raices-*.mov
+# Flutter/Dart files do not belong to this Next.js project
+/.dart_tool/
+/.flutter-plugins
+/.flutter-plugins-dependencies
+/.metadata
+/analysis_options.yaml
+/flutter_launcher_icons.yaml
+/pubspec.yaml
+/pubspec.lock
+/android/
+/ios/
+/legacy_flutter/
+/lib/
+/test/
+/web/
+/assets/icon/
+/artifacts/manual-validation/
+
+# Copias accidentales del proyecto dentro de scripts
+/scripts/app/
+/scripts/components/
+/scripts/data/
+/scripts/public/
+/scripts/sanity/
+/scripts/types/
+/scripts/messages/
+/scripts/package.json
+/scripts/package-lock.json
+/scripts/next.config.ts
+/scripts/tsconfig.json
+/scripts/sanity.config.ts
+
+# Cachés de TypeScript
+*.tsbuildinfo
+/.codex-backup/
+/_revision_zips/

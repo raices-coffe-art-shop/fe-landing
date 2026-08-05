@@ -21,6 +21,7 @@ export function EditorialImage({ src, alt, className = "", position = "center", 
           alt={alt}
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
+          decoding="async"
           onError={() => setFailed(true)}
           style={{ objectPosition: position }}
         />

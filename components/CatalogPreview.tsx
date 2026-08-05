@@ -1,15 +1,29 @@
-"use client";
-
-import { useMemo, useState } from "react";
-import { products } from "@/data/site";
+import Link from "next/link";
 import { contactChannels } from "@/data/social";
-import { EditorialImage } from "./EditorialImage";
+import { getCatalogCategories, getCatalogItems, getFeaturedCatalogItems } from "@/sanity/lib/catalog";
+import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
+import { CatalogCollection } from "./CatalogCollection";
 
-const filters = ["Todo", "Café y cacao", "Alimentos", "Arte"];
+export async function CatalogPreview() {
+  const [featuredItems, allItems, categories, settings] = await Promise.all([
+    getFeaturedCatalogItems(),
+    getCatalogItems(),
+    getCatalogCategories(),
+    getSiteSettings(),
+  ]);
+  const contactHref = getPrimarySocialHref(settings, "whatsapp", contactChannels.whatsappHref);
 
-export function CatalogPreview() {
-  const [filter, setFilter] = useState("Todo");
-  const filtered = useMemo(() => filter === "Todo" ? products : products.filter((p) => p.category === filter), [filter]);
+  // La portada debe mostrar dos filas completas en escritorio. Primero se
+  // respetan los productos destacados en Sanity y, si hay menos de seis, se
+  // completa la selección con los siguientes productos activos del catálogo.
+  const featuredIds = new Set(featuredItems.map((item) => item.id));
+  const items = [
+    ...featuredItems,
+    ...allItems.filter((item) => !featuredIds.has(item.id)),
+  ].slice(0, 6);
+
+  const featuredCategorySlugs = new Set(items.map((item) => item.category.slug));
+  const featuredCategories = categories.filter((category) => featuredCategorySlugs.has(category.slug));
 
   return (
     <section className="catalog-section" id="catalogo">
@@ -18,37 +32,23 @@ export function CatalogPreview() {
           <p className="eyebrow">Catálogo visual</p>
           <h2>Productos con nombre, procedencia y una historia detrás.</h2>
         </div>
-        <p>Explora cafés, alimentos, postres, pinturas y piezas seleccionadas. Cada ficha indica qué es, de dónde viene, quién está relacionado con su elaboración y cómo puedes conseguirlo.</p>
+        <div className="catalog-title-side">
+          <p>Explora cafés, alimentos, postres, pinturas y piezas seleccionadas. Cada ficha explica qué es, de dónde viene y cómo consultarlo.</p>
+          <Link className="catalog-title-cta" href="/catalogo">Ver catálogo completo <span aria-hidden="true">↗</span></Link>
+        </div>
       </div>
 
-      <div className="catalog-filters page-shell" role="group" aria-label="Filtrar productos">
-        {filters.map((item) => (
-          <button key={item} className={filter === item ? "is-active" : ""} onClick={() => setFilter(item)} aria-pressed={filter === item}>
-            {item}
-          </button>
-        ))}
-      </div>
+      <CatalogCollection
+        items={items}
+        categories={featuredCategories}
+        contactHref={contactHref}
+        showCatalogPrices={settings.showCatalogPrices}
+        variant="preview"
+      />
 
-      <div className="catalog-rail page-shell">
-        {filtered.map((product, index) => (
-          <article key={product.name} className={`product-card tone-${product.tone}`}>
-            <div className="product-image">
-              <EditorialImage src={product.image} alt={product.name} position={index === 0 ? "center 62%" : "center"} />
-              <span className="product-number">0{index + 1}</span>
-            </div>
-            <div className="product-copy">
-              <div><span>{product.category}</span><span>{product.procedencia}</span></div>
-              <h3>{product.name}</h3>
-              <p>{product.note}</p>
-              <a href={`${contactChannels.whatsappHref}?text=${encodeURIComponent(`Hola, quisiera consultar por ${product.name}.`)}`} target="_blank" rel="noreferrer">
-                Consultar <span>↗</span>
-              </a>
-              <a href={`/catalogo/${product.slug}`}>
-                Ver ficha <span>↗</span>
-              </a>
-            </div>
-          </article>
-        ))}
+      <div className="catalog-closing page-shell">
+        <p>El catálogo cambia con las cosechas, las piezas disponibles y las historias que pueden documentarse con claridad.</p>
+        <Link href="/catalogo">Explorar el catálogo completo <span aria-hidden="true">↗</span></Link>
       </div>
     </section>
   );

@@ -3,11 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
+    "dev:turbopack": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "tsc --noEmit",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "catalog:migrate:dry": "node --env-file=.env.local scripts/migrate-catalog.mjs --dry-run",
+    "catalog:migrate": "node --env-file=.env.local scripts/migrate-catalog.mjs",
+    "sanity:verify-read": "node scripts/verify-sanity-read.mjs",
+    "sanity:backfill-price-visibility": "node scripts/backfill-price-visibility.mjs",
+    "sanity:backfill-social-links": "node scripts/backfill-official-social-links.mjs"
   },
   "dependencies": {
     "lenis": "^1.3.25",

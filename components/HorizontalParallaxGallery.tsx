@@ -7,7 +7,7 @@ const postcards = [
   {
     title: "Sacsamarca",
     subtitle: "Territorio",
-    src: "/ayacucho-sacsamarca.jpg",
+    src: "/ayacucho-sacsamarca.webp",
     size: "large",
     offset: -54,
     speed: .42

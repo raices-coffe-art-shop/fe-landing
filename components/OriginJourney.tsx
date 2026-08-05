@@ -44,7 +44,7 @@ export function OriginJourney() {
           <div className="journey-photo-strip" aria-hidden="true">
             {documentaryStops.map((stage, index) => (
               <span key={stage.id} className={active === index ? "is-active" : ""}>
-                {stage.coverImage ? <img src={stage.coverImage} alt="" /> : <i />}
+                {stage.coverImage ? <img src={stage.coverImage} alt="" loading="lazy" decoding="async" /> : <i />}
               </span>
             ))}
           </div>

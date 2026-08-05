@@ -114,6 +114,9 @@ export function ContinuousRoots() {
   const frameRef = useRef(0);
   const lastScrollYRef = useRef(0);
   const scrollSettleFramesRef = useRef(0);
+  const pathLocalRef = useRef<number[]>([]);
+  const branchLocalRef = useRef<number[]>([]);
+  const activeRef = useRef(false);
   const [layout, setLayout] = useState<RootLayout | null>(null);
 
   const syncRootProgress = (nextProgress: number, nextLayout = layoutRef.current) => {
@@ -123,7 +126,9 @@ export function ContinuousRoots() {
       const local = path.kind === "continuation"
         ? linearProgressFor(nextProgress, path.start, path.end)
         : progressFor(nextProgress, path.start, path.end);
-      const dashOffset = (1 - local).toFixed(6);
+      if (Math.abs((pathLocalRef.current[index] ?? -1) - local) < 0.0009) return;
+      pathLocalRef.current[index] = local;
+      const dashOffset = (1 - local).toFixed(5);
       const refs = pathRefs.current[index];
       if (refs?.shadow) refs.shadow.style.strokeDashoffset = dashOffset;
       if (refs?.main) refs.main.style.strokeDashoffset = dashOffset;
@@ -131,8 +136,10 @@ export function ContinuousRoots() {
 
     nextLayout.branches.forEach((branch, index) => {
       const local = progressFor(nextProgress, branch.start, branch.end);
+      if (Math.abs((branchLocalRef.current[index] ?? -1) - local) < 0.0012) return;
+      branchLocalRef.current[index] = local;
       const ref = branchRefs.current[index];
-      if (ref) ref.style.strokeDashoffset = (1 - local).toFixed(6);
+      if (ref) ref.style.strokeDashoffset = (1 - local).toFixed(5);
     });
   };
 
@@ -146,10 +153,9 @@ export function ContinuousRoots() {
     let end = 1;
     let resizeFrame = 0;
 
-    const relativeBox = (selector: string) => {
+    const relativeBox = (selector: string, parentRect: DOMRect) => {
       const element = parent.querySelector<HTMLElement>(selector);
       if (!element) return null;
-      const parentRect = parent.getBoundingClientRect();
       const rect = element.getBoundingClientRect();
       return {
         left: rect.left - parentRect.left,
@@ -169,17 +175,17 @@ export function ContinuousRoots() {
       if (width < 1 || height < 1) return;
 
       const compact = width <= 760;
-      const origin = relativeBox("#historia");
-      const photo = relativeBox(".history-photo, .human-origin-photo");
-      const lexicon = relativeBox("#lengua");
-      const people = relativeBox("#personas");
-      const territory = relativeBox("#territorio");
-      const journey = relativeBox("#origen");
-      const archive = relativeBox("#archivo");
-      const art = relativeBox("#arte");
-      const catalog = relativeBox("#catalogo");
-      const purpose = relativeBox("#comunidad");
-      const visit = relativeBox("#visita");
+      const origin = relativeBox("#historia", parentRect);
+      const photo = relativeBox(".history-photo, .human-origin-photo", parentRect);
+      const lexicon = relativeBox("#lengua", parentRect);
+      const people = relativeBox("#personas", parentRect);
+      const territory = relativeBox("#territorio", parentRect);
+      const journey = relativeBox("#origen", parentRect);
+      const archive = relativeBox("#archivo", parentRect);
+      const art = relativeBox("#arte", parentRect);
+      const catalog = relativeBox("#catalogo", parentRect);
+      const purpose = relativeBox("#comunidad", parentRect);
+      const visit = relativeBox("#visita", parentRect);
 
       if (!origin || !lexicon || !people || !territory || !archive || !art || !catalog || !purpose || !visit) return;
 
@@ -473,6 +479,8 @@ export function ContinuousRoots() {
       const nextLayout = { width, height, seed, paths, branches };
       pathRefs.current.length = nextLayout.paths.length;
       branchRefs.current.length = nextLayout.branches.length;
+      pathLocalRef.current = Array(nextLayout.paths.length).fill(Number.NaN);
+      branchLocalRef.current = Array(nextLayout.branches.length).fill(Number.NaN);
       layoutRef.current = nextLayout;
       setLayout(nextLayout);
       syncRootProgress(visualProgressRef.current, nextLayout);
@@ -494,13 +502,13 @@ export function ContinuousRoots() {
       const scrollDelta = Math.abs(window.scrollY - lastScrollYRef.current);
       lastScrollYRef.current = window.scrollY;
       if (scrollDelta > 0.05) {
-        scrollSettleFramesRef.current = 8;
+        scrollSettleFramesRef.current = 5;
       } else if (scrollSettleFramesRef.current > 0) {
         scrollSettleFramesRef.current -= 1;
       }
 
       const delta = rawProgressRef.current - visualProgressRef.current;
-      visualProgressRef.current += delta * (reducedQuery.matches ? 1 : 0.42);
+      visualProgressRef.current += delta * (reducedQuery.matches ? 1 : 0.52);
       if (Math.abs(delta) < 0.0006) visualProgressRef.current = rawProgressRef.current;
       syncRootProgress(visualProgressRef.current);
       parent.style.setProperty("--narrative-root-progress", visualProgressRef.current.toFixed(4));
@@ -510,7 +518,8 @@ export function ContinuousRoots() {
     };
 
     const requestTick = () => {
-      scrollSettleFramesRef.current = 8;
+      if (!activeRef.current && !reducedQuery.matches) return;
+      scrollSettleFramesRef.current = 5;
       if (!frameRef.current) frameRef.current = requestAnimationFrame(tick);
     };
 
@@ -527,6 +536,15 @@ export function ContinuousRoots() {
     resizeObserver.observe(parent);
     parent.querySelectorAll<HTMLElement>("section, .history-photo, .human-origin-photo").forEach((element) => resizeObserver.observe(element));
 
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        activeRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) requestTick();
+      },
+      { rootMargin: "80% 0px 80% 0px" },
+    );
+    visibilityObserver.observe(parent);
+
     measure();
     updateRaw();
     lastScrollYRef.current = window.scrollY;
@@ -534,7 +552,6 @@ export function ContinuousRoots() {
     syncRootProgress(rawProgressRef.current);
 
     window.addEventListener("scroll", requestTick, { passive: true });
-    window.addEventListener("raices:smooth-scroll", requestTick);
     window.addEventListener("resize", requestMeasure);
     window.addEventListener("orientationchange", requestMeasure);
     window.visualViewport?.addEventListener("resize", requestMeasure);
@@ -542,8 +559,8 @@ export function ContinuousRoots() {
 
     return () => {
       resizeObserver.disconnect();
+      visibilityObserver.disconnect();
       window.removeEventListener("scroll", requestTick);
-      window.removeEventListener("raices:smooth-scroll", requestTick);
       window.removeEventListener("resize", requestMeasure);
       window.removeEventListener("orientationchange", requestMeasure);
       window.visualViewport?.removeEventListener("resize", requestMeasure);

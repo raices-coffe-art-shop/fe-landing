@@ -10,7 +10,7 @@ const stories = [
     title: <>Una <em>distancia</em><br />que revela el origen.</>,
     note: "Capítulo I · Ayacucho",
     body: "Raíces nace de mirar Ayacucho desde lejos y entender que el origen no desaparece: se vuelve más nítido, más necesario y más fácil de reconocer.",
-    left: "/ayacucho-sacsamarca.jpg",
+    left: "/ayacucho-sacsamarca.webp",
     right: "https://images.unsplash.com/photo-1526392060635-9d6019884377?auto=format&fit=crop&w=1600&q=86"
   },
   {

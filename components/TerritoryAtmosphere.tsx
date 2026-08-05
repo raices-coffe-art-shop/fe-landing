@@ -44,30 +44,42 @@ export function TerritoryAtmosphere() {
     if (!root) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const section = root.closest<HTMLElement>(".territory-section") ?? root;
     let frame = 0;
+    let active = false;
+    let lastProgress = -1;
 
     const update = () => {
       frame = 0;
-      const section = root.closest<HTMLElement>(".territory-section");
-      const rect = (section ?? root).getBoundingClientRect();
-      const nearViewport = rect.bottom > -window.innerHeight * 0.25 && rect.top < window.innerHeight * 1.35;
-      if (!nearViewport) return;
-
+      if (!active && !reduced) return;
+      const rect = section.getBoundingClientRect();
       const progress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / (rect.height + window.innerHeight)));
+      if (!reduced && Math.abs(progress - lastProgress) < 0.0015) return;
+      lastProgress = progress;
       root.style.setProperty("--territory-progress", reduced ? "0.45" : progress.toFixed(4));
-      section?.style.setProperty("--territory-parallax", reduced ? "0.5" : progress.toFixed(4));
-      section?.style.setProperty("--territory-photo-y", reduced ? "0px" : `${((progress - 0.5) * -34).toFixed(2)}px`);
+      section.style.setProperty("--territory-parallax", reduced ? "0.5" : progress.toFixed(4));
+      section.style.setProperty("--territory-photo-y", reduced ? "0px" : `${((progress - 0.5) * -34).toFixed(2)}px`);
     };
 
     const requestUpdate = () => {
+      if (!active && !reduced) return;
       if (!frame) frame = requestAnimationFrame(update);
     };
 
-    update();
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        active = entry.isIntersecting;
+        if (active) requestUpdate();
+      },
+      { rootMargin: "60% 0px 60% 0px" },
+    );
+    observer.observe(section);
+
     window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
+    window.addEventListener("resize", requestUpdate, { passive: true });
 
     return () => {
+      observer.disconnect();
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
       if (frame) cancelAnimationFrame(frame);

@@ -1,33 +1,22 @@
-import { defineField, defineType } from "sanity";
-
-const socialPlatforms = [
-  { title: "Instagram", value: "instagram" },
-  { title: "Facebook", value: "facebook" },
-  { title: "TikTok", value: "tiktok" },
-  { title: "YouTube", value: "youtube" },
-  { title: "WhatsApp", value: "whatsapp" },
-  { title: "Correo electrónico", value: "email" },
-  { title: "Otra", value: "other" },
-];
-
-function hasProtocol(value: string, protocols: string[]) {
-  try {
-    const url = new URL(value);
-    return protocols.includes(url.protocol);
-  } catch {
-    return false;
-  }
-}
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const siteSettings = defineType({
   name: "siteSettings",
   title: "Configuración del sitio",
   type: "document",
+  groups: [
+    { name: "brand", title: "Marca", default: true },
+    { name: "catalog", title: "Catálogo" },
+    { name: "social", title: "Redes sociales" },
+  ],
   initialValue: {
     title: "Configuración del sitio",
     brandLogoAlt: "Raíces — Café y Cultura",
+    showCatalogPrices: true,
     socialLinks: [
       {
+        _type: "socialLink",
+        _key: "whatsapp",
         platform: "whatsapp",
         label: "WhatsApp",
         url: "https://wa.me/51915123159",
@@ -35,6 +24,8 @@ export const siteSettings = defineType({
         order: 10,
       },
       {
+        _type: "socialLink",
+        _key: "email",
         platform: "email",
         label: "Correo electrónico",
         url: "mailto:raicescoffeeartshop@gmail.com",
@@ -42,16 +33,20 @@ export const siteSettings = defineType({
         order: 20,
       },
       {
+        _type: "socialLink",
+        _key: "instagram",
         platform: "instagram",
         label: "Instagram",
-        url: "https://instagram.com",
+        url: "https://www.instagram.com/raicescoffeeartshop/",
         isVisible: true,
         order: 30,
       },
       {
+        _type: "socialLink",
+        _key: "facebook",
         platform: "facebook",
         label: "Facebook",
-        url: "https://facebook.com",
+        url: "https://www.facebook.com/profile.php?id=100089073728506&locale=es_LA",
         isVisible: true,
         order: 40,
       },
@@ -61,13 +56,18 @@ export const siteSettings = defineType({
     defineField({
       name: "title",
       title: "Título interno",
+      description: "Solo sirve para reconocer este documento dentro de Sanity.",
       type: "string",
+      group: "brand",
       initialValue: "Configuración del sitio",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "brandLogo",
       title: "Logo principal",
+      description: "La misma imagen se usa en navbar, footer y /links.",
       type: "image",
+      group: "brand",
       options: { hotspot: true },
       validation: (Rule) => Rule.required(),
     }),
@@ -75,127 +75,42 @@ export const siteSettings = defineType({
       name: "brandLogoAlt",
       title: "Texto alternativo del logo",
       type: "string",
+      group: "brand",
       initialValue: "Raíces — Café y Cultura",
-      validation: (Rule) => Rule.required().min(2),
+      validation: (Rule) => Rule.required().min(2).max(160),
+    }),
+    defineField({
+      name: "showCatalogPrices",
+      title: "Mostrar precios en todo el catálogo",
+      description: "Control general. Al desactivarlo se ocultan todos los precios en la portada, /catalogo y las fichas, sin borrar los montos guardados.",
+      type: "boolean",
+      group: "catalog",
+      initialValue: true,
     }),
     defineField({
       name: "socialLinks",
       title: "Redes sociales",
+      description: "Administra las URLs, el orden y la visibilidad del footer y de /links.",
       type: "array",
+      group: "social",
       options: { sortable: true },
-      of: [
-        defineField({
-          name: "socialLink",
-          title: "Red social",
-          type: "object",
-          fields: [
-            defineField({
-              name: "platform",
-              title: "Plataforma",
-              type: "string",
-              options: {
-                list: socialPlatforms,
-                layout: "dropdown",
-              },
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: "customPlatformName",
-              title: "Nombre personalizado",
-              type: "string",
-              hidden: ({ parent }) => parent?.platform !== "other",
-              validation: (Rule) =>
-                Rule.custom((value, context) => {
-                  const parent = context.parent as { platform?: string } | undefined;
-                  if (parent?.platform === "other" && !value?.trim()) return "Indica el nombre de la plataforma.";
-                  return true;
-                }),
-            }),
-            defineField({
-              name: "label",
-              title: "Etiqueta",
-              type: "string",
-              validation: (Rule) => Rule.required().min(2),
-            }),
-            defineField({
-              name: "url",
-              title: "URL",
-              type: "url",
-              validation: (Rule) =>
-                Rule.required()
-                  .uri({
-                    scheme: ["http", "https", "mailto", "tel"],
-                    allowRelative: false,
-                  })
-                  .custom((value, context) => {
-                    const parent = context.parent as { platform?: string } | undefined;
-                    if (!value?.trim()) return "Indica una URL.";
-                    if (parent?.platform === "email" && !hasProtocol(value, ["mailto:"])) {
-                      return "Usa un enlace de correo con formato mailto:correo@dominio.com.";
-                    }
-                    if (parent?.platform === "whatsapp" && !hasProtocol(value, ["https:", "tel:"])) {
-                      return "Usa un enlace de WhatsApp https://wa.me/... o un enlace tel:.";
-                    }
-                    return true;
-                  }),
-            }),
-            defineField({
-              name: "isVisible",
-              title: "Visible",
-              type: "boolean",
-              initialValue: true,
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: "order",
-              title: "Orden",
-              type: "number",
-              initialValue: 10,
-              validation: (Rule) => Rule.required().integer().min(0),
-            }),
-          ],
-          preview: {
-            select: {
-              title: "label",
-              platform: "platform",
-              visible: "isVisible",
-            },
-            prepare({ title, platform, visible }) {
-              return {
-                title: title || "Red sin etiqueta",
-                subtitle: `${platform || "sin plataforma"}${visible === false ? " - oculta" : ""}`,
-              };
-            },
-          },
-          validation: (Rule) =>
-            Rule.custom((value) => {
-              const item = value as
-                | {
-                    platform?: string;
-                    customPlatformName?: string;
-                    label?: string;
-                    url?: string;
-                    isVisible?: boolean;
-                    order?: number;
-                  }
-                | undefined;
-              if (!item) return true;
-              if (!item.platform || !item.label?.trim() || !item.url || typeof item.isVisible !== "boolean" || typeof item.order !== "number") {
-                return "Completa plataforma, etiqueta, URL, visibilidad y orden antes de publicar.";
-              }
-              if (item.platform === "other" && !item.customPlatformName?.trim()) return "Indica el nombre personalizado.";
-              return true;
-            }),
+      of: [defineArrayMember({ type: "socialLink" })],
+      validation: (Rule) =>
+        Rule.unique().custom((links) => {
+          if (!Array.isArray(links)) return true;
+          const seen = new Set<string>();
+          for (const link of links as Array<{ platform?: string }>) {
+            if (!link.platform || link.platform === "other") continue;
+            if (seen.has(link.platform)) return `La plataforma ${link.platform} está repetida.`;
+            seen.add(link.platform);
+          }
+          return true;
         }),
-      ],
-      validation: (Rule) => Rule.unique(),
     }),
   ],
   preview: {
     prepare() {
-      return {
-        title: "Configuración del sitio",
-      };
+      return { title: "Configuración del sitio" };
     },
   },
 });

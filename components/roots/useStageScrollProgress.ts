@@ -1,45 +1,75 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { clamp, type RootStage } from "./rootGeometry";
 
 export function useStageScrollProgress(stage: RootStage) {
   const [progress, setProgress] = useState(0);
+  const progressRef = useRef(0);
 
   useEffect(() => {
+    const element = document.querySelector<HTMLElement>(`[data-roots-stage="${stage}"]`);
+    if (!element) return;
+
     const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
-    let interval = 0;
+    let active = false;
 
     const update = () => {
       frame = 0;
-      const element = document.querySelector<HTMLElement>(`[data-roots-stage="${stage}"]`);
-      if (!element) return;
+      if (!active && !reducedQuery.matches) return;
+
       const rect = element.getBoundingClientRect();
-      const scrollableDistance = Math.max(1, rect.height - window.innerHeight * (stage === "lexicon" ? 0.18 : 0.72));
-      const viewportReference = window.innerHeight * (stage === "origin" ? 0.58 : stage === "territory" ? 0.54 : stage === "lexicon" ? 0.12 : 0.5);
-      const next = reducedQuery.matches ? 1 : clamp((viewportReference - rect.top) / scrollableDistance);
-      setProgress((current) => (Math.abs(current - next) < 0.001 ? current : next));
+      const scrollableDistance = Math.max(
+        1,
+        rect.height - window.innerHeight * (stage === "lexicon" ? 0.18 : 0.72),
+      );
+      const viewportReference = window.innerHeight * (
+        stage === "origin" ? 0.58
+          : stage === "territory" ? 0.54
+            : stage === "lexicon" ? 0.12
+              : 0.5
+      );
+      const next = reducedQuery.matches
+        ? 1
+        : clamp((viewportReference - rect.top) / scrollableDistance);
+
+      if (Math.abs(progressRef.current - next) < 0.0015) return;
+      progressRef.current = next;
+      setProgress(next);
     };
 
     const requestUpdate = () => {
+      if (!active && !reducedQuery.matches) return;
       if (!frame) frame = requestAnimationFrame(update);
     };
 
-    const observer = new ResizeObserver(requestUpdate);
-    const element = document.querySelector<HTMLElement>(`[data-roots-stage="${stage}"]`);
-    if (element) observer.observe(element);
-    update();
-    interval = window.setInterval(update, 180);
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", requestUpdate);
-    window.addEventListener("orientationchange", requestUpdate);
-    window.visualViewport?.addEventListener("resize", requestUpdate);
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        active = entry.isIntersecting;
+        if (active) requestUpdate();
+      },
+      { rootMargin: "70% 0px 70% 0px" },
+    );
+    intersectionObserver.observe(element);
+
+    const resizeObserver = new ResizeObserver(requestUpdate);
+    resizeObserver.observe(element);
+
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate, { passive: true });
+    window.addEventListener("orientationchange", requestUpdate, { passive: true });
+    window.visualViewport?.addEventListener("resize", requestUpdate, { passive: true });
     reducedQuery.addEventListener("change", requestUpdate);
+
+    active = element.getBoundingClientRect().bottom > -window.innerHeight * 0.7
+      && element.getBoundingClientRect().top < window.innerHeight * 1.7;
+    requestUpdate();
+
     return () => {
-      observer.disconnect();
-      window.clearInterval(interval);
-      window.removeEventListener("scroll", update);
+      intersectionObserver.disconnect();
+      resizeObserver.disconnect();
+      window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
       window.removeEventListener("orientationchange", requestUpdate);
       window.visualViewport?.removeEventListener("resize", requestUpdate);

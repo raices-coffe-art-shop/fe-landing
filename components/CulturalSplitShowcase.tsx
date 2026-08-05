@@ -40,8 +40,8 @@ export function CulturalSplitShowcase() {
           >
             <span className="split-nav-number">{item.number}</span>
             <span className="split-nav-preview" aria-hidden="true">
-              <img src={item.left} alt="" />
-              <img src={item.right} alt="" />
+              <img src={item.left} alt="" loading="lazy" decoding="async" />
+              <img src={item.right} alt="" loading="lazy" decoding="async" />
             </span>
             <b>{item.eyebrow}</b>
           </button>
@@ -56,6 +56,8 @@ export function CulturalSplitShowcase() {
                 key={item.number}
                 src={item.left}
                 alt={item.leftAlt}
+                loading="lazy"
+                decoding="async"
                 className={index === 0 ? "is-active" : ""}
               />
             ))}
@@ -83,7 +85,7 @@ export function CulturalSplitShowcase() {
         <div className="art-mobile-reduced-list" aria-label="Bloques de arte en Raíces">
           {slides.map((item) => (
             <Link key={item.number} className="art-mobile-piece" href={`/catalogo/${item.catalogSlug}`}>
-              <img src={item.left} alt={item.leftAlt} />
+              <img src={item.left} alt={item.leftAlt} loading="lazy" decoding="async" />
               <span>{item.number} · {item.eyebrow}</span>
               <h3>{item.title}</h3>
               <p>{item.text}</p>

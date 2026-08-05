@@ -14,19 +14,19 @@ export type PersonCardPhoto = {
 
 export const personCardPhotos = {
   pedro: [
-    { src: "/media/people/pedro-01.png", alt: "Pedro Ñahui mostrando una selección de granos", position: "center 38%" },
-    { src: "/media/people/pedro-02.png", alt: "Pedro Ñahui revisando granos durante una visita de campo", position: "center 38%" },
-    { src: "/media/people/pedro-03.png", alt: "Pedro Ñahui junto a la tostadora", position: "center 34%" },
+    { src: "/media/people/pedro-01.webp", alt: "Pedro Ñahui mostrando una selección de granos", position: "center 38%" },
+    { src: "/media/people/pedro-02.webp", alt: "Pedro Ñahui revisando granos durante una visita de campo", position: "center 38%" },
+    { src: "/media/people/pedro-03.webp", alt: "Pedro Ñahui junto a la tostadora", position: "center 34%" },
   ],
   fortunato: [
-    { src: "/media/people/fortunato-01.jpg", alt: "Fortunato durante un encuentro en Ayacucho", position: "center 54%" },
-    { src: "/media/people/fortunato-02.png", alt: "Fortunato en el paisaje de su comunidad", position: "left 52%" },
-    { src: "/media/people/fortunato-03.png", alt: "Fortunato dentro de su espacio de productos locales", position: "center 42%" },
+    { src: "/media/people/fortunato-01.webp", alt: "Fortunato durante un encuentro en Ayacucho", position: "center 54%" },
+    { src: "/media/people/fortunato-02.webp", alt: "Fortunato en el paisaje de su comunidad", position: "left 52%" },
+    { src: "/media/people/fortunato-03.webp", alt: "Fortunato dentro de su espacio de productos locales", position: "center 42%" },
   ],
   dina: [
-    { src: "/media/people/dina-01.png", alt: "Dina durante una visita de Raíces", position: "center 35%" },
-    { src: "/media/people/dina-02.png", alt: "Dina en su espacio de trabajo", position: "center 28%" },
-    { src: "/media/people/dina-03.png", alt: "Dina mostrando una mazorca de cacao", position: "center 38%" },
+    { src: "/media/people/dina-01.webp", alt: "Dina durante una visita de Raíces", position: "center 35%" },
+    { src: "/media/people/dina-02.webp", alt: "Dina en su espacio de trabajo", position: "center 28%" },
+    { src: "/media/people/dina-03.webp", alt: "Dina mostrando una mazorca de cacao", position: "center 38%" },
   ],
 } satisfies Record<string, PersonCardPhoto[]>;
 

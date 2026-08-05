@@ -577,152 +577,6 @@ img { max-width: 100%; }
   color: rgba(238, 229, 216, .72);
 }
 
-.catalogo-editor-section {
-  position: relative;
-  z-index: 2;
-  padding: 60px 0 165px;
-  background: #efe7da;
-}
-
-.editor-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-  padding-bottom: 22px;
-  border-bottom: 1px solid rgba(43, 33, 28, .3);
-}
-.editor-bar-copy {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.editor-bar-copy p {
-  margin: 0;
-  font-size: 12px;
-  letter-spacing: .04em;
-  color: var(--ink-soft);
-}
-.editor-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgba(43, 33, 28, .28);
-  transition: background .25s ease, box-shadow .25s ease;
-}
-.editor-dot.is-on {
-  background: var(--clay);
-  box-shadow: 0 0 0 4px rgba(166, 93, 72, .2);
-}
-.editor-bar-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.edit-toggle,
-.editor-reset {
-  border: 1px solid rgba(43, 33, 28, .34);
-  background: transparent;
-  color: var(--ink);
-  border-radius: 999px;
-  padding: 11px 19px;
-  font-size: 11px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: .2s ease;
-}
-.edit-toggle:hover,
-.edit-toggle.is-active {
-  background: var(--ink);
-  color: var(--paper);
-}
-.editor-reset {
-  border-style: dashed;
-  color: var(--ink-soft);
-}
-.editor-reset:hover {
-  border-color: var(--clay);
-  color: var(--clay);
-}
-
-.product-price-row {
-  margin-top: 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 14px;
-}
-.product-price-row > span:first-child {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  color: var(--clay);
-}
-.product-price-row strong {
-  font: 500 1.5rem/1 var(--serif);
-  letter-spacing: -.02em;
-}
-
-.product-card.is-editing {
-  outline: 1px dashed rgba(166, 93, 72, .55);
-  outline-offset: 10px;
-}
-.edit-field {
-  width: 100%;
-  border: none;
-  border-bottom: 1px dashed rgba(166, 93, 72, .6);
-  background: rgba(244, 239, 229, .6);
-  color: var(--ink);
-  padding: 4px 2px;
-  transition: border-color .2s ease, background .2s ease;
-}
-.edit-field:focus {
-  outline: none;
-  border-bottom-color: var(--clay);
-  background: #fff8ed;
-}
-.edit-name {
-  margin: 14px 0 0;
-  font: 500 clamp(1.6rem, 2.3vw, 2.45rem)/1.05 var(--serif);
-}
-.edit-note {
-  margin: 10px 0 0;
-  font-size: 12px;
-  color: var(--ink-soft);
-}
-.price-edit {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  font: 500 1.5rem/1 var(--serif);
-}
-.edit-price {
-  width: 5.2ch;
-  font: inherit;
-  text-align: right;
-}
-
-.photo-edit-button {
-  position: absolute;
-  z-index: 5;
-  right: 12px;
-  bottom: 12px;
-  border: none;
-  background: rgba(43, 33, 28, .85);
-  color: var(--paper);
-  padding: 10px 15px;
-  font-size: 10px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background .2s ease;
-}
-.photo-edit-button:hover {
-  background: var(--clay);
-}
-
 .visit-section { position: relative; z-index: 2; min-height: 760px; background: var(--ink); display: grid; grid-template-columns: 1.1fr .9fr; }
 .visit-image { min-height: 760px; }
 .visit-image .editorial-image { height: 100%; }
@@ -1018,7 +872,7 @@ img { max-width: 100%; }
   background: #191512;
 }
 .hero-photo {
-  background-image: url("/ayacucho-sacsamarca.jpg");
+  background-image: url("/ayacucho-sacsamarca.webp");
   background-size: cover;
   background-position: var(--hero-bg-x) var(--hero-bg-y);
   transform: scale(var(--hero-photo-scale));
@@ -1077,7 +931,7 @@ img { max-width: 100%; }
   line-height: .66;
   letter-spacing: -.085em;
   text-align: center;
-  background-image: url("/ayacucho-sacsamarca.jpg");
+  background-image: url("/ayacucho-sacsamarca.webp");
   background-size: 112% 270%;
   background-position: var(--hero-bg-x) calc(var(--hero-bg-y) + 12%);
   filter: saturate(.82) brightness(1.18) contrast(1.06);
@@ -1724,7 +1578,7 @@ img { max-width: 100%; }
   letter-spacing: -.072em;
   white-space: nowrap;
   text-align: center;
-  background-image: url("/ayacucho-sacsamarca.jpg");
+  background-image: url("/ayacucho-sacsamarca.webp");
   /* Igual que el efecto original del CodePen: cover + repeat,
      y la posición se desplaza en px con el scroll (diagonal). */
   background-size: cover;
@@ -1849,13 +1703,44 @@ img { max-width: 100%; }
   color: #fff8ed;
 }
 
-.links-hero-photo {
+.links-hero-media {
   position: absolute;
   inset: 0;
-  background-image: url("/ayacucho-sacsamarca.jpg");
+  overflow: hidden;
+  background: #251d18;
+  contain: paint;
+}
+
+.links-hero-photo {
+  position: absolute;
+  inset: -1.5%;
+  z-index: 1;
+  opacity: 0;
+  background-repeat: no-repeat;
   background-size: cover;
-  background-position: center 50%;
-  transform: scale(1.05);
+  transform: scale(1.035);
+  transform-origin: center;
+  will-change: opacity, transform;
+}
+
+.links-hero-photo.is-active {
+  z-index: 2;
+  animation: linksHeroPhotoEnter 1.35s cubic-bezier(.22,.72,.22,1) forwards;
+}
+
+.links-hero-photo.is-previous {
+  z-index: 1;
+  animation: linksHeroPhotoLeave 1.35s cubic-bezier(.22,.72,.22,1) forwards;
+}
+
+@keyframes linksHeroPhotoEnter {
+  from { opacity: 0; transform: scale(1.035); }
+  to { opacity: 1; transform: scale(1.055); }
+}
+
+@keyframes linksHeroPhotoLeave {
+  from { opacity: 1; transform: scale(1.055); }
+  to { opacity: 0; transform: scale(1.07); }
 }
 
 .links-hero-glow {
@@ -5165,8 +5050,8 @@ img { max-width: 100%; }
 
   .product-copy a {
     margin-top: 12px;
-    font-size: 9px;
-    letter-spacing: .08em;
+    font-size: 10px;
+    letter-spacing: .07em;
   }
 
   .links-accordion {
@@ -5212,14 +5097,6 @@ img { max-width: 100%; }
     padding: 165px 0 80px;
   }
 
-  .catalogo-editor-section {
-    padding: 44px 0 110px;
-  }
-
-  .editor-bar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
 }
 
 @media (max-width: 380px) {
@@ -6467,6 +6344,9 @@ img { max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .links-root-path { animation: none; stroke-dashoffset: 0; }
   .links-background-words span { animation: none; opacity: .08; filter: none; transform: none; }
+  .links-hero-photo { animation: none; transform: none; }
+  .links-hero-photo.is-active { opacity: 1; }
+  .links-hero-photo.is-previous { display: none; }
   .stack-photo-media { transition: opacity .2s linear; transform: none; }
 }
 
@@ -8675,5 +8555,3886 @@ img { max-width: 100%; }
 
   .art-mobile-reduced-list strong {
     color: #fff2ce;
+  }
+}
+
+/* ========================================================================== */
+/* SANITY CATALOG — public editorial catalog                                  */
+/* ========================================================================== */
+
+.catalog-title-side {
+  display: grid;
+  gap: 24px;
+  align-self: end;
+}
+
+.catalog-title-side > p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.catalog-title-cta,
+.catalog-closing a {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid rgba(43, 33, 28, .45);
+  padding-bottom: 9px;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  transition: border-color .2s ease, color .2s ease, gap .2s ease;
+}
+
+.catalog-title-cta:hover,
+.catalog-title-cta:focus-visible,
+.catalog-closing a:hover,
+.catalog-closing a:focus-visible {
+  color: var(--clay);
+  border-color: currentColor;
+  gap: 26px;
+}
+
+.catalog-rail {
+  align-items: stretch;
+}
+
+.catalog-card {
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.catalog-card-image {
+  flex: 0 0 auto;
+}
+
+.catalog-card-copy {
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-copy > .catalog-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  min-height: 2.8em;
+  font-size: 9px;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--clay);
+}
+
+.catalog-card-meta span {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.catalog-card-meta span:last-child {
+  text-align: right;
+}
+
+.product-subcategory {
+  min-height: 1.4em;
+  margin-top: 10px !important;
+  color: rgba(43, 33, 28, .52) !important;
+  font-size: 9px !important;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.catalog-card h3 {
+  display: -webkit-box;
+  min-height: 2.1em;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.catalog-card-description {
+  display: -webkit-box;
+  min-height: 4.65em;
+  overflow: hidden;
+  line-height: 1.55 !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.product-copy > .catalog-card-actions {
+  display: grid;
+  margin-top: auto;
+  padding-top: 24px;
+  color: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: none;
+}
+
+.catalog-card-actions a,
+.product-copy .catalog-card-actions a {
+  margin-top: 0;
+  min-height: 44px;
+  align-items: center;
+  padding: 12px 0;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.catalog-card-actions a:last-child {
+  border-bottom: 1px solid rgba(43, 33, 28, .16);
+}
+
+.catalog-card-actions a:hover,
+.catalog-card-actions a:focus-visible {
+  color: var(--clay);
+}
+
+.catalog-closing {
+  margin-top: 78px;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 40px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(43, 33, 28, .3);
+}
+
+.catalog-closing p {
+  max-width: 52ch;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.catalog-empty {
+  margin-top: 60px;
+  min-height: 320px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+  border-top: 1px solid rgba(43, 33, 28, .25);
+  border-bottom: 1px solid rgba(43, 33, 28, .25);
+}
+
+.catalog-empty h3 {
+  max-width: 18ch;
+  margin: 10px 0 0;
+  font: 500 clamp(2rem, 4vw, 3.8rem)/1 var(--serif);
+  letter-spacing: -.035em;
+}
+
+.catalog-empty > p:last-of-type {
+  max-width: 50ch;
+  margin: 18px auto 0;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.catalog-empty button {
+  margin-top: 24px;
+  border: 1px solid rgba(43, 33, 28, .4);
+  border-radius: 999px;
+  background: transparent;
+  padding: 11px 18px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.catalogo-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, .55fr);
+  gap: clamp(50px, 9vw, 150px);
+  align-items: end;
+}
+
+.catalogo-hero-aside {
+  display: grid;
+  gap: 42px;
+}
+
+.catalogo-hero-aside dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.catalogo-hero-aside dl div {
+  padding-top: 14px;
+  border-top: 1px solid rgba(248, 241, 229, .28);
+}
+
+.catalogo-hero-aside dt {
+  color: rgba(248, 241, 229, .58);
+  font-size: 9px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.catalogo-hero-aside dd {
+  margin: 9px 0 0;
+  font: 500 2rem/1 var(--serif);
+}
+
+.catalogo-public-section {
+  position: relative;
+  z-index: 2;
+  min-height: 70vh;
+  padding: 105px 0 165px;
+  background: #efe7da;
+}
+
+.catalogo-public-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, .48fr);
+  gap: 70px;
+  align-items: end;
+}
+
+.catalogo-public-intro h2 {
+  max-width: 14ch;
+  margin: 0;
+  font: 500 clamp(2.5rem, 4.7vw, 5.2rem)/.98 var(--serif);
+  letter-spacing: -.04em;
+}
+
+.catalogo-public-intro > p {
+  margin: 0 0 7px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.catalogo-public-section .catalog-filters {
+  margin-top: 52px;
+}
+
+.catalog-rail-full {
+  margin-top: 54px;
+}
+
+.catalog-card-full .catalog-card-description {
+  -webkit-line-clamp: 4;
+  min-height: 6.2em;
+}
+
+.catalog-detail-grid {
+  align-items: end;
+}
+
+.catalog-detail-copy {
+  padding-bottom: clamp(10px, 4vw, 60px);
+}
+
+.catalog-detail-actions {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.catalog-detail-actions > span {
+  color: rgba(248, 241, 229, .58);
+  font-size: 10px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.catalog-detail-main-image {
+  margin: 0;
+  position: relative;
+  align-self: stretch;
+  min-height: 520px;
+  overflow: hidden;
+  background: rgba(255,255,255,.08);
+}
+
+.catalog-detail-main-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 520px;
+  display: block;
+  object-fit: cover;
+}
+
+.catalog-detail-main-image figcaption {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  padding: 8px 10px;
+  background: rgba(31, 27, 24, .75);
+  color: #fff8ed;
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.catalog-detail-body article > section {
+  margin-top: 34px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(43, 33, 28, .18);
+}
+
+.catalog-detail-body article h2,
+.portable-copy h2 {
+  margin: 0 0 14px;
+  font: 500 clamp(1.8rem, 3vw, 3rem)/1.05 var(--serif);
+}
+
+.portable-copy h3 {
+  margin: 30px 0 10px;
+  font: 500 1.55rem/1.1 var(--serif);
+}
+
+.portable-copy p,
+.catalog-detail-body article > p,
+.catalog-detail-body article > section p {
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.portable-copy blockquote {
+  margin: 32px 0;
+  padding-left: 24px;
+  border-left: 2px solid var(--clay);
+  font: italic 1.4rem/1.45 var(--serif);
+}
+
+.portable-list-item {
+  padding-left: 12px;
+}
+
+.catalog-detail-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding-bottom: 120px;
+}
+
+.catalog-detail-gallery figure {
+  margin: 0;
+  aspect-ratio: 1 / .82;
+  overflow: hidden;
+  background: var(--paper-deep);
+}
+
+.catalog-detail-gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.catalog-related {
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .catalog-title,
+  .catalogo-public-intro,
+  .catalogo-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .catalog-title-side {
+    max-width: 60ch;
+  }
+
+  .catalog-closing {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .catalog-detail-main-image,
+  .catalog-detail-main-image img {
+    min-height: 430px;
+  }
+}
+
+@media (max-width: 640px) {
+  .catalog-section {
+    padding: 92px 0 100px;
+  }
+
+  .catalog-title h2,
+  .catalogo-public-intro h2 {
+    font-size: clamp(2.4rem, 12vw, 4.1rem);
+  }
+
+  .catalog-title-cta {
+    margin-top: 2px;
+  }
+
+  .catalog-filters {
+    margin-top: 34px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    scrollbar-width: thin;
+  }
+
+  .catalog-filters button {
+    flex: 0 0 auto;
+    min-height: 42px;
+  }
+
+  .catalog-rail,
+  .catalog-rail-full {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    margin-top: 38px;
+  }
+
+  .catalog-card h3,
+  .catalog-card-description,
+  .product-subcategory,
+  .product-copy > .catalog-card-meta {
+    min-height: 0;
+  }
+
+  .catalog-card h3 {
+    -webkit-line-clamp: 3;
+  }
+
+  .catalog-card-description,
+  .catalog-card-full .catalog-card-description {
+    -webkit-line-clamp: 4;
+  }
+
+  .catalog-closing {
+    margin-top: 58px;
+  }
+
+  .catalogo-hero {
+    padding: 150px 0 78px;
+  }
+
+  .catalogo-hero-aside {
+    gap: 28px;
+  }
+
+  .catalogo-public-section {
+    padding: 76px 0 110px;
+  }
+
+  .catalogo-public-intro > p {
+    max-width: 48ch;
+  }
+
+  .catalog-detail-main-image,
+  .catalog-detail-main-image img {
+    min-height: 360px;
+  }
+
+  .catalog-detail-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .catalog-detail-gallery {
+    grid-template-columns: 1fr;
+    padding-bottom: 80px;
+  }
+}
+
+/* ========================================================================== */
+/* CATÁLOGO ACCESIBLE — lectura clara, búsqueda, galería y recomendados       */
+/* ========================================================================== */
+
+.catalogo-public-intro > p,
+.catalog-title-side > p,
+.catalog-closing p {
+  font-size: clamp(15px, 1vw, 17px);
+  line-height: 1.75;
+}
+
+.catalog-search {
+  margin-top: 54px;
+  display: grid;
+  grid-template-columns: minmax(220px, .55fr) minmax(360px, 1fr) auto;
+  gap: 22px 30px;
+  align-items: end;
+}
+
+.catalog-search-heading label {
+  display: block;
+  font: 500 clamp(1.55rem, 2.3vw, 2.2rem)/1.05 var(--serif);
+  letter-spacing: -.02em;
+}
+
+.catalog-search-heading p {
+  max-width: 42ch;
+  margin: 10px 0 0;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.catalog-search-control {
+  min-height: 62px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px 0 18px;
+  border: 1.5px solid rgba(43, 33, 28, .44);
+  background: rgba(255, 252, 246, .58);
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.catalog-search-control:focus-within {
+  border-color: var(--ink);
+  background: #fffaf1;
+  box-shadow: 0 0 0 4px rgba(67, 90, 69, .14);
+}
+
+.catalog-search-control > span {
+  font-size: 27px;
+  line-height: 1;
+  transform: rotate(-18deg);
+}
+
+.catalog-search-control input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 500 18px/1.3 var(--sans);
+}
+
+.catalog-search-control input::placeholder {
+  color: rgba(43, 33, 28, .5);
+}
+
+.catalog-search-control input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.catalog-search-control button {
+  min-height: 42px;
+  border: 0;
+  border-left: 1px solid rgba(43, 33, 28, .18);
+  background: transparent;
+  padding: 0 0 0 14px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.catalog-search-results {
+  min-width: 150px;
+  margin: 0 0 18px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.catalogo-public-section .catalog-filters {
+  margin-top: 30px;
+}
+
+.catalog-filters button {
+  min-height: 50px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+
+.catalog-card-meta,
+.product-copy > .catalog-card-meta {
+  font-size: 11px;
+  line-height: 1.55;
+  letter-spacing: .1em;
+}
+
+.product-subcategory {
+  font-size: 11px !important;
+  letter-spacing: .09em;
+}
+
+.catalog-card h3 {
+  font-size: clamp(2rem, 2.65vw, 2.8rem);
+  line-height: 1.02;
+}
+
+.catalog-card-description,
+.catalog-card-full .catalog-card-description {
+  color: #514941 !important;
+  font-size: clamp(15px, 1vw, 17px) !important;
+  line-height: 1.65 !important;
+}
+
+.catalog-card-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 22px 0 0 !important;
+  padding: 15px 0;
+  border-top: 1px solid rgba(43, 33, 28, .18);
+  border-bottom: 1px solid rgba(43, 33, 28, .18);
+  color: var(--ink) !important;
+}
+
+.catalog-card-price span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.catalog-card-price strong {
+  font: 600 clamp(1.35rem, 1.8vw, 1.75rem)/1 var(--serif);
+}
+
+.catalog-card-actions,
+.product-copy > .catalog-card-actions {
+  gap: 8px;
+  padding-top: 28px;
+}
+
+.catalog-card-actions a,
+.product-copy .catalog-card-actions a {
+  min-height: 56px;
+  padding: 15px 14px;
+  border: 1px solid rgba(43, 33, 28, .28);
+  background: rgba(255, 250, 242, .45);
+  font-size: 14px;
+  font-weight: 750;
+  letter-spacing: .055em;
+  line-height: 1.3;
+  transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.catalog-card-actions a:last-child {
+  border-bottom: 1px solid rgba(43, 33, 28, .28);
+}
+
+.catalog-card-actions a:hover,
+.catalog-card-actions a:focus-visible {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  transform: translateY(-1px);
+}
+
+.catalog-empty > p:last-of-type,
+.catalog-empty button {
+  font-size: 16px;
+}
+
+.catalog-empty button {
+  min-height: 50px;
+  padding: 13px 22px;
+  font-weight: 700;
+}
+
+.catalog-detail-page .back-link {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 46px;
+  padding: 11px 17px;
+  border: 1px solid rgba(255, 248, 237, .42);
+  border-radius: 999px;
+  color: #fff8ed;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: .02em;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.catalog-detail-page .back-link:hover,
+.catalog-detail-page .back-link:focus-visible {
+  border-color: #fff8ed;
+  background: rgba(255, 248, 237, .13);
+  transform: translateX(-3px);
+}
+
+.catalog-detail-page .eyebrow {
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .15em;
+}
+
+.catalog-detail-page .detail-lead {
+  max-width: 42ch;
+  font-size: clamp(1.2rem, 1.7vw, 1.45rem);
+  line-height: 1.7;
+}
+
+.catalog-detail-price {
+  width: fit-content;
+  display: grid;
+  gap: 7px;
+  margin: 28px 0 0;
+  padding: 16px 22px;
+  border: 1px solid rgba(255, 248, 237, .32);
+  background: rgba(0, 0, 0, .12);
+}
+
+.catalog-detail-price span {
+  color: rgba(255, 248, 237, .7);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.catalog-detail-price strong {
+  font: 600 clamp(2rem, 3vw, 3rem)/1 var(--serif);
+}
+
+.catalog-detail-actions {
+  margin-top: 34px;
+  gap: 24px;
+}
+
+.catalog-detail-actions .button {
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 25px;
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: .045em;
+}
+
+.catalog-detail-actions > span {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: .1em;
+}
+
+.catalog-product-gallery {
+  min-width: 0;
+  align-self: stretch;
+  outline: none;
+}
+
+.catalog-product-gallery:focus-visible {
+  box-shadow: 0 0 0 4px rgba(255, 248, 237, .38);
+}
+
+.catalog-detail-main-image img {
+  transition: opacity .22s ease, transform .45s ease;
+}
+
+.catalog-product-gallery:hover .catalog-detail-main-image img {
+  transform: scale(1.015);
+}
+
+.catalog-gallery-count {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  z-index: 3;
+  padding: 9px 12px;
+  background: rgba(31, 27, 24, .82);
+  color: #fff8ed;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.catalog-gallery-controls {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  z-index: 4;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.catalog-gallery-controls button {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 248, 237, .72);
+  background: rgba(31, 27, 24, .86);
+  padding: 11px 15px;
+  color: #fff8ed;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.catalog-gallery-controls button:hover,
+.catalog-gallery-controls button:focus-visible {
+  background: #fff8ed;
+  color: var(--ink);
+}
+
+.catalog-detail-main-image:has(.catalog-gallery-controls) figcaption {
+  right: 14px;
+  bottom: 76px;
+}
+
+.catalog-gallery-thumbnails {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(74px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.catalog-gallery-thumbnails button {
+  position: relative;
+  min-height: 88px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, .08);
+  padding: 0;
+  cursor: pointer;
+}
+
+.catalog-gallery-thumbnails button.is-active {
+  border-color: #fff8ed;
+}
+
+.catalog-gallery-thumbnails button:focus-visible {
+  outline: 3px solid #e4bb72;
+  outline-offset: 2px;
+}
+
+.catalog-gallery-thumbnails img {
+  width: 100%;
+  height: 100%;
+  min-height: 88px;
+  display: block;
+  object-fit: cover;
+}
+
+.catalog-gallery-thumbnails span {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  min-width: 28px;
+  min-height: 28px;
+  display: grid;
+  place-items: center;
+  background: rgba(31, 27, 24, .84);
+  color: #fff8ed;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.catalog-detail-body {
+  grid-template-columns: minmax(300px, .48fr) minmax(0, 1fr);
+  gap: clamp(48px, 7vw, 112px);
+}
+
+.catalog-detail-body aside > .eyebrow {
+  font-size: 13px;
+}
+
+.catalog-detail-body dl {
+  margin-top: 30px;
+}
+
+.catalog-detail-body dl div {
+  grid-template-columns: minmax(120px, .8fr) minmax(0, 1fr);
+  gap: 20px;
+  padding: 22px 0;
+}
+
+.catalog-detail-body dt {
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+  letter-spacing: .12em;
+}
+
+.catalog-detail-body dd {
+  color: #514941;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.catalog-detail-body dd strong {
+  color: var(--ink);
+  font: 600 1.45rem/1 var(--serif);
+}
+
+.portable-copy p,
+.catalog-detail-body article > p,
+.catalog-detail-body article > section p {
+  color: #514941;
+  font-size: clamp(17px, 1.18vw, 19px);
+  line-height: 1.78;
+}
+
+.catalog-detail-body article strong {
+  color: var(--ink);
+}
+
+.catalog-related {
+  position: relative;
+  overflow: visible;
+  padding: 96px 0 110px;
+}
+
+.catalog-related > .page-shell > p {
+  margin-bottom: 24px;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .16em;
+}
+
+.catalog-related-list a {
+  min-height: 150px;
+  grid-template-columns: minmax(150px, .28fr) minmax(0, 1fr) auto;
+  align-items: center;
+  padding: 28px 0;
+}
+
+.catalog-related-category {
+  font-size: 13px !important;
+  font-weight: 750;
+  line-height: 1.45;
+  letter-spacing: .11em !important;
+}
+
+.catalog-related-list h2 {
+  font-size: clamp(3.2rem, 6.4vw, 6.4rem);
+}
+
+.catalog-related-mobile-media {
+  display: none;
+}
+
+.catalog-related-floating-preview {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  width: clamp(230px, 20vw, 330px);
+  aspect-ratio: .82;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: 0 24px 65px rgba(0, 0, 0, .42);
+  transition: opacity .16s ease;
+  will-change: transform, opacity;
+}
+
+.catalog-related-floating-preview.is-visible {
+  opacity: 1;
+}
+
+.catalog-related-floating-preview img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.catalog-related-floating-preview span {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  padding: 10px 12px;
+  background: rgba(31, 27, 24, .84);
+  color: #fff8ed;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@media (max-width: 1000px) {
+  .catalog-search {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .catalog-search-results {
+    margin: 0;
+    text-align: left;
+  }
+
+  .catalog-detail-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 900px) {
+  .catalog-related-floating-preview {
+    display: none;
+  }
+
+  .catalog-related-list a {
+    min-height: 0;
+    grid-template-columns: 112px minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr;
+    gap: 8px 18px;
+    align-items: center;
+    padding: 20px 0;
+  }
+
+  .catalog-related-mobile-media {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    width: 112px;
+    aspect-ratio: .84;
+    display: block;
+    overflow: hidden;
+    background: rgba(255, 255, 255, .08);
+  }
+
+  .catalog-related-mobile-media img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .catalog-related-category {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .catalog-related-list h2 {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: clamp(2.2rem, 8vw, 4.2rem);
+    line-height: .98;
+  }
+
+  .catalog-related-list i {
+    grid-column: 3;
+    grid-row: 1 / 3;
+  }
+}
+
+@media (max-width: 640px) {
+  .catalog-search {
+    margin-top: 38px;
+    gap: 18px;
+  }
+
+  .catalog-search-heading label {
+    font-size: 1.75rem;
+  }
+
+  .catalog-search-heading p,
+  .catalogo-public-intro > p {
+    font-size: 16px;
+  }
+
+  .catalog-search-control {
+    min-height: 60px;
+  }
+
+  .catalog-search-control input {
+    font-size: 16px;
+  }
+
+  .catalog-filters button {
+    min-height: 48px;
+    font-size: 14px;
+  }
+
+  .catalog-card-meta,
+  .product-copy > .catalog-card-meta,
+  .product-subcategory {
+    font-size: 12px !important;
+  }
+
+  .catalog-card-description,
+  .catalog-card-full .catalog-card-description {
+    font-size: 16px !important;
+  }
+
+  .catalog-card-actions a,
+  .product-copy .catalog-card-actions a {
+    min-height: 58px;
+    font-size: 15px;
+  }
+
+  .catalog-detail-page .back-link {
+    margin-bottom: 32px;
+    font-size: 15px;
+  }
+
+  .catalog-detail-page .detail-lead {
+    font-size: 1.17rem;
+  }
+
+  .catalog-detail-actions .button {
+    width: 100%;
+    min-height: 58px;
+  }
+
+  .catalog-product-gallery {
+    width: 100%;
+  }
+
+  .catalog-gallery-controls {
+    gap: 8px;
+  }
+
+  .catalog-gallery-controls button {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 9px;
+    font-size: 13px;
+  }
+
+  .catalog-gallery-thumbnails {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .catalog-detail-body dl div {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 20px 0;
+  }
+
+  .catalog-detail-body dt {
+    font-size: 12px;
+  }
+
+  .catalog-detail-body dd {
+    font-size: 18px;
+  }
+
+  .portable-copy p,
+  .catalog-detail-body article > p,
+  .catalog-detail-body article > section p {
+    font-size: 18px;
+    line-height: 1.72;
+  }
+
+  .catalog-related {
+    padding: 72px 0 84px;
+  }
+
+  .catalog-related-list a {
+    grid-template-columns: 92px minmax(0, 1fr) auto;
+    gap: 7px 14px;
+  }
+
+  .catalog-related-mobile-media {
+    width: 92px;
+  }
+
+  .catalog-related-category {
+    font-size: 11px !important;
+  }
+
+  .catalog-related-list h2 {
+    font-size: clamp(1.95rem, 9vw, 3.2rem);
+  }
+}
+
+/* ========================================================================== */
+/* CATÁLOGO V4 — acciones compactas, ritmo vertical y control de precios      */
+/* ========================================================================== */
+
+.catalogo-public-section .catalog-search {
+  margin-top: 34px;
+}
+
+.catalogo-public-section .catalog-filters {
+  margin-top: 24px;
+}
+
+.catalog-rail-full {
+  margin-top: 30px;
+}
+
+.catalog-card-copy {
+  padding-top: 14px;
+}
+
+.product-copy > .catalog-card-meta {
+  min-height: 2.25em;
+}
+
+.product-subcategory {
+  margin-top: 7px !important;
+}
+
+.catalog-card h3 {
+  margin-top: 8px;
+  min-height: 2.05em;
+}
+
+.catalog-card-description,
+.catalog-card-full .catalog-card-description {
+  min-height: 4.85em;
+  margin-top: 11px !important;
+  -webkit-line-clamp: 3;
+}
+
+.catalog-card-price {
+  margin-top: 14px !important;
+  padding: 12px 0;
+}
+
+.catalog-card-actions,
+.product-copy > .catalog-card-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 0;
+}
+
+.catalog-card-actions .catalog-action,
+.product-copy .catalog-card-actions .catalog-action {
+  min-width: 0;
+  min-height: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin: 0;
+  padding: 13px 12px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  font-weight: 780;
+  letter-spacing: .035em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: none;
+}
+
+.catalog-card-actions .catalog-action svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.catalog-card-actions .catalog-action-primary {
+  border-color: #2f493c;
+  background: #2f493c;
+  color: #fffaf1;
+}
+
+.catalog-card-actions .catalog-action-secondary,
+.catalog-card-actions .catalog-action-secondary:last-child {
+  border-color: rgba(43, 33, 28, .38);
+  background: rgba(255, 252, 246, .62);
+  color: var(--ink);
+}
+
+.catalog-card-actions .catalog-action-primary:hover,
+.catalog-card-actions .catalog-action-primary:focus-visible {
+  border-color: #20352b;
+  background: #20352b;
+  color: #fffaf1;
+}
+
+.catalog-card-actions .catalog-action-secondary:hover,
+.catalog-card-actions .catalog-action-secondary:focus-visible {
+  border-color: #a45f43;
+  background: #a45f43;
+  color: #fffaf1;
+}
+
+@media (max-width: 640px) {
+  .catalogo-public-section .catalog-search {
+    margin-top: 28px;
+  }
+
+  .catalogo-public-section .catalog-filters {
+    margin-top: 20px;
+  }
+
+  .catalog-rail,
+  .catalog-rail-full {
+    margin-top: 28px;
+  }
+
+  .catalog-card-description,
+  .catalog-card-full .catalog-card-description {
+    min-height: 0;
+  }
+
+  .catalog-card-actions,
+  .product-copy > .catalog-card-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .catalog-card-actions .catalog-action,
+  .product-copy .catalog-card-actions .catalog-action {
+    min-height: 56px;
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+
+  .catalog-card-actions .catalog-action svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+.catalog-section .catalog-filters {
+  margin-top: 30px;
+}
+
+.catalog-rail-preview {
+  margin-top: 34px;
+}
+
+/* ========================================================================== */
+/* CATÁLOGO V5 — precio compacto dentro del encabezado y CTA legible          */
+/* ========================================================================== */
+
+/*
+ * El precio ocupa el espacio editorial entre el título y la descripción.
+ * La fila existe siempre: cuando no hay monto publicado muestra "Consultar",
+ * por lo que todas las tarjetas mantienen un ritmo consistente sin saltos.
+ */
+.catalog-card-heading-block {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 7px;
+}
+
+.catalog-card-heading-block .catalog-card-price-slot {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  padding: 0 0 10px;
+  border-bottom: 1px solid rgba(43, 33, 28, .18);
+  color: var(--ink);
+}
+
+.catalog-card-heading-block .catalog-card-price-slot span {
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+.catalog-card-heading-block .catalog-card-price-slot strong {
+  font: 600 clamp(1.35rem, 1.8vw, 1.75rem)/1 var(--serif);
+  letter-spacing: -.025em;
+}
+
+.catalog-card-heading-block .catalog-card-price-slot.is-inquiry {
+  justify-content: flex-start;
+}
+
+.catalog-card-heading-block .catalog-card-price-slot.is-inquiry strong {
+  font: 760 12px/1.2 var(--sans);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+/* El bloque antiguo ya no se renderiza, pero se neutraliza por compatibilidad. */
+.catalog-card-price {
+  display: none !important;
+}
+
+.catalog-card h3,
+.catalog-card-heading-block h3 {
+  min-height: 0;
+  margin: 0;
+  line-height: 1.02;
+}
+
+.catalog-card-description,
+.catalog-card-full .catalog-card-description {
+  margin-top: 12px !important;
+}
+
+/*
+ * La regla genérica `.product-copy .catalog-card-actions a` tenía mayor
+ * especificidad y dejaba el CTA primario con fondo claro + texto blanco.
+ * Estas reglas incluyen toda la cadena para garantizar contraste en reposo.
+ */
+.product-copy .catalog-card-actions .catalog-action-primary,
+.catalog-card-actions .catalog-action.catalog-action-primary {
+  border-color: #355444;
+  background: #355444;
+  color: #fffaf1;
+}
+
+.product-copy .catalog-card-actions .catalog-action-primary:hover,
+.product-copy .catalog-card-actions .catalog-action-primary:focus-visible,
+.catalog-card-actions .catalog-action.catalog-action-primary:hover,
+.catalog-card-actions .catalog-action.catalog-action-primary:focus-visible {
+  border-color: #20352b;
+  background: #20352b;
+  color: #fffaf1;
+}
+
+.product-copy .catalog-card-actions .catalog-action-secondary,
+.product-copy .catalog-card-actions .catalog-action-secondary:last-child,
+.catalog-card-actions .catalog-action.catalog-action-secondary {
+  border-color: rgba(43, 33, 28, .42);
+  background: rgba(255, 252, 246, .72);
+  color: var(--ink);
+}
+
+.product-copy .catalog-card-actions .catalog-action-secondary:hover,
+.product-copy .catalog-card-actions .catalog-action-secondary:focus-visible,
+.catalog-card-actions .catalog-action.catalog-action-secondary:hover,
+.catalog-card-actions .catalog-action.catalog-action-secondary:focus-visible {
+  border-color: #a45f43;
+  background: #a45f43;
+  color: #fffaf1;
+}
+
+@media (max-width: 640px) {
+  .catalog-card-heading-block {
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .catalog-card-heading-block .catalog-card-price-slot {
+    min-height: 36px;
+    padding-bottom: 9px;
+  }
+
+  .catalog-card-heading-block .catalog-card-price-slot strong {
+    font-size: 1.35rem;
+  }
+
+  .catalog-card-heading-block .catalog-card-price-slot.is-inquiry strong {
+    font-size: 12px;
+  }
+}
+
+/* ========================================================================== */
+/* CATÁLOGO V6 — títulos más sobrios y altura estable                         */
+/* ========================================================================== */
+
+/*
+ * El bloque del encabezado es hijo directo de `.product-copy` y heredaba el
+ * color arcilla y el `text-transform: uppercase` de una regla histórica. Eso
+ * hacía que los títulos se vieran demasiado rojizos y ocuparan más ancho.
+ */
+.catalog-card-heading-block h3,
+.catalog-card h3 {
+  color: #623a30;
+  text-transform: none;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+
+/*
+ * En cuadrículas de dos o tres columnas todos los títulos reservan exactamente
+ * dos líneas. Así un producto con un título corto y otro con un título largo
+ * mantienen alineados precio/consulta, descripción y acciones.
+ */
+@media (min-width: 641px) {
+  .catalog-card-heading-block h3,
+  .catalog-card h3 {
+    min-height: 2.08em;
+    max-height: 2.08em;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+/* En una sola columna no hace falta reservar una línea vacía. */
+@media (max-width: 640px) {
+  .catalog-card-heading-block h3,
+  .catalog-card h3 {
+    min-height: 0;
+    max-height: none;
+    -webkit-line-clamp: 3;
+  }
+}
+
+/* ========================================================================== */
+/* CATÁLOGO V7 — títulos compactos sin reservar una segunda línea vacía       */
+/* ========================================================================== */
+
+/*
+ * V6 reservaba siempre dos líneas completas para el título. Eso mantenía una
+ * alineación estricta, pero dejaba un vacío demasiado grande en productos con
+ * nombres cortos. Ahora el título ocupa solo las líneas que realmente necesita
+ * y continúa limitado a un máximo de dos. Las acciones siguen alineadas al
+ * fondo de la tarjeta gracias al layout flexible existente.
+ */
+.catalog-card-heading-block {
+  gap: 5px;
+  margin-top: 5px;
+}
+
+@media (min-width: 641px) {
+  .catalog-card-heading-block h3,
+  .catalog-card h3 {
+    min-height: 1.05em;
+    max-height: 2.08em;
+  }
+}
+
+.catalog-card-heading-block .catalog-card-price-slot {
+  min-height: 34px;
+  padding-bottom: 8px;
+}
+
+.catalog-card-description,
+.catalog-card-full .catalog-card-description {
+  margin-top: 8px !important;
+}
+
+@media (max-width: 640px) {
+  .catalog-card-heading-block {
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .catalog-card-heading-block .catalog-card-price-slot {
+    min-height: 32px;
+    padding-bottom: 7px;
+  }
+
+  .catalog-card-description,
+  .catalog-card-full .catalog-card-description {
+    margin-top: 7px !important;
+  }
+}
+
+/* ========================================================================== */
+/* CATÁLOGO V8 — dos filas en portada, selector móvil 2/1 y menú visible       */
+/* ========================================================================== */
+
+/* El selector solo es necesario en pantallas estrechas. */
+.catalog-view-toolbar {
+  display: none;
+}
+
+/* En tablet la cuadrícula gana aire con dos columnas. */
+@media (min-width: 761px) and (max-width: 1050px) {
+  .catalog-rail,
+  .catalog-rail-full,
+  .catalog-rail-preview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  /*
+   * Una regla antigua ocultaba todos los span del botón, incluyendo las
+   * líneas del hamburguesa. Solo se oculta la palabra “Menú”; el icono queda
+   * claramente visible y se transforma en X al abrirse.
+   */
+  .menu-button > .menu-button-label {
+    display: none;
+  }
+
+  .menu-button .menu-button-lines {
+    position: relative;
+    display: block !important;
+    width: 22px;
+    height: 16px;
+  }
+
+  .menu-button .menu-button-lines > span {
+    position: absolute;
+    left: 0;
+    display: block !important;
+    width: 22px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 1;
+    transform: none;
+    transition: top .24s ease, transform .24s ease, opacity .18s ease;
+  }
+
+  .menu-button .menu-button-lines > span:nth-child(1) { top: 1px; }
+  .menu-button .menu-button-lines > span:nth-child(2) { top: 7px; }
+  .menu-button .menu-button-lines > span:nth-child(3) { top: 13px; }
+
+  .site-header.is-open .menu-button .menu-button-lines > span:nth-child(1) {
+    top: 7px;
+    transform: rotate(45deg);
+  }
+
+  .site-header.is-open .menu-button .menu-button-lines > span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .site-header.is-open .menu-button .menu-button-lines > span:nth-child(3) {
+    top: 7px;
+    transform: rotate(-45deg);
+  }
+
+  .site-header.is-scrolled .menu-button {
+    color: var(--ink);
+    border-color: rgba(43, 33, 28, .3);
+    background: rgba(248, 243, 234, .94);
+    box-shadow: 0 8px 24px rgba(43, 33, 28, .1);
+  }
+
+  /* Selector de densidad: dos productos por fila es la vista inicial. */
+  .catalog-view-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(43, 33, 28, .18);
+  }
+
+  .catalog-view-label {
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .catalog-view-options {
+    display: inline-grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 4px;
+    border: 1px solid rgba(43, 33, 28, .22);
+    border-radius: 999px;
+    background: rgba(255, 252, 246, .58);
+  }
+
+  .catalog-view-options button {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 11px;
+    background: transparent;
+    color: var(--ink-soft);
+    font: 700 11px/1 var(--sans);
+    cursor: pointer;
+  }
+
+  .catalog-view-options button.is-active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .catalog-view-options button:focus-visible {
+    outline: 2px solid var(--clay);
+    outline-offset: 2px;
+  }
+
+  .catalog-view-options svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+  }
+
+  /* La opción por defecto muestra dos tarjetas por fila. */
+  .catalog-rail.catalog-mobile-cols-2,
+  .catalog-rail-full.catalog-mobile-cols-2,
+  .catalog-rail-preview.catalog-mobile-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 12px;
+    margin-top: 24px;
+  }
+
+  .catalog-rail.catalog-mobile-cols-1,
+  .catalog-rail-full.catalog-mobile-cols-1,
+  .catalog-rail-preview.catalog-mobile-cols-1 {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 34px;
+    margin-top: 28px;
+  }
+
+  /* Ajustes legibles para tarjetas estrechas de la vista 2×. */
+  .catalog-mobile-cols-2 .product-card {
+    padding-top: 8px;
+  }
+
+  .catalog-mobile-cols-2 .product-image {
+    aspect-ratio: .92;
+  }
+
+  .catalog-mobile-cols-2 .product-number {
+    top: 8px;
+    left: 8px;
+    width: 29px;
+    height: 29px;
+    font-size: 9px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-copy {
+    padding-top: 10px;
+  }
+
+  .catalog-mobile-cols-2 .product-copy > .catalog-card-meta {
+    min-height: 2.6em;
+    gap: 7px;
+    font-size: 10px;
+    letter-spacing: .065em;
+  }
+
+  .catalog-mobile-cols-2 .product-subcategory {
+    min-height: 1.35em;
+    margin-top: 5px !important;
+    font-size: 10px !important;
+    letter-spacing: .055em;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-heading-block {
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-heading-block h3,
+  .catalog-mobile-cols-2 .catalog-card h3 {
+    min-height: 0;
+    max-height: 2.12em;
+    font-size: clamp(1.28rem, 6.3vw, 1.72rem);
+    line-height: 1.06;
+    -webkit-line-clamp: 2;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-heading-block .catalog-card-price-slot {
+    min-height: 31px;
+    gap: 8px;
+    padding-bottom: 7px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-price-slot span,
+  .catalog-mobile-cols-2 .catalog-card-price-slot.is-inquiry strong {
+    font-size: 10px;
+    letter-spacing: .07em;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-price-slot strong {
+    font-size: 1.12rem;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-description,
+  .catalog-mobile-cols-2 .catalog-card-full .catalog-card-description {
+    min-height: 4.35em;
+    margin-top: 7px !important;
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+    -webkit-line-clamp: 3;
+  }
+
+  /* En dos columnas se apilan las acciones para conservar tamaño táctil. */
+  .catalog-mobile-cols-2 .catalog-card-actions,
+  .catalog-mobile-cols-2 .product-copy > .catalog-card-actions {
+    grid-template-columns: 1fr;
+    gap: 7px;
+    margin-top: 12px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-actions .catalog-action,
+  .catalog-mobile-cols-2 .product-copy .catalog-card-actions .catalog-action {
+    min-height: 46px;
+    padding: 10px 7px;
+    font-size: 12px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-actions .catalog-action svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* En una columna se conserva la presentación amplia ya aprobada. */
+  .catalog-mobile-cols-1 .catalog-card-actions,
+  .catalog-mobile-cols-1 .product-copy > .catalog-card-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 370px) {
+  .catalog-view-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .catalog-view-options {
+    width: 100%;
+  }
+
+  .catalog-view-options button {
+    padding-inline: 8px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-actions .catalog-action {
+    font-size: 11px;
+  }
+}
+
+/* ========================================================================== */
+/* CATÁLOGO V9 — cuadrícula adaptable 4/3 desktop y 2/1 móvil                */
+/* ========================================================================== */
+
+/*
+ * La vista completa usa cuatro columnas por defecto. El selector permite
+ * regresar a tres sin afectar la portada, que conserva su composición 3 × 2.
+ */
+.catalog-view-toolbar-full {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.catalog-view-toolbar-preview,
+.catalog-view-mobile {
+  display: none;
+}
+
+.catalog-view-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.catalog-view-label {
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 720;
+}
+
+.catalog-view-options {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid rgba(43, 33, 28, .2);
+  border-radius: 999px;
+  background: rgba(255, 252, 246, .58);
+}
+
+.catalog-view-options button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 13px;
+  background: transparent;
+  color: var(--ink-soft);
+  font: 720 11px/1 var(--sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.catalog-view-options button:hover {
+  color: var(--ink);
+}
+
+.catalog-view-options button.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.catalog-view-options button:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 2px;
+}
+
+.catalog-view-options svg {
+  width: 20px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.55;
+}
+
+@media (min-width: 1051px) {
+  .catalog-rail-full.catalog-desktop-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px 14px;
+    margin-top: 18px;
+  }
+
+  .catalog-rail-full.catalog-desktop-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 18px;
+    margin-top: 22px;
+  }
+
+  /*
+   * En la vista 4× se reduce únicamente la densidad visual. Las acciones
+   * mantienen tamaño cómodo y la ficha sigue ofreciendo el detalle completo.
+   */
+  .catalog-desktop-cols-4 .product-card {
+    padding-top: 9px;
+  }
+
+  .catalog-desktop-cols-4 .product-image {
+    aspect-ratio: 1.03;
+  }
+
+  .catalog-desktop-cols-4 .product-number {
+    top: 9px;
+    left: 9px;
+    width: 31px;
+    height: 31px;
+    font-size: 9px;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-copy {
+    padding-top: 11px;
+  }
+
+  .catalog-desktop-cols-4 .product-copy > .catalog-card-meta {
+    min-height: 2.25em;
+    gap: 8px;
+    font-size: 8.5px;
+    letter-spacing: .095em;
+  }
+
+  .catalog-desktop-cols-4 .product-subcategory {
+    min-height: 1.35em;
+    margin-top: 5px !important;
+    font-size: 8.5px !important;
+    letter-spacing: .085em;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-heading-block {
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-heading-block h3,
+  .catalog-desktop-cols-4 .catalog-card h3 {
+    min-height: 2.06em;
+    max-height: 2.06em;
+    font-size: clamp(1.45rem, 1.65vw, 1.85rem);
+    line-height: 1.03;
+    -webkit-line-clamp: 2;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-heading-block .catalog-card-price-slot {
+    min-height: 31px;
+    padding-bottom: 7px;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-price-slot span,
+  .catalog-desktop-cols-4 .catalog-card-price-slot.is-inquiry strong {
+    font-size: 9.5px;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-price-slot strong {
+    font-size: 1.22rem;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-description,
+  .catalog-desktop-cols-4 .catalog-card-full .catalog-card-description {
+    min-height: 4.25em;
+    margin-top: 7px !important;
+    font-size: 13px !important;
+    line-height: 1.42 !important;
+    -webkit-line-clamp: 3;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-actions,
+  .catalog-desktop-cols-4 .product-copy > .catalog-card-actions {
+    gap: 7px;
+    margin-top: auto;
+    padding-top: 14px;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-actions .catalog-action,
+  .catalog-desktop-cols-4 .product-copy .catalog-card-actions .catalog-action {
+    min-height: 48px;
+    gap: 7px;
+    padding: 10px 8px;
+    font-size: 11.5px;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-actions .catalog-action svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+@media (max-width: 760px) {
+  .catalog-view-toolbar,
+  .catalog-view-toolbar-full,
+  .catalog-view-toolbar-preview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 13px;
+    border-top: 1px solid rgba(43, 33, 28, .18);
+  }
+
+  .catalog-view-desktop {
+    display: none;
+  }
+
+  .catalog-view-mobile {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .catalog-view-options button {
+    min-height: 40px;
+    padding: 8px 10px;
+  }
+
+  .catalog-view-options svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .catalog-rail.catalog-mobile-cols-2,
+  .catalog-rail-full.catalog-mobile-cols-2,
+  .catalog-rail-preview.catalog-mobile-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 26px 12px;
+    margin-top: 22px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-copy {
+    height: 100%;
+    min-height: 0;
+    flex: 1;
+    padding-top: 9px;
+  }
+
+  .catalog-mobile-cols-2 .product-image {
+    aspect-ratio: 1;
+  }
+
+  .catalog-mobile-cols-2 .product-copy > .catalog-card-meta {
+    min-height: 3em;
+    max-height: 3em;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 9.5px;
+    line-height: 1.42;
+    letter-spacing: .055em;
+  }
+
+  .catalog-mobile-cols-2 .product-subcategory {
+    min-height: 1.35em;
+    max-height: 1.35em;
+    margin-top: 5px !important;
+    overflow: hidden;
+    font-size: 9.5px !important;
+    letter-spacing: .05em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-heading-block {
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  /* Reserva dos líneas reales para que ambas tarjetas de la fila cuadren. */
+  .catalog-mobile-cols-2 .catalog-card-heading-block h3,
+  .catalog-mobile-cols-2 .catalog-card h3 {
+    min-height: 2.14em;
+    max-height: 2.14em;
+    font-size: clamp(1.28rem, 5.8vw, 1.62rem);
+    line-height: 1.07;
+    -webkit-line-clamp: 2;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-heading-block .catalog-card-price-slot {
+    min-height: 31px;
+    max-height: 31px;
+    gap: 6px;
+    padding-bottom: 7px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-price-slot span,
+  .catalog-mobile-cols-2 .catalog-card-price-slot.is-inquiry strong {
+    font-size: 9.5px;
+    letter-spacing: .065em;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-price-slot strong {
+    font-size: 1.08rem;
+  }
+
+  /*
+   * La vista 2× es deliberadamente compacta. La descripción completa queda
+   * disponible al cambiar a 1 por fila o al abrir la ficha.
+   */
+  .catalog-mobile-cols-2 .catalog-card-description,
+  .catalog-mobile-cols-2 .catalog-card-full .catalog-card-description {
+    display: none;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-actions,
+  .catalog-mobile-cols-2 .product-copy > .catalog-card-actions {
+    grid-template-columns: 1fr;
+    gap: 7px;
+    margin-top: auto;
+    padding-top: 12px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-actions .catalog-action,
+  .catalog-mobile-cols-2 .product-copy .catalog-card-actions .catalog-action {
+    min-height: 46px;
+    padding: 10px 6px;
+    font-size: 11.5px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-actions .catalog-action svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Un último producto impar queda centrado en vez de quedar pegado a la izquierda. */
+  .catalog-rail-full.catalog-mobile-cols-2 > .catalog-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    width: calc((100% - 12px) / 2);
+    justify-self: center;
+  }
+
+  .catalog-mobile-cols-1 .catalog-card-description,
+  .catalog-mobile-cols-1 .catalog-card-full .catalog-card-description {
+    display: -webkit-box;
+  }
+
+  .catalog-mobile-cols-1 .catalog-card-heading-block h3,
+  .catalog-mobile-cols-1 .catalog-card h3 {
+    min-height: 0;
+    max-height: none;
+  }
+
+  .catalog-mobile-cols-1 .catalog-card-actions,
+  .catalog-mobile-cols-1 .product-copy > .catalog-card-actions {
+    margin-top: auto;
+    padding-top: 16px;
+  }
+}
+
+@media (max-width: 390px) {
+  .catalog-view-mobile {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .catalog-view-options {
+    width: 100%;
+  }
+
+  .catalog-view-options button {
+    width: 100%;
+    padding-inline: 7px;
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-heading-block h3,
+  .catalog-mobile-cols-2 .catalog-card h3 {
+    font-size: clamp(1.16rem, 5.9vw, 1.45rem);
+  }
+
+  .catalog-mobile-cols-2 .catalog-card-actions .catalog-action,
+  .catalog-mobile-cols-2 .product-copy .catalog-card-actions .catalog-action {
+    font-size: 11px;
+  }
+}
+
+/* ========================================================================== */
+/* CATÁLOGO V10 — controles contextuales y tarjetas más compactas             */
+/* ========================================================================== */
+
+/*
+ * El selector ya no necesita explicar "escritorio" o "celular". Solo se
+ * renderiza visualmente el control que corresponde al ancho actual y sus
+ * botones ya describen por sí mismos la cantidad de productos por fila.
+ */
+.catalog-view-label {
+  display: none !important;
+}
+
+.catalog-view-toolbar,
+.catalog-view-toolbar-full,
+.catalog-view-toolbar-preview {
+  min-height: 0;
+}
+
+.catalog-view-group {
+  gap: 0;
+}
+
+/* Escritorio real: solo 4/3 por fila. */
+@media (min-width: 1051px) {
+  .catalog-view-toolbar-full {
+    display: flex !important;
+    justify-content: flex-end;
+    margin-top: 14px;
+  }
+
+  .catalog-view-desktop {
+    display: flex !important;
+  }
+
+  .catalog-view-mobile {
+    display: none !important;
+  }
+}
+
+/* Tablet: no mostramos un selector que no cambia la cuadrícula de tablet. */
+@media (min-width: 761px) and (max-width: 1050px) {
+  .catalog-view-toolbar,
+  .catalog-view-toolbar-full,
+  .catalog-view-toolbar-preview {
+    display: none !important;
+  }
+}
+
+/* Celular: solo 2/1 por fila, tanto en catálogo completo como en portada. */
+@media (max-width: 760px) {
+  .catalog-view-desktop {
+    display: none !important;
+  }
+
+  .catalog-view-mobile {
+    display: flex !important;
+    width: auto;
+    justify-content: flex-end;
+  }
+
+  .catalog-view-toolbar,
+  .catalog-view-toolbar-full,
+  .catalog-view-toolbar-preview {
+    justify-content: flex-end;
+    padding-top: 10px;
+  }
+}
+
+/*
+ * Compactamos el bloque editorial. Antes la tarjeta reservaba dos líneas para
+ * todos los títulos y tres para todas las descripciones, incluso cuando eran
+ * cortos. Las acciones continúan alineadas abajo gracias al flex de la card.
+ */
+@media (min-width: 1051px) {
+  .catalog-rail-full .catalog-card-heading-block h3,
+  .catalog-rail-full .catalog-card h3 {
+    min-height: 1.04em;
+    max-height: 2.08em;
+  }
+
+  .catalog-rail-full .catalog-card-heading-block {
+    margin-top: 2px;
+    gap: 2px;
+  }
+
+  .catalog-rail-full .catalog-card-heading-block .catalog-card-price-slot {
+    min-height: 27px;
+    padding-bottom: 5px;
+  }
+
+  .catalog-rail-full .catalog-card-description,
+  .catalog-rail-full .catalog-card-full .catalog-card-description {
+    min-height: 2.9em;
+    margin-top: 5px !important;
+    line-height: 1.42 !important;
+    -webkit-line-clamp: 2;
+  }
+
+  .catalog-rail-full .catalog-card-actions,
+  .catalog-rail-full .product-copy > .catalog-card-actions {
+    padding-top: 10px;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-heading-block h3,
+  .catalog-desktop-cols-4 .catalog-card h3 {
+    min-height: 1.03em;
+    max-height: 2.06em;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-description,
+  .catalog-desktop-cols-4 .catalog-card-full .catalog-card-description {
+    min-height: 2.85em;
+    margin-top: 5px !important;
+    -webkit-line-clamp: 2;
+  }
+
+  .catalog-desktop-cols-4 .catalog-card-actions,
+  .catalog-desktop-cols-4 .product-copy > .catalog-card-actions {
+    padding-top: 10px;
+  }
+}
+
+/* Una columna móvil recupera el texto, pero sin el vacío histórico. */
+@media (max-width: 760px) {
+  .catalog-mobile-cols-1 .catalog-card-heading-block {
+    margin-top: 3px;
+    gap: 3px;
+  }
+
+  .catalog-mobile-cols-1 .catalog-card-description,
+  .catalog-mobile-cols-1 .catalog-card-full .catalog-card-description {
+    min-height: 0;
+    margin-top: 6px !important;
+  }
+}
+
+/* ---------- Ubicación — mapa editorial ---------- */
+.location-map-section {
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  padding: clamp(110px, 10vw, 165px) 0 clamp(115px, 10vw, 170px);
+  color: #f8f1e5;
+  background:
+    linear-gradient(128deg, rgba(166, 93, 72, .24), transparent 44%),
+    var(--green-deep);
+  isolation: isolate;
+}
+
+.location-map-root-anchor {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.location-map-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .18;
+  background-image: radial-gradient(rgba(228, 187, 114, .78) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(90deg, transparent 2%, #000 44%, #000 100%);
+}
+
+.location-map-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(260px, .55fr);
+  gap: clamp(52px, 9vw, 140px);
+  align-items: end;
+}
+
+.location-map-heading h2 {
+  max-width: 12ch;
+  margin: 0;
+  font: 500 clamp(3rem, 6.3vw, 6.7rem)/.94 var(--serif);
+  letter-spacing: -.048em;
+  text-wrap: balance;
+}
+
+.location-map-intro {
+  padding-top: 22px;
+  border-top: 1px solid rgba(248, 241, 229, .22);
+}
+
+.location-map-intro > span {
+  display: block;
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #e1ba73;
+}
+
+.location-map-intro p {
+  max-width: 38ch;
+  margin: 18px 0 0;
+  font-size: 14px;
+  line-height: 1.72;
+  color: rgba(248, 241, 229, .72);
+}
+
+.location-map-intro a {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 48px;
+  margin-top: 28px;
+  padding: 0 18px;
+  border: 1px solid rgba(248, 241, 229, .34);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.location-map-intro a:hover,
+.location-map-intro a:focus-visible {
+  color: var(--ink);
+  background: #e4bb72;
+  border-color: #e4bb72;
+  outline: none;
+}
+
+.location-map-intro a b {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.location-map-shell {
+  margin-top: clamp(58px, 7vw, 96px);
+}
+
+.location-map-frame {
+  position: relative;
+  height: clamp(430px, 58vw, 720px);
+  overflow: hidden;
+  border: 1px solid rgba(248, 241, 229, .24);
+  background: #ddd2c1;
+  box-shadow: 0 35px 90px rgba(10, 17, 13, .28);
+}
+
+.location-map-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: saturate(.8) sepia(.08) contrast(.96);
+}
+
+.location-map-caption {
+  position: absolute;
+  left: clamp(18px, 3vw, 42px);
+  bottom: clamp(18px, 3vw, 38px);
+  display: grid;
+  gap: 7px;
+  min-width: min(280px, calc(100% - 36px));
+  padding: 18px 22px;
+  color: var(--ink);
+  background: rgba(244, 239, 229, .94);
+  border: 1px solid rgba(43, 33, 28, .14);
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+.location-map-caption span {
+  font-size: 8px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+.location-map-caption strong {
+  font: 500 clamp(1.4rem, 2.2vw, 2rem)/1.05 var(--serif);
+}
+
+@media (max-width: 900px) {
+  .location-map-heading {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+
+  .location-map-heading h2 {
+    max-width: 14ch;
+  }
+
+  .location-map-intro {
+    max-width: 560px;
+  }
+}
+
+@media (max-width: 640px) {
+  .location-map-section {
+    padding: 92px 0 98px;
+  }
+
+  .location-map-heading {
+    gap: 30px;
+  }
+
+  .location-map-heading h2 {
+    font-size: clamp(2.65rem, 12vw, 4.2rem);
+  }
+
+  .location-map-intro a {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .location-map-shell {
+    width: 100%;
+    margin-top: 48px;
+  }
+
+  .location-map-frame {
+    height: 68svh;
+    min-height: 470px;
+    border-inline: 0;
+  }
+
+  .location-map-caption {
+    left: 18px;
+    right: 18px;
+    min-width: 0;
+  }
+}
+
+/* ========================================================================== */
+/* V12 — compactar mapas y reforzar accesos al catálogo                      */
+/* ========================================================================== */
+
+/* El mapa de ubicación debe poder leerse como una sección, no como una
+   pantalla completa. En escritorio el encabezado y el iframe caben juntos
+   dentro de una altura mucho más contenida. */
+@media (min-width: 901px) {
+  .location-map-section {
+    padding: clamp(68px, 5.4vw, 94px) 0 clamp(72px, 5.8vw, 102px);
+  }
+
+  .location-map-heading {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, .52fr);
+    gap: clamp(46px, 6vw, 92px);
+    align-items: center;
+  }
+
+  .location-map-heading h2 {
+    max-width: 13ch;
+    font-size: clamp(2.9rem, 4.75vw, 5.15rem);
+    line-height: .96;
+  }
+
+  .location-map-intro {
+    padding-top: 18px;
+  }
+
+  .location-map-intro p {
+    margin-top: 14px;
+    line-height: 1.62;
+  }
+
+  .location-map-intro a {
+    min-height: 46px;
+    margin-top: 20px;
+  }
+
+  .location-map-shell {
+    margin-top: clamp(30px, 3.2vw, 46px);
+  }
+
+  .location-map-frame {
+    height: clamp(320px, 31vw, 440px);
+    box-shadow: 0 24px 62px rgba(10, 17, 13, .24);
+  }
+
+  .location-map-caption {
+    left: clamp(16px, 2vw, 28px);
+    bottom: clamp(16px, 2vw, 26px);
+    padding: 14px 18px;
+  }
+}
+
+/* La sección Territorio conservaba una escala casi de portada para el mapa
+   del Perú. Se reduce el manifiesto, el espacio entre bloques y el tamaño del
+   mapa, manteniendo la ficha superpuesta y la lectura de Lima/Ayacucho. */
+@media (min-width: 1180px) {
+  .territory-content {
+    gap: clamp(34px, 4.2vw, 68px);
+    padding-top: clamp(68px, 5.7vw, 92px);
+    padding-bottom: clamp(72px, 6.6vw, 104px);
+  }
+
+  .territory-content h2 {
+    max-width: 13.5ch;
+    font-size: clamp(3rem, 4.65vw, 5.35rem);
+    line-height: .96;
+  }
+
+  .territory-text {
+    gap: 18px;
+    max-width: 490px;
+    padding: clamp(22px, 2.2vw, 30px);
+  }
+
+  .territory-text p {
+    font-size: clamp(1.05rem, 1.25vw, 1.25rem);
+    line-height: 1.42;
+  }
+
+  .territory-highlights li {
+    padding: 12px 0;
+  }
+
+  .territory-atmosphere {
+    margin-top: clamp(18px, 2.6vw, 34px);
+    padding-top: clamp(28px, 3.2vw, 42px);
+  }
+
+  .territory-modules {
+    margin-top: clamp(22px, 2.8vw, 34px);
+  }
+
+  .territory-module,
+  .territory-module:first-child,
+  .territory-module:nth-child(2) {
+    min-height: 205px;
+    padding: clamp(22px, 2vw, 28px);
+    transform: none;
+  }
+
+  .territory-module h3 {
+    margin-top: 18px;
+    font-size: 1.35rem;
+  }
+
+  .territory-module p {
+    line-height: 1.58;
+  }
+
+  .territory-module small {
+    margin-top: 18px;
+  }
+
+  .cultural-map {
+    margin-top: clamp(48px, 5vw, 68px);
+    padding-top: clamp(30px, 3.6vw, 44px);
+  }
+
+  .map-narrative-heading {
+    gap: clamp(24px, 3vw, 44px);
+  }
+
+  .map-narrative-heading h3 {
+    max-width: 20ch;
+    font-size: clamp(2.2rem, 3.2vw, 3.55rem);
+    line-height: 1;
+  }
+
+  .map-narrative-heading > p:last-child {
+    padding-top: 14px;
+    line-height: 1.65;
+  }
+
+  .cultural-map-body {
+    min-height: 610px;
+    margin-top: clamp(28px, 3.2vw, 42px);
+  }
+
+  .regional-map {
+    width: min(42vw, 470px);
+    max-width: 470px;
+    padding: 22px;
+  }
+
+  .map-caption {
+    right: clamp(90px, 9vw, 145px);
+    width: min(370px, 31vw);
+    min-height: 292px;
+    padding: clamp(25px, 2.4vw, 32px);
+    transform: translateY(-47%);
+  }
+
+  .map-caption-heading span {
+    font-size: clamp(2rem, 2.7vw, 2.7rem);
+  }
+
+  .map-caption-meta,
+  .map-caption p,
+  .map-caption-tags,
+  .map-caption-route,
+  .map-legend {
+    margin-top: 17px;
+  }
+
+  .map-caption p {
+    line-height: 1.58;
+  }
+}
+
+/* En tamaños intermedios también se evita que el mapa vuelva a crecer hasta
+   ocupar varias pantallas seguidas. */
+@media (min-width: 761px) and (max-width: 1179px) {
+  .territory-content {
+    padding-top: 74px;
+    padding-bottom: 96px;
+  }
+
+  .cultural-map {
+    margin-top: 56px;
+    padding-top: 38px;
+  }
+
+  .cultural-map-body {
+    margin-top: 34px;
+  }
+
+  .regional-map {
+    width: min(100%, 500px);
+  }
+
+  .map-caption {
+    width: min(100%, 560px);
+    margin-top: -58px;
+  }
+}
+
+@media (max-width: 640px) {
+  .location-map-section {
+    padding: 76px 0 82px;
+  }
+
+  .location-map-heading h2 {
+    font-size: clamp(2.45rem, 10.8vw, 3.7rem);
+  }
+
+  .location-map-shell {
+    margin-top: 34px;
+  }
+
+  .location-map-frame {
+    height: min(54svh, 430px);
+    min-height: 340px;
+  }
+}
+
+/* Los accesos al catálogo deben funcionar como llamadas a la acción reales,
+   no como notas al pie que se pierden entre el texto editorial. */
+.catalog-title-cta {
+  min-height: 50px;
+  padding: 0 20px;
+  color: #fff8eb;
+  background: var(--green);
+  border: 1px solid var(--green);
+  border-bottom-width: 1px;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  box-shadow: 0 10px 24px rgba(49, 89, 68, .13);
+}
+
+.catalog-title-cta:hover,
+.catalog-title-cta:focus-visible {
+  gap: 20px;
+  color: #fff8eb;
+  background: var(--green-deep);
+  border-color: var(--green-deep);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.catalog-closing {
+  padding: 28px 30px;
+  background: rgba(255, 250, 241, .42);
+  border: 1px solid rgba(43, 33, 28, .16);
+}
+
+.catalog-closing a {
+  min-height: 48px;
+  padding: 0 18px;
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-bottom-width: 1px;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .09em;
+}
+
+.catalog-closing a:hover,
+.catalog-closing a:focus-visible {
+  gap: 20px;
+  color: #fff8eb;
+  background: var(--green);
+  border-color: var(--green);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+@media (max-width: 760px) {
+  .catalog-title-cta,
+  .catalog-closing a {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .catalog-closing {
+    padding: 22px 20px;
+  }
+}
+
+/* ========================================================================== */
+/* V13 — navegación Links + mapa integrado en Visítanos                      */
+/* ========================================================================== */
+
+/* Conserva el punto geométrico que ContinuousRoots utiliza entre Origen y Arte
+   sin volver a mostrar la antigua sección independiente de ubicación. */
+.narrative-anchor {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* La información práctica y el mapa forman ahora un mismo destino #visita. */
+.visit-section {
+  min-height: 0;
+  align-items: stretch;
+  grid-template-columns: minmax(0, 1.04fr) minmax(560px, .96fr);
+}
+
+.visit-image {
+  min-height: 760px;
+}
+
+.visit-image .editorial-image,
+.visit-image .editorial-image img {
+  height: 100%;
+}
+
+.visit-card {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  padding: clamp(42px, 4.2vw, 72px) clamp(42px, 5vw, 82px);
+}
+
+.visit-card h2 {
+  max-width: 9.5ch;
+  font-size: clamp(3rem, 4.3vw, 4.8rem);
+}
+
+.visit-card > p:not(.eyebrow) {
+  margin-top: 16px;
+}
+
+.visit-details {
+  margin-top: 28px;
+  gap: 18px 30px;
+  padding-top: 18px;
+}
+
+.visit-map {
+  position: relative;
+  height: clamp(220px, 18vw, 290px);
+  margin-top: 24px;
+  border-radius: 0;
+  background: var(--paper-deep);
+}
+
+.visit-map iframe {
+  filter: saturate(.84) contrast(.96);
+}
+
+.visit-actions {
+  margin-top: 24px;
+  gap: 16px 22px;
+}
+
+@media (max-width: 1280px) and (min-width: 1101px) {
+  .desktop-nav {
+    gap: 12px;
+  }
+
+  .desktop-nav > a {
+    font-size: 12px;
+  }
+
+  .nav-cta {
+    padding-inline: 15px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .visit-section {
+    display: block;
+  }
+
+  .visit-image {
+    min-height: min(72svh, 720px);
+  }
+
+  .visit-card {
+    margin: -54px 18px 0;
+    padding: 42px 28px 52px;
+  }
+
+  .visit-card h2 {
+    max-width: 11ch;
+  }
+
+  .visit-map {
+    height: clamp(250px, 48vw, 360px);
+  }
+}
+
+@media (max-width: 640px) {
+  .visit-image {
+    min-height: 56svh;
+  }
+
+  .visit-card {
+    margin-inline: 10px;
+    padding: 38px 20px 44px;
+  }
+
+  .visit-map {
+    height: 290px;
+    margin-inline: -20px;
+    width: calc(100% + 40px);
+    border-inline: 0;
+  }
+
+  .visit-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .visit-actions .button,
+  .visit-actions .text-link {
+    width: 100%;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* ========================================================================== */
+/* V14 — Visítanos compacto + redes con iconos                               */
+/* ========================================================================== */
+
+@media (min-width: 1101px) {
+  .visit-section {
+    height: clamp(600px, calc(100svh - var(--header-height)), 720px);
+    min-height: 600px;
+    overflow: hidden;
+  }
+
+  .visit-image {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .visit-card {
+    min-height: 0;
+    height: 100%;
+    justify-content: center;
+    padding: clamp(28px, 3.1vw, 48px) clamp(34px, 4vw, 64px);
+  }
+
+  .visit-card h2 {
+    max-width: 10.5ch;
+    font-size: clamp(2.8rem, 3.65vw, 4.15rem);
+    line-height: .92;
+  }
+
+  .visit-card > p:not(.eyebrow) {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .visit-details {
+    margin-top: 18px;
+    padding-top: 14px;
+    gap: 12px 24px;
+  }
+
+  .visit-details p {
+    margin: 7px 0 0;
+    line-height: 1.45;
+  }
+
+  .visit-map {
+    height: clamp(170px, 22svh, 215px);
+    margin-top: 16px;
+  }
+
+  .visit-actions {
+    margin-top: 16px;
+    gap: 12px 18px;
+  }
+
+  .visit-actions .button {
+    min-height: 44px;
+    padding-block: 12px;
+  }
+}
+
+.visit-contact-detail {
+  min-width: 0;
+}
+
+.visit-social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 8px;
+}
+
+.visit-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1;
+  text-decoration: none;
+  transition: color .2s ease, transform .2s ease;
+}
+
+.visit-social-link:hover,
+.visit-social-link:focus-visible {
+  color: var(--green);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.visit-social-link svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.visit-social-link > span {
+  color: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  text-transform: none;
+}
+
+.visit-social-link svg path:last-child:not(:only-child) {
+  fill: currentColor;
+  stroke: none;
+}
+
+.visit-social-link svg circle.visit-social-icon-dot {
+  fill: currentColor;
+  stroke: none;
+}
+
+.visit-social-link[aria-label*="Facebook"] svg {
+  fill: currentColor;
+  stroke: none;
+}
+
+@media (max-width: 1100px) {
+  .visit-section {
+    height: auto;
+    min-height: auto;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 640px) {
+  .visit-social-links {
+    gap: 10px 16px;
+  }
+
+  .visit-social-link {
+    min-height: 36px;
+    font-size: 13px;
+  }
+
+  .visit-social-link > span {
+    font-size: 13px;
+  }
+}
+
+/* ========================================================================== */
+/* V15 — canales oficiales, SVG sociales y WhatsApp persistente               */
+/* ========================================================================== */
+
+.social-platform-icon,
+.nav-whatsapp-icon,
+.mobile-wa-icon,
+.floating-whatsapp-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.social-platform-icon-dot {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* WhatsApp uses the official solid glyph; the rest of the social set remains outlined. */
+.social-platform-icon[data-platform="whatsapp"],
+.nav-whatsapp-icon[data-platform="whatsapp"],
+.mobile-wa-icon[data-platform="whatsapp"],
+.floating-whatsapp-icon[data-platform="whatsapp"] {
+  fill: currentColor;
+  stroke: none;
+}
+
+.social-platform-icon-whatsapp {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* El CTA de escritorio debe leerse inmediatamente como WhatsApp. */
+.nav-cta {
+  min-height: 44px;
+  padding: 10px 18px;
+  color: #fffaf0 !important;
+  background: #2f684a;
+  border-color: #2f684a !important;
+  box-shadow: 0 10px 24px rgba(30, 75, 51, .18);
+  opacity: 1 !important;
+  transition: background .22s ease, border-color .22s ease, transform .22s ease, box-shadow .22s ease;
+}
+
+.nav-cta:hover,
+.nav-cta:focus-visible {
+  color: #fffaf0;
+  background: #234f39;
+  border-color: #234f39 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(30, 75, 51, .25);
+}
+
+.nav-cta::after { display: none !important; }
+.nav-whatsapp-icon { width: 18px; height: 18px; }
+
+.mobile-wa {
+  min-height: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: min(100%, 360px);
+  padding: 13px 18px;
+  color: #fffaf0;
+  background: #2f684a;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 999px;
+  font-weight: 750;
+  text-align: center;
+}
+
+.mobile-wa span {
+  color: inherit !important;
+  font: 750 12px/1 var(--sans) !important;
+  letter-spacing: .06em !important;
+}
+
+.mobile-wa:hover,
+.mobile-wa:focus-visible { background: #234f39; }
+.mobile-wa-icon { width: 21px; height: 21px; }
+
+/* Redes reales del footer: WhatsApp, Instagram y Facebook con SVG. */
+.footer-social-links {
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.footer-social-links a {
+  min-height: 42px;
+  gap: 9px;
+  padding: 9px 12px;
+  border-color: rgba(238,229,216,.24);
+  color: rgba(238,229,216,.84);
+  background: rgba(255,255,255,.025);
+}
+
+.footer-social-links a:hover,
+.footer-social-links a:focus-visible {
+  color: #fff;
+  background: rgba(47,104,74,.34);
+  border-color: rgba(121,181,143,.48);
+  transform: translateY(-2px);
+}
+
+.footer-social-links .social-platform-icon {
+  width: 18px;
+  height: 18px;
+  color: #d0a65e;
+}
+
+.footer-social-links a > span {
+  display: inline;
+  color: inherit;
+  font: 750 9px/1 var(--sans);
+  letter-spacing: .1em;
+}
+
+/* WhatsApp permanente únicamente cuando desaparece el CTA completo. */
+.floating-whatsapp {
+  display: none;
+  position: fixed;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  z-index: 318;
+  min-height: 58px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 20px;
+  color: #fff;
+  background: #2f684a;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 999px;
+  box-shadow: 0 14px 34px rgba(17,48,31,.32);
+  font: 750 12px/1 var(--sans);
+  letter-spacing: .04em;
+  transition: opacity .2s ease, transform .2s ease, background .2s ease;
+}
+
+.floating-whatsapp:hover,
+.floating-whatsapp:focus-visible {
+  color: #fff;
+  background: #234f39;
+  transform: translateY(-3px);
+  outline: 2px solid rgba(255,255,255,.8);
+  outline-offset: 3px;
+}
+
+.floating-whatsapp-icon { width: 24px; height: 24px; }
+
+@media (max-width: 1100px) {
+  .floating-whatsapp { display: inline-flex; }
+  .site-header.is-open .floating-whatsapp {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+  }
+}
+
+@media (max-width: 640px) {
+  .floating-whatsapp {
+    width: 58px;
+    min-width: 58px;
+    height: 58px;
+    padding: 0;
+  }
+
+  .floating-whatsapp span { display: none; }
+  .floating-whatsapp-icon { width: 26px; height: 26px; }
+}
+
+/* PERSONAS V16 — mobile cards are shorter without removing the rotating portrait animation. */
+@media (max-width: 760px) {
+  .people-stack-section {
+    padding-top: 54px;
+    padding-bottom: 58px;
+  }
+
+  .people-stack-intro {
+    margin-bottom: 22px;
+  }
+
+  .stack-card-slot,
+  .stack-card-slot:last-child {
+    min-height: auto;
+    margin-bottom: 18px;
+  }
+
+  .stack-person-card {
+    position: relative;
+    top: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto clamp(255px, 69vw, 325px);
+    min-height: 0;
+    max-height: none;
+    transform: none;
+  }
+
+  .stack-person-copy {
+    min-height: 0;
+    padding: 20px 20px 18px;
+    gap: 12px;
+    justify-content: flex-start;
+  }
+
+  .stack-card-topline {
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 7.5px;
+    line-height: 1.35;
+  }
+
+  .stack-card-topline span:first-child {
+    flex: 0 0 auto;
+    font-size: clamp(1.55rem, 7vw, 2rem);
+  }
+
+  .stack-card-topline span:last-child {
+    max-width: 19ch;
+    text-align: right;
+  }
+
+  .stack-person-role {
+    margin-bottom: 6px;
+    font-size: 7.5px;
+    line-height: 1.35;
+  }
+
+  .stack-person-copy h3 {
+    max-width: 12ch;
+    font-size: clamp(2.2rem, 10vw, 3.15rem);
+    line-height: .92;
+  }
+
+  .stack-person-summary {
+    display: -webkit-box;
+    max-width: 34ch;
+    margin-top: 10px;
+    overflow: hidden;
+    font-size: 12.5px;
+    line-height: 1.48;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+
+  .stack-card-footer {
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+    padding-top: 13px;
+    font-size: 7.5px;
+  }
+
+  .stack-card-footer > span {
+    max-width: 16ch;
+    line-height: 1.35;
+  }
+
+  .stack-card-footer a {
+    flex: 0 0 auto;
+    gap: 7px;
+    font-size: 9px;
+    letter-spacing: .08em;
+  }
+
+  .stack-card-footer b {
+    font-size: 15px;
+  }
+
+  .stack-person-visual {
+    min-height: 255px;
+    height: clamp(255px, 69vw, 325px);
+  }
+
+  .stack-person-visual blockquote {
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    display: -webkit-box;
+    max-height: 3.2em;
+    overflow: hidden;
+    font-size: clamp(1.05rem, 5vw, 1.35rem);
+    line-height: 1.25;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .stack-photo-dots {
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 430px) {
+  .stack-person-card {
+    grid-template-rows: auto clamp(245px, 67vw, 295px);
+  }
+
+  .stack-person-copy {
+    padding: 18px 18px 16px;
+  }
+
+  .stack-person-visual {
+    min-height: 245px;
+    height: clamp(245px, 67vw, 295px);
+  }
+}
+
+/* ========================================================================== */
+/* V18 — /links reutiliza exactamente los SVG sociales globales              */
+/* ========================================================================== */
+
+.link-card-icon.social-platform-icon {
+  color: color-mix(in srgb, var(--card-accent) 82%, #fff8ed 18%);
+}
+
+.link-card-icon.social-platform-icon[data-platform="whatsapp"],
+.link-card-icon.social-platform-icon[data-platform="whatsapp"] path {
+  fill: currentColor;
+  stroke: none;
+}
+
+.link-card-icon.social-platform-icon:not([data-platform="whatsapp"]),
+.link-card-icon.social-platform-icon:not([data-platform="whatsapp"]) path,
+.link-card-icon.social-platform-icon:not([data-platform="whatsapp"]) rect,
+.link-card-icon.social-platform-icon:not([data-platform="whatsapp"]) circle {
+  fill: none;
+  stroke: currentColor;
+}
+
+.link-card-icon.social-platform-icon .social-platform-icon-dot {
+  fill: currentColor !important;
+  stroke: none !important;
+}
+
+/* ========================================================================== */
+/* V19 — WhatsApp flotante fuera del header, nav más legible y menú centrado */
+/* ========================================================================== */
+
+/*
+ * El CTA flotante ya no vive dentro de .site-header. De este modo el
+ * backdrop-filter del header no lo convierte en un elemento "fixed" relativo
+ * a la barra superior, que era la causa del círculo verde detrás del menú.
+ */
+.floating-whatsapp.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+}
+
+/* Un poco más de cuerpo y altura de línea para las opciones de escritorio. */
+.desktop-nav {
+  gap: clamp(13px, 1.55vw, 23px);
+}
+
+.desktop-nav > a {
+  font-size: clamp(13.5px, .92vw, 15.5px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: .005em;
+  opacity: .92;
+}
+
+.desktop-nav .nav-cta {
+  font-weight: 700;
+}
+
+@media (max-width: 1280px) and (min-width: 1101px) {
+  .desktop-nav {
+    gap: 10px;
+  }
+
+  .desktop-nav > a {
+    font-size: 13px;
+  }
+
+  .nav-cta {
+    padding-inline: 14px;
+  }
+}
+
+/* Centrado geométrico real de las tres líneas, también cuando “Menú” es visible. */
+@media (max-width: 1100px) {
+  .menu-button .menu-button-lines {
+    position: relative;
+    display: block;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 16px;
+    margin: 0;
+  }
+
+  .menu-button .menu-button-lines > span {
+    position: absolute;
+    left: 50%;
+    display: block;
+    width: 20px;
+    height: 2px;
+    margin-left: -10px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 1;
+  }
+
+  .menu-button .menu-button-lines > span:nth-child(1) { top: 1px; }
+  .menu-button .menu-button-lines > span:nth-child(2) { top: 7px; }
+  .menu-button .menu-button-lines > span:nth-child(3) { top: 13px; }
+
+  .site-header.is-open .menu-button .menu-button-lines > span:nth-child(1) {
+    top: 7px;
+    transform: rotate(45deg);
+  }
+
+  .site-header.is-open .menu-button .menu-button-lines > span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .site-header.is-open .menu-button .menu-button-lines > span:nth-child(3) {
+    top: 7px;
+    transform: rotate(-45deg);
+  }
+}
+
+@media (max-width: 760px) {
+  .menu-button {
+    box-sizing: border-box;
+    display: grid;
+    place-items: center;
+    gap: 0;
+    padding: 0;
+  }
+}
+
+/* ========================================================================== */
+/* V20 — legibilidad del lexicón y continuidad exacta del hero AYACUCHO       */
+/* ========================================================================== */
+
+/* La narración amarilla debía seguir sintiéndose editorial, pero no como una
+   nota microscópica. Se refuerza sin competir con la raíz ni con los cierres. */
+.lexicon-editorial-copy p {
+  color: rgba(236, 193, 107, .96);
+  font-size: clamp(12px, .84vw, 14px);
+  font-weight: 750;
+  line-height: 1.35;
+  letter-spacing: .2em;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, .24);
+}
+
+.lexicon-editorial-copy small {
+  width: min(88vw, 820px);
+  color: rgba(236, 193, 107, .92);
+  font-size: clamp(10px, .68vw, 11.5px);
+  font-weight: 650;
+  line-height: 1.5;
+  letter-spacing: .1em;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, .22);
+}
+
+@media (max-width: 767px) {
+  .lexicon-editorial-copy p {
+    width: min(88vw, 360px);
+    font-size: 11.5px;
+    line-height: 1.4;
+    letter-spacing: .17em;
+  }
+
+  .lexicon-editorial-copy small {
+    width: min(88vw, 400px);
+    font-size: 9.5px;
+    line-height: 1.55;
+    letter-spacing: .085em;
+  }
+}
+
+
+/* =========================================================
+   Performance pass V21 — preserve motion, reduce scroll paint
+   ========================================================= */
+
+/* A nearly opaque fixed header does not need a live backdrop blur. Removing
+   that filter prevents the entire header from being repainted on every frame. */
+.site-header.is-scrolled {
+  background: rgba(244, 239, 229, .975);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* Isolate large visual surfaces so their paints do not invalidate neighbours. */
+.product-image,
+.stack-person-visual,
+.journey-visual,
+.split-stage,
+.visit-map {
+  contain: paint;
+}
+
+/* Do not reserve dozens of persistent compositor layers for the narrative SVG. */
+.continuous-root-main,
+.continuous-root-shadow,
+.continuous-root-branch,
+.continuous-root-child-branch {
+  will-change: auto;
+}
+
+@media (max-width: 760px), (pointer: coarse) {
+  /* Shadows are the most expensive part of the SVG root. The coloured root and
+     its growth remain intact; only the barely visible halo is removed. */
+  .continuous-root-shadow { display: none; }
+  .continuous-root-branch,
+  .continuous-root-child-branch { filter: none; }
+
+  /* Mobile/touch uses native scrolling, so fixed translucent elements avoid
+     expensive per-frame backdrop compositing. */
+  .site-header.is-scrolled,
+  .menu-button,
+  .floating-whatsapp {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* V23 · Selector manual y encuadres protegidos en el hero de /links */
+.links-hero-controls {
+  position: absolute;
+  z-index: 5;
+  top: clamp(16px, 2vw, 24px);
+  right: clamp(16px, 2vw, 24px);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 5px 7px;
+  border: 1px solid rgba(255, 248, 237, .2);
+  border-radius: 999px;
+  background: rgba(20, 15, 12, .66);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .22);
+  backdrop-filter: blur(12px);
+}
+
+.links-hero-arrow {
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 50%;
+  color: #fff8ed;
+  background: rgba(255, 248, 237, .08);
+  cursor: pointer;
+  transition: background-color .22s ease, transform .22s ease;
+}
+
+.links-hero-arrow:hover,
+.links-hero-arrow:focus-visible {
+  background: rgba(224, 173, 95, .3);
+  transform: translateY(-1px);
+}
+
+.links-hero-arrow:focus-visible,
+.links-hero-dots button:focus-visible {
+  outline: 2px solid #e0ad5f;
+  outline-offset: 2px;
+}
+
+.links-hero-arrow svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.links-hero-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.links-hero-dots button {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 248, 237, .42);
+  cursor: pointer;
+  transition: width .25s ease, background-color .25s ease, transform .25s ease;
+}
+
+.links-hero-dots button:hover {
+  background: rgba(255, 248, 237, .76);
+  transform: scale(1.15);
+}
+
+.links-hero-dots button.is-active {
+  width: 22px;
+  background: #e0ad5f;
+}
+
+.links-hero-count {
+  min-width: 48px;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: .12em;
+  text-align: center;
+  color: rgba(255, 248, 237, .78);
+}
+
+@media (max-width: 680px) {
+  .links-hero-controls {
+    top: 14px;
+    right: 14px;
+    gap: 6px;
+    padding: 4px 5px;
+  }
+
+  .links-hero-count { display: none; }
+  .links-hero-dots { gap: 5px; }
+  .links-hero-dots button { width: 6px; height: 6px; }
+  .links-hero-dots button.is-active { width: 16px; }
+  .links-hero-arrow { width: 30px; height: 30px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .links-hero-arrow,
+  .links-hero-dots button {
+    transition: none;
+  }
+}
+
+/* ========================================================================== */
+/* V24 — cierre RAÍCES estable, cards de Personas con textura y mapa más alto */
+/* ========================================================================== */
+
+/* La primera palabra del cierre no debe ocupar una superficie tan grande como
+   HUAMANGA/AYACUCHO. Esta medida evita cualquier recorte lateral incluso con
+   zoom del navegador o barras visibles. */
+.lexicon-special-closing-raices {
+  width: min(90vw, 1080px);
+  max-width: calc(100vw - 48px);
+  white-space: nowrap;
+  font-size: clamp(5.8rem, 10vw, 10.8rem);
+  line-height: .84;
+  letter-spacing: -.045em;
+}
+
+@media (max-width: 1179px) {
+  .lexicon-special-closing-raices {
+    width: min(88vw, 840px);
+    font-size: clamp(4.6rem, 12.4vw, 8rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .lexicon-special-closing-raices {
+    width: calc(100vw - 42px);
+    max-width: none;
+    font-size: clamp(3.15rem, 14.2vw, 5rem);
+    letter-spacing: -.035em;
+  }
+}
+
+/* El panel editorial de Personas gana profundidad con una trama orgánica muy
+   tenue. La textura se mantiene detrás de todo el contenido y hereda el tono
+   de cada card sin competir con la fotografía ni reducir la legibilidad. */
+.stack-person-copy {
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 14% 12%, color-mix(in srgb, var(--stack-accent) 13%, transparent), transparent 34%),
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--stack-bg) 94%, #fff 6%) 0%,
+      var(--stack-bg) 56%,
+      color-mix(in srgb, var(--stack-bg) 91%, var(--stack-accent) 9%) 100%);
+}
+
+.stack-person-copy::before,
+.stack-person-copy::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.stack-person-copy::before {
+  z-index: 0;
+  opacity: .24;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='520' height='620' viewBox='0 0 520 620' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2357463a' stroke-linecap='round'%3E%3Cpath opacity='.28' stroke-width='1.15' d='M500-20C438 78 458 146 397 211c-45 48-94 54-126 113-28 52-9 103-64 158-36 36-86 50-137 119'/%3E%3Cpath opacity='.2' stroke-width='.85' d='M407 201c-14 61 14 91-8 141-20 44-65 63-72 117M274 320c-54-5-80 20-116 60-29 32-48 42-91 47M208 482c30 16 44 42 46 79M157 379c-38-25-75-24-121-4'/%3E%3Cpath opacity='.16' stroke-width='.7' d='M398 341c31 11 47 31 54 67M327 459c22 25 26 51 18 88M70 601c-7-43-30-69-67-84'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(rgba(55,42,33,.18) .55px, transparent .65px);
+  background-position: right top, 0 0;
+  background-size: auto 115%, 17px 17px;
+  mix-blend-mode: multiply;
+}
+
+.stack-person-copy::after {
+  z-index: 1;
+  background:
+    linear-gradient(110deg, rgba(255,255,255,.08), transparent 28%),
+    radial-gradient(circle at 88% 82%, color-mix(in srgb, var(--stack-accent) 8%, transparent), transparent 34%);
+}
+
+.stack-person-copy > * {
+  position: relative;
+  z-index: 2;
+}
+
+.stack-person-card.is-reversed .stack-person-copy::before {
+  transform: scaleX(-1);
+}
+
+@media (max-width: 760px) {
+  .stack-person-copy::before {
+    opacity: .18;
+    background-size: auto 100%, 18px 18px;
+  }
+}
+
+/* El mapa de Visítanos recupera un poco de respiración: sigue entrando en una
+   vista de escritorio habitual, pero deja de sentirse achatado. */
+@media (min-width: 1101px) {
+  .visit-section {
+    height: clamp(680px, calc(100svh - var(--header-height) + 44px), 790px);
+    min-height: 680px;
+  }
+
+  .visit-card {
+    padding-top: clamp(32px, 3.2vw, 52px);
+    padding-bottom: clamp(32px, 3.2vw, 52px);
+  }
+
+  .visit-map {
+    height: clamp(220px, 27svh, 285px);
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 1100px) and (min-width: 641px) {
+  .visit-map {
+    height: clamp(300px, 48vw, 410px);
+  }
+}
+
+@media (max-width: 640px) {
+  .visit-map {
+    height: 320px;
   }
 }

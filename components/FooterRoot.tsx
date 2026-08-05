@@ -12,11 +12,18 @@ export function FooterRoot() {
     if (!root) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let frame = 0;
+    let active = false;
+    let lastProgress = -1;
 
     const update = () => {
       frame = 0;
+      if (!active && !reduced) return;
       const rect = root.getBoundingClientRect();
-      const progress = reduced ? 1 : Math.min(1, Math.max(0, (window.innerHeight - rect.top) / Math.max(1, rect.height * 0.9)));
+      const progress = reduced
+        ? 1
+        : Math.min(1, Math.max(0, (window.innerHeight - rect.top) / Math.max(1, rect.height * 0.9)));
+      if (Math.abs(progress - lastProgress) < 0.0015) return;
+      lastProgress = progress;
       if (pathRef.current) pathRef.current.style.strokeDashoffset = String(1 - progress);
       branchRefs.current.forEach((path, index) => {
         if (!path) return;
@@ -26,13 +33,23 @@ export function FooterRoot() {
     };
 
     const requestUpdate = () => {
+      if (!active && !reduced) return;
       if (!frame) frame = requestAnimationFrame(update);
     };
 
-    update();
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        active = entry.isIntersecting;
+        if (active) requestUpdate();
+      },
+      { rootMargin: "60% 0px 60% 0px" },
+    );
+    observer.observe(root);
+
     window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
+    window.addEventListener("resize", requestUpdate, { passive: true });
     return () => {
+      observer.disconnect();
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
       if (frame) cancelAnimationFrame(frame);
