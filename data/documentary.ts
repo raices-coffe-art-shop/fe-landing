@@ -43,7 +43,7 @@ export const documentaryStops: DocumentaryStop[] = [
     location: "Ayacucho",
     summary: "Una conversación para registrar proceso, organización y trazabilidad sin separar el grano de la persona que lo trabaja.",
     status: "planned",
-    coverImage: "/ayacucho-hero-3.jpg",
+    coverImage: "/ayacucho-hero-3.webp",
   },
   {
     id: "miel-floracion",
@@ -53,7 +53,7 @@ export const documentaryStops: DocumentaryStop[] = [
     location: "Ayacucho",
     summary: "Registro de floración, producto y relación con el paisaje a partir de visitas y conversaciones.",
     status: "planned",
-    coverImage: "/ayacucho-hero-5.jpg",
+    coverImage: "/ayacucho-hero-5.webp",
   },
   {
     id: "panes-alimentos",
@@ -73,7 +73,7 @@ export const documentaryStops: DocumentaryStop[] = [
     location: "Ayacucho y Lima",
     summary: "Registro de autoría, técnica, procedencia y relato detrás de cada pieza.",
     status: "planned",
-    coverImage: "/ayacucho-hero-6.png",
+    coverImage: "/ayacucho-hero-6.webp",
   },
   {
     id: "cacao",
@@ -94,10 +94,10 @@ export const archiveCategories = [
     status: "confirmed" as ContentStatus,
     summary: "Paisajes locales usados como contexto territorial, no como retratos de productores.",
     media: [
-      { id: "sacsamarca", type: "image", src: "/ayacucho-sacsamarca.jpg", alt: "Paisaje de Sacsamarca en Ayacucho", caption: "Paisaje ayacuchano", status: "confirmed" as ContentStatus },
-      { id: "hero-03", type: "image", src: "/ayacucho-hero-3.jpg", alt: "Valle ayacuchano rodeado de montañas", caption: "Valle y montaña", status: "confirmed" as ContentStatus },
-      { id: "hero-05", type: "image", src: "/ayacucho-hero-5.jpg", alt: "Campos andinos bajo un cielo nublado", caption: "Paisaje agrícola", status: "confirmed" as ContentStatus },
-      { id: "hero-06", type: "image", src: "/ayacucho-hero-6.png", alt: "Persona observando terrazas agrícolas andinas", caption: "Territorio andino", status: "confirmed" as ContentStatus },
+      { id: "sacsamarca", type: "image", src: "/ayacucho-sacsamarca.webp", alt: "Paisaje de Sacsamarca en Ayacucho", caption: "Paisaje ayacuchano", status: "confirmed" as ContentStatus },
+      { id: "hero-03", type: "image", src: "/ayacucho-hero-3.webp", alt: "Valle ayacuchano rodeado de montañas", caption: "Valle y montaña", status: "confirmed" as ContentStatus },
+      { id: "hero-05", type: "image", src: "/ayacucho-hero-5.webp", alt: "Campos andinos bajo un cielo nublado", caption: "Paisaje agrícola", status: "confirmed" as ContentStatus },
+      { id: "hero-06", type: "image", src: "/ayacucho-hero-6.webp", alt: "Persona observando terrazas agrícolas andinas", caption: "Territorio andino", status: "confirmed" as ContentStatus },
     ],
   },
   {
@@ -106,9 +106,9 @@ export const archiveCategories = [
     status: "in-editing" as ContentStatus,
     summary: "Fotografías, entrevistas y notas de proceso sobre café y cacao.",
     media: [
-      { id: "cafe-01", type: "image", src: "/ayacucho-hero-3.jpg", alt: "Valle ayacuchano asociado al origen del café", caption: "Paisaje de procedencia", status: "editorial-reference" as ContentStatus },
-      { id: "cafe-02", type: "image", src: "/ayacucho-sacsamarca.jpg", alt: "Contexto territorial ayacuchano", caption: "Contexto territorial", status: "editorial-reference" as ContentStatus },
-      { id: "cafe-03", type: "image", src: "/ayacucho-hero-5.jpg", alt: "Campos andinos", caption: "Campo y ruta", status: "editorial-reference" as ContentStatus },
+      { id: "cafe-01", type: "image", src: "/ayacucho-hero-3.webp", alt: "Valle ayacuchano asociado al origen del café", caption: "Paisaje de procedencia", status: "editorial-reference" as ContentStatus },
+      { id: "cafe-02", type: "image", src: "/ayacucho-sacsamarca.webp", alt: "Contexto territorial ayacuchano", caption: "Contexto territorial", status: "editorial-reference" as ContentStatus },
+      { id: "cafe-03", type: "image", src: "/ayacucho-hero-5.webp", alt: "Campos andinos", caption: "Campo y ruta", status: "editorial-reference" as ContentStatus },
       { id: "cafe-04", type: "image", src: "/ayacucho-hero-1.jpg", alt: "Ciudad de Ayacucho", caption: "Punto de encuentro", status: "editorial-reference" as ContentStatus },
     ],
   },
@@ -118,9 +118,9 @@ export const archiveCategories = [
     status: "pending" as ContentStatus,
     summary: "Registro visual de miel, floración, alimento y paisaje.",
     media: [
-      { id: "miel-01", type: "image", src: "/ayacucho-hero-5.jpg", alt: "Campos y floración en paisaje andino", caption: "Floración por documentar", status: "editorial-reference" as ContentStatus },
-      { id: "miel-02", type: "image", src: "/ayacucho-hero-6.png", alt: "Terrazas agrícolas andinas", caption: "Ruta de trabajo", status: "editorial-reference" as ContentStatus },
-      { id: "miel-03", type: "image", src: "/ayacucho-hero-3.jpg", alt: "Valle ayacuchano", caption: "Paisaje de temporada", status: "editorial-reference" as ContentStatus },
+      { id: "miel-01", type: "image", src: "/ayacucho-hero-5.webp", alt: "Campos y floración en paisaje andino", caption: "Floración por documentar", status: "editorial-reference" as ContentStatus },
+      { id: "miel-02", type: "image", src: "/ayacucho-hero-6.webp", alt: "Terrazas agrícolas andinas", caption: "Ruta de trabajo", status: "editorial-reference" as ContentStatus },
+      { id: "miel-03", type: "image", src: "/ayacucho-hero-3.webp", alt: "Valle ayacuchano", caption: "Paisaje de temporada", status: "editorial-reference" as ContentStatus },
       { id: "miel-04", type: "image", src: "/ayacucho-hero-4.webp", alt: "Cañón rocoso con agua", caption: "Territorio en registro", status: "editorial-reference" as ContentStatus },
     ],
   },
@@ -131,8 +131,8 @@ export const archiveCategories = [
     summary: "Categoría preparada para futuras entrevistas.",
     media: [
       { id: "cacao-01", type: "image", src: "/ayacucho-hero-2.jpeg", alt: "Agua turquesa entre rocas", caption: "Referencia territorial", status: "editorial-reference" as ContentStatus },
-      { id: "cacao-02", type: "image", src: "/ayacucho-hero-5.jpg", alt: "Campos andinos", caption: "Campos andinos", status: "editorial-reference" as ContentStatus },
-      { id: "cacao-03", type: "image", src: "/ayacucho-sacsamarca.jpg", alt: "Paisaje ayacuchano", caption: "Paisaje ayacuchano", status: "editorial-reference" as ContentStatus },
+      { id: "cacao-02", type: "image", src: "/ayacucho-hero-5.webp", alt: "Campos andinos", caption: "Campos andinos", status: "editorial-reference" as ContentStatus },
+      { id: "cacao-03", type: "image", src: "/ayacucho-sacsamarca.webp", alt: "Paisaje ayacuchano", caption: "Paisaje ayacuchano", status: "editorial-reference" as ContentStatus },
       { id: "cacao-04", type: "image", src: "/ayacucho-hero-1.jpg", alt: "Plaza de Ayacucho", caption: "Encuentro documental", status: "editorial-reference" as ContentStatus },
     ],
   },
@@ -143,9 +143,9 @@ export const archiveCategories = [
     summary: "Espacio para alimentos tradicionales, pan, palta y quesos.",
     media: [
       { id: "alimentos-01", type: "image", src: "/ayacucho-hero-1.jpg", alt: "Centro histórico de Ayacucho", caption: "Mercado y ciudad por documentar", status: "editorial-reference" as ContentStatus },
-      { id: "alimentos-02", type: "image", src: "/ayacucho-hero-6.png", alt: "Terrazas agrícolas", caption: "Paisaje agrícola", status: "editorial-reference" as ContentStatus },
-      { id: "alimentos-03", type: "image", src: "/ayacucho-hero-5.jpg", alt: "Campo andino", caption: "Campo y alimento", status: "editorial-reference" as ContentStatus },
-      { id: "alimentos-04", type: "image", src: "/ayacucho-hero-3.jpg", alt: "Valle entre montañas", caption: "Contexto productivo", status: "editorial-reference" as ContentStatus },
+      { id: "alimentos-02", type: "image", src: "/ayacucho-hero-6.webp", alt: "Terrazas agrícolas", caption: "Paisaje agrícola", status: "editorial-reference" as ContentStatus },
+      { id: "alimentos-03", type: "image", src: "/ayacucho-hero-5.webp", alt: "Campo andino", caption: "Campo y alimento", status: "editorial-reference" as ContentStatus },
+      { id: "alimentos-04", type: "image", src: "/ayacucho-hero-3.webp", alt: "Valle entre montañas", caption: "Contexto productivo", status: "editorial-reference" as ContentStatus },
     ],
   },
   {
@@ -154,9 +154,9 @@ export const archiveCategories = [
     status: "in-editing" as ContentStatus,
     summary: "Autoría, técnica y procedencia por documentar con cada pieza.",
     media: [
-      { id: "arte-01", type: "image", src: "/ayacucho-hero-6.png", alt: "Persona observando paisaje andino", caption: "Oficio y territorio", status: "editorial-reference" as ContentStatus },
+      { id: "arte-01", type: "image", src: "/ayacucho-hero-6.webp", alt: "Persona observando paisaje andino", caption: "Oficio y territorio", status: "editorial-reference" as ContentStatus },
       { id: "arte-02", type: "image", src: "/ayacucho-hero-1.jpg", alt: "Centro histórico de Ayacucho", caption: "Procedencia cultural", status: "editorial-reference" as ContentStatus },
-      { id: "arte-03", type: "image", src: "/ayacucho-sacsamarca.jpg", alt: "Paisaje de Sacsamarca", caption: "Memoria visual", status: "editorial-reference" as ContentStatus },
+      { id: "arte-03", type: "image", src: "/ayacucho-sacsamarca.webp", alt: "Paisaje de Sacsamarca", caption: "Memoria visual", status: "editorial-reference" as ContentStatus },
       { id: "arte-04", type: "image", src: "/ayacucho-hero-4.webp", alt: "Cañón y pozas turquesas", caption: "Registro de territorio", status: "editorial-reference" as ContentStatus },
     ],
   },

@@ -7,13 +7,10 @@ import { schemaTypes } from "./sanity/schemaTypes";
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
 
-if (!projectId) {
-  throw new Error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID");
-}
+if (!projectId) throw new Error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID");
+if (!dataset) throw new Error("Missing NEXT_PUBLIC_SANITY_DATASET");
 
-if (!dataset) {
-  throw new Error("Missing NEXT_PUBLIC_SANITY_DATASET");
-}
+const hiddenRootTypes = new Set(["siteSettings", "catalogItem", "catalogCategory", "socialLink", "seo"]);
 
 export default defineConfig({
   name: "default",
@@ -38,7 +35,22 @@ export default defineConfig({
                   .documentId("siteSettings")
                   .title("Configuración del sitio"),
               ),
-            ...S.documentTypeListItems().filter((item) => item.getId() !== "siteSettings"),
+            S.divider(),
+            S.listItem()
+              .id("catalog")
+              .title("Catálogo")
+              .child(
+                S.list()
+                  .title("Catálogo")
+                  .items([
+                    S.documentTypeListItem("catalogItem").title("Productos"),
+                    S.documentTypeListItem("catalogCategory").title("Categorías"),
+                  ]),
+              ),
+            ...S.documentTypeListItems().filter((item) => {
+              const id = item.getId();
+              return id ? !hiddenRootTypes.has(id) : true;
+            }),
           ]),
     }),
   ],

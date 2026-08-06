@@ -3,94 +3,111 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
-import { products } from "@/data/site";
+import { SimplePortableText } from "@/components/SimplePortableText";
+import { CatalogProductGallery } from "@/components/CatalogProductGallery";
+import { CatalogRelatedProducts } from "@/components/CatalogRelatedProducts";
 import { contactChannels } from "@/data/social";
+import { getCatalogItemBySlug, getRelatedCatalogItems } from "@/sanity/lib/catalog";
+import { formatCatalogPrice, shouldDisplayCatalogPrice } from "@/sanity/lib/catalogShared";
+import { buildCatalogInquiryHref } from "@/sanity/lib/inquiry";
+import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
 
-export function generateStaticParams() {
-  return products.map((product) => ({ slug: product.slug }));
-}
+type ProductPageProps = {
+  params: Promise<{ slug: string }>;
+};
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = products.find((item) => item.slug === slug);
+  const product = await getCatalogItemBySlug(slug);
+  if (!product) return { title: "Producto no encontrado — Raíces" };
+
   return {
-    title: product ? `${product.name} — Catálogo Raíces` : "Producto — Raíces",
-    description: product?.note
+    title: product.seo?.title || `${product.title} — Catálogo Raíces`,
+    description: product.seo?.description || product.shortDescription,
+    openGraph: {
+      title: product.seo?.title || product.title,
+      description: product.seo?.description || product.shortDescription,
+      images: [{ url: product.mainImage.src, alt: product.mainImage.alt }],
+    },
   };
 }
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = products.find((item) => item.slug === slug);
+  const product = await getCatalogItemBySlug(slug);
   if (!product) notFound();
 
-  const related = products
-    .filter((item) => item.slug !== product.slug && item.category === product.category)
-    .slice(0, 3);
+  const [related, settings] = await Promise.all([
+    getRelatedCatalogItems(product.category.id, product.slug),
+    getSiteSettings(),
+  ]);
+  const contactHref = getPrimarySocialHref(settings, "whatsapp", contactChannels.whatsappHref);
+  const inquiryHref = buildCatalogInquiryHref(contactHref, product);
+  const formattedPrice = formatCatalogPrice(product);
+  const displayPrice = formattedPrice && shouldDisplayCatalogPrice(product, settings.showCatalogPrices);
 
   return (
     <>
       <SiteHeader />
       <main className="detail-page catalog-detail-page">
-        <section className="detail-hero">
+        <section className="detail-hero catalog-detail-hero">
           <div className="detail-hero-pattern" aria-hidden="true" />
-          <div className="page-shell detail-hero-grid">
-            <div>
+          <div className="page-shell detail-hero-grid catalog-detail-grid">
+            <div className="catalog-detail-copy">
               <Link href="/catalogo" className="back-link">← Volver al catálogo</Link>
-              <p className="eyebrow light">{product.category} · {product.subcategory}</p>
-              <h1>{product.name}</h1>
-              <p className="detail-lead">{product.note}</p>
-              <a
-                className="button button-light"
-                href={`${contactChannels.whatsappHref}?text=${encodeURIComponent(`Hola, quisiera consultar por ${product.name}.`)}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Consultar por WhatsApp
-              </a>
+              <p className="eyebrow light">{product.category.title}{product.subcategory ? ` · ${product.subcategory}` : ""}</p>
+              <h1>{product.title}</h1>
+              <p className="detail-lead">{product.shortDescription}</p>
+              {displayPrice && (
+                <p className="catalog-detail-price">
+                  <span>Precio</span>
+                  <strong>{formattedPrice}</strong>
+                </p>
+              )}
+              <div className="catalog-detail-actions">
+                <a className="button button-light" href={inquiryHref} target="_blank" rel="noreferrer">
+                  Consultar
+                </a>
+                <span>{product.origin}</span>
+              </div>
             </div>
-            <div className="detail-media-duo">
-              <img src={product.image} alt={product.name} />
-            </div>
+            <CatalogProductGallery
+              title={product.title}
+              origin={product.origin}
+              mainImage={product.mainImage}
+              gallery={product.gallery}
+            />
           </div>
         </section>
 
-        <section className="page-shell detail-body">
+        <section className="page-shell detail-body catalog-detail-body">
           <aside>
             <p className="eyebrow">Ficha de producto</p>
             <dl>
-              <div><dt>Categoría</dt><dd>{product.category}</dd></div>
-              <div><dt>Subcategoría</dt><dd>{product.subcategory}</dd></div>
-              <div><dt>Procedencia</dt><dd>{product.procedencia}</dd></div>
-              {product.price && <div><dt>Precio</dt><dd>S/ {product.price}</dd></div>}
+              <div><dt>Categoría</dt><dd>{product.category.title}</dd></div>
+              {product.subcategory && <div><dt>Subcategoría</dt><dd>{product.subcategory}</dd></div>}
+              <div><dt>Procedencia</dt><dd>{product.origin}</dd></div>
+              {product.region && <div><dt>Territorio</dt><dd>{product.region}</dd></div>}
+              {displayPrice && <div><dt>Precio</dt><dd><strong>{formattedPrice}</strong></dd></div>}
               {product.availability && <div><dt>Disponibilidad</dt><dd>{product.availability}</dd></div>}
               {product.producerOrCreator && <div><dt>Productor o creador</dt><dd>{product.producerOrCreator}</dd></div>}
             </dl>
           </aside>
           <article>
-            {product.story && <p>{product.story}</p>}
-            {product.process && <p>{product.process}</p>}
-            {product.presentations?.length && <p>Presentaciones: {product.presentations.join(", ")}.</p>}
-            {product.ingredients?.length && <p>Ingredientes: {product.ingredients.join(", ")}.</p>}
-            {product.allergens?.length && <p>Alérgenos: {product.allergens.join(", ")}.</p>}
-            {!product.story && <p>Cada ficha del catálogo conserva una procedencia obligatoria y puede ampliarse con historia, proceso, presentaciones, ingredientes y disponibilidad cuando esa información esté confirmada.</p>}
+            {product.description.length > 0 ? (
+              <SimplePortableText value={product.description} />
+            ) : (
+              <p>{product.shortDescription}</p>
+            )}
+            {product.process && <section><h2>Proceso</h2><p>{product.process}</p></section>}
+            {product.presentations.length > 0 && <p><strong>Presentaciones:</strong> {product.presentations.join(", ")}.</p>}
+            {product.ingredients.length > 0 && <p><strong>Ingredientes:</strong> {product.ingredients.join(", ")}.</p>}
+            {product.allergens.length > 0 && <p><strong>Alérgenos:</strong> {product.allergens.join(", ")}.</p>}
+            {product.verifiedClaims.length > 0 && <p><strong>Información verificada:</strong> {product.verifiedClaims.join(", ")}.</p>}
           </article>
         </section>
 
-        {related.length > 0 && (
-          <section className="next-story">
-            <div className="page-shell">
-              <p>Productos relacionados</p>
-              {related.map((item) => (
-                <Link key={item.slug} href={`/catalogo/${item.slug}`}>
-                  <span>{item.subcategory}</span>
-                  <h2>{item.name}</h2>
-                  <i>↗</i>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
+        <CatalogRelatedProducts items={related} />
       </main>
       <Footer />
     </>

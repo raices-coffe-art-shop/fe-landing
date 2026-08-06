@@ -28,6 +28,7 @@ export type SocialLink = {
 
 export type SiteSettings = {
   brandLogo: BrandLogo;
+  showCatalogPrices: boolean;
   socialLinks: SocialLink[];
 };
 
@@ -36,6 +37,7 @@ type SanitySocialLink = Partial<SocialLink>;
 type SanitySiteSettings = {
   brandLogo?: SanityImageSource;
   brandLogoAlt?: string | null;
+  showCatalogPrices?: boolean | null;
   socialLinks?: SanitySocialLink[] | null;
 } | null;
 
@@ -80,24 +82,53 @@ const fallbackSocialLinks: SocialLink[] = [
 
 const platforms = new Set<SocialPlatform>(["instagram", "facebook", "tiktok", "youtube", "whatsapp", "email", "other"]);
 
-function isVisibleSocialLink(link: SanitySocialLink): link is SocialLink {
+function isCompleteSocialLink(link: SanitySocialLink): link is SocialLink {
   return (
     typeof link.label === "string" &&
     link.label.trim().length > 0 &&
     typeof link.url === "string" &&
     link.url.trim().length > 0 &&
     typeof link.order === "number" &&
-    link.isVisible === true &&
+    typeof link.isVisible === "boolean" &&
     typeof link.platform === "string" &&
     platforms.has(link.platform as SocialPlatform)
   );
 }
 
-function normalizeSocialLinks(links: SanitySocialLink[] | null | undefined) {
-  const visibleLinks = links?.filter(isVisibleSocialLink) ?? [];
-  return visibleLinks.length > 0
-    ? visibleLinks.sort((a, b) => a.order - b.order)
-    : fallbackSocialLinks;
+function replaceGenericSocialUrl(link: SocialLink): SocialLink {
+  try {
+    const parsed = new URL(link.url);
+    const hostname = parsed.hostname.replace(/^www\./, "").toLowerCase();
+    const pathname = parsed.pathname.replace(/\/+$/, "");
+
+    if (link.platform === "instagram" && hostname === "instagram.com" && pathname === "") {
+      return { ...link, url: contactChannels.instagram };
+    }
+
+    if (link.platform === "facebook" && hostname === "facebook.com" && pathname === "") {
+      return { ...link, url: contactChannels.facebook };
+    }
+  } catch {
+    // La validación del schema evita URLs inválidas; conserva el valor si llega contenido antiguo.
+  }
+
+  return link;
+}
+
+function normalizeSocialLinks(links: SanitySocialLink[] | null | undefined, useFallback: boolean) {
+  const completeLinks = links?.filter(isCompleteSocialLink).map(replaceGenericSocialUrl) ?? [];
+  const knownPlatforms = new Set(completeLinks.map((link) => link.platform));
+  const visibleLinks = completeLinks.filter((link) => link.isVisible);
+
+  // Los canales oficiales esenciales deben seguir disponibles cuando el
+  // documento existente todavía no los contiene. Si una plataforma existe y
+  // está oculta en Sanity, se respeta esa decisión y no se vuelve a añadir.
+  for (const fallbackLink of fallbackSocialLinks) {
+    if (!knownPlatforms.has(fallbackLink.platform)) visibleLinks.push(fallbackLink);
+  }
+
+  if (visibleLinks.length > 0) return visibleLinks.sort((a, b) => a.order - b.order);
+  return useFallback ? fallbackSocialLinks : [];
 }
 
 function normalizeSettings(settings: SanitySiteSettings): SiteSettings {
@@ -117,7 +148,8 @@ function normalizeSettings(settings: SanitySiteSettings): SiteSettings {
           ...fallbackBrandLogo,
           alt,
         },
-    socialLinks: normalizeSocialLinks(settings?.socialLinks),
+    showCatalogPrices: settings?.showCatalogPrices !== false,
+    socialLinks: normalizeSocialLinks(settings?.socialLinks, !settings || !Array.isArray(settings.socialLinks)),
   };
 }
 
@@ -125,7 +157,10 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   if (!sanityClient) return normalizeSettings(null);
 
   try {
-    const settings = await sanityClient.fetch<SanitySiteSettings>(siteSettingsQuery, {}, { next: { revalidate: 300, tags: [SITE_SETTINGS_TAG] } });
+    const fetchOptions = process.env.NODE_ENV === "development"
+      ? { cache: "no-store" as const }
+      : { next: { revalidate: 300, tags: [SITE_SETTINGS_TAG] } };
+    const settings = await sanityClient.fetch<SanitySiteSettings>(siteSettingsQuery, {}, fetchOptions);
     return normalizeSettings(settings);
   } catch {
     return normalizeSettings(null);

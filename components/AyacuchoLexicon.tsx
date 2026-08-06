@@ -66,8 +66,10 @@ const rangeSequence: Array<[number, number]> = [
 ];
 
 const closingSequence = [
-  { id: "closing-raices", type: "text", value: "RAÍCES", start: 0.08, end: 0.29 },
-  { id: "closing-huamanga", type: "text", value: "HUAMANGA", start: 0.37, end: 0.58 },
+  // RAÍCES empezaba demasiado pronto y llegaba ya ampliada por la perspectiva.
+  // Se desplaza su ventana para que entre limpia después de las palabras sueltas.
+  { id: "closing-raices", type: "text", value: "RAÍCES", start: 0.20, end: 0.42 },
+  { id: "closing-huamanga", type: "text", value: "HUAMANGA", start: 0.44, end: 0.63 },
   { id: "closing-ayacucho", type: "text", value: "AYACUCHO", start: 0.65, end: 0.83 },
   { id: "closing-logo", type: "logo", start: 0.84, end: 1.00 },
 ] satisfies LexiconClosingStep[];
@@ -109,7 +111,9 @@ function depthForWidth(width: number) {
 }
 
 function blurForWidth(width: number) {
-  return width < 768 ? 3.6 : 5;
+  // En pantallas pequeñas el blur aporta muy poco visualmente, pero obliga a
+  // repintar una superficie grande. Se conserva una cantidad mínima.
+  return width < 768 ? 1.4 : 4;
 }
 
 function createDepthAnimation(element: HTMLElement, depth: number, blur: number) {
@@ -118,6 +122,23 @@ function createDepthAnimation(element: HTMLElement, depth: number, blur: number)
       { transform: `translate3d(0, 0, ${-depth}px)`, opacity: 0, filter: `blur(${blur}px)` },
       { transform: "translate3d(0, 0, 0)", opacity: 1, filter: "blur(0px)", offset: 0.5 },
       { transform: `translate3d(0, 0, ${depth}px)`, opacity: 0, filter: `blur(${blur}px)` },
+    ],
+    { duration: 1000, fill: "both", easing: "linear" }
+  );
+
+  animation.pause();
+  animation.currentTime = 0;
+  return animation;
+}
+
+function createClosingRaicesAnimation(element: HTMLElement) {
+  // La primera palabra de cierre no usa translateZ. Al acercarse a la cámara,
+  // la perspectiva podía recortar letras y dejar visible solo el centro.
+  const animation = element.animate(
+    [
+      { transform: "translate3d(0, 18px, 0) scale(.84)", opacity: 0, filter: "blur(7px)" },
+      { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1, filter: "blur(0px)", offset: 0.5 },
+      { transform: "translate3d(0, -10px, 0) scale(1.12)", opacity: 0, filter: "blur(5px)" },
     ],
     { duration: 1000, fill: "both", easing: "linear" }
   );
@@ -163,6 +184,8 @@ export function AyacuchoLexicon() {
     const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let measureRafA = 0;
     let measureRafB = 0;
+    let lastProgress = -1;
+    let mutationObserver: MutationObserver | null = null;
 
     const buildAnimations = () => {
       animatedRef.current.forEach(({ animation }) => animation.cancel());
@@ -172,7 +195,9 @@ export function AyacuchoLexicon() {
         element,
         animation: element.dataset.lexiconAppearance === "logo"
           ? createLogoAnimation(element)
-          : createDepthAnimation(element, depthRef.current, blurRef.current),
+          : element.dataset.lexiconAppearance === "closing-raices"
+            ? createClosingRaicesAnimation(element)
+            : createDepthAnimation(element, depthRef.current, blurRef.current),
         start: Number(element.dataset.start ?? 0),
         end: Number(element.dataset.end ?? 1),
       }));
@@ -189,6 +214,7 @@ export function AyacuchoLexicon() {
       const connectorPath =
         document.querySelector<SVGPathElement>('[data-root-handoff-connector="previous-root-end"]');
       previousConnectorPathRef.current = connectorPath;
+      if (connectorPath) mutationObserver?.disconnect();
 
       const stickyStage = stageRef.current;
       if (!connectorPath || !stickyStage) return;
@@ -238,6 +264,8 @@ export function AyacuchoLexicon() {
       const progress = reducedQuery.matches
         ? 0.5
         : clamp(-rect.top / Math.max(1, metricsRef.current.distance));
+      if (!reducedQuery.matches && Math.abs(progress - lastProgress) < 0.0014) return;
+      lastProgress = progress;
 
       stage.style.setProperty("--lexicon-progress", progress.toFixed(4));
 
@@ -248,6 +276,7 @@ export function AyacuchoLexicon() {
     };
 
     const requestUpdate = () => {
+      if (!activeRef.current && !reducedQuery.matches) return;
       if (rafRef.current) return;
       rafRef.current = requestAnimationFrame(update);
     };
@@ -264,7 +293,7 @@ export function AyacuchoLexicon() {
         stage.classList.toggle("is-active", entry.isIntersecting);
         requestUpdate();
       },
-      { rootMargin: "100% 0px 100% 0px" }
+      { rootMargin: "65% 0px 65% 0px" }
     );
 
     const connectorContainer = document.querySelector<HTMLElement>(".continuous-root-trail");
@@ -274,7 +303,7 @@ export function AyacuchoLexicon() {
     resizeObserver.observe(stage);
     if (connectorContainer) resizeObserver.observe(connectorContainer);
 
-    const mutationObserver = new MutationObserver(() => {
+    mutationObserver = new MutationObserver(() => {
       scheduleRootHandoffMeasurement();
       const connectorSvg = previousConnectorPathRef.current?.ownerSVGElement;
       if (connectorSvg) resizeObserver.observe(connectorSvg);
@@ -282,7 +311,7 @@ export function AyacuchoLexicon() {
     if (connectorContainer) mutationObserver.observe(connectorContainer, { childList: true, subtree: true });
 
     const imageLoadCleanups: Array<() => void> = [];
-    document.querySelectorAll<HTMLImageElement>("img").forEach((image) => {
+    document.querySelectorAll<HTMLImageElement>("#historia img, #lengua img").forEach((image) => {
       if (image.complete) return;
       const onImageLoad = () => scheduleRootHandoffMeasurement();
       image.addEventListener("load", onImageLoad, { once: true });
@@ -292,7 +321,9 @@ export function AyacuchoLexicon() {
     measureLexiconMetrics();
     buildAnimations();
     observer.observe(section);
-    activeRef.current = true;
+    const initialRect = section.getBoundingClientRect();
+    activeRef.current = initialRect.bottom > -window.innerHeight * 0.65
+      && initialRect.top < window.innerHeight * 1.65;
     scheduleRootHandoffMeasurement();
     document.fonts?.ready.then(scheduleRootHandoffMeasurement).catch(() => undefined);
     update();
@@ -353,7 +384,7 @@ export function AyacuchoLexicon() {
           {closingSequence.map((step) => (
             <div
               key={step.id}
-              data-lexicon-appearance={step.type}
+              data-lexicon-appearance={step.type === "logo" ? "logo" : step.id}
               data-start={step.start}
               data-end={step.end}
               className={step.type === "logo" ? "lexicon-closing-logo" : `lexicon-special lexicon-special-${step.id}`}

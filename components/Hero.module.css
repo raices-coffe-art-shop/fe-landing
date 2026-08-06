@@ -7,17 +7,16 @@
 }
 
 .stage {
-  --ay-scene-x: 50%;
-  --ay-scene-y: 50%;
-  --ay-word-x: 50%;
-  --ay-word-y: 50%;
+  --ay-scene-shift-x: 0px;
+  --ay-scene-shift-y: 0px;
+  --ay-word-drift-x: 0px;
+  --ay-word-drift-y: 0px;
   --ay-copy-opacity: 1;
   --ay-copy-shift: 0px;
   --ay-word-opacity: 0;
   --ay-word-stroke: 0;
   --ay-meta-opacity: 0;
   --ay-indicator-opacity: 1;
-  --ay-photo-scale: 1;
   --ay-bg-size: cover;
   position: sticky;
   top: 0;
@@ -33,9 +32,7 @@
   position: absolute;
   inset: 0;
   z-index: -3;
-  transform: scale(var(--ay-photo-scale));
-  transform-origin: center;
-  will-change: transform;
+  transform: none;
 }
 
 .sceneImage {
@@ -44,10 +41,12 @@
   opacity: 0;
   background-repeat: no-repeat;
   background-size: var(--ay-bg-size);
-  background-position: var(--ay-scene-x) var(--ay-scene-y);
+  background-position:
+    calc(50% + var(--ay-scene-shift-x))
+    calc(50% + var(--ay-scene-shift-y));
   transition: opacity 1.25s cubic-bezier(.22,.61,.36,1), filter 1.25s ease;
   filter: saturate(.88) contrast(1.03);
-  will-change: opacity, background-position;
+  will-change: auto;
 }
 
 .sceneImage.isActive {
@@ -129,7 +128,10 @@
 }
 
 .wordImage {
-  grid-area: 1 / 1;
+  position: absolute;
+  inset: -7%;
+  display: grid;
+  place-items: center;
   white-space: nowrap;
   text-align: center;
   text-transform: uppercase;
@@ -143,13 +145,15 @@
   opacity: 0;
   background-repeat: no-repeat;
   background-size: var(--ay-bg-size);
-  background-position: var(--ay-word-x) var(--ay-word-y);
+  background-position:
+    calc(50% + var(--ay-scene-shift-x) + var(--ay-word-drift-x))
+    calc(50% + var(--ay-scene-shift-y) + var(--ay-word-drift-y));
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-stroke: 1px rgba(255,248,237,var(--ay-word-stroke));
   filter: saturate(.92) brightness(1.04) contrast(1.05);
   transition: opacity 1.25s cubic-bezier(.22,.61,.36,1);
-  will-change: background-position, opacity;
+  will-change: auto;
 }
 
 .wordImage.isActive {
@@ -334,4 +338,14 @@
   .sceneImage {
     transition: none;
   }
+}
+
+
+/* GPU layers are reserved only while the hero is close to the viewport. */
+.isMotionActive .sceneImage { will-change: opacity, background-position; }
+.isMotionActive .wordImage { will-change: opacity, background-position; }
+
+@media (max-width: 760px) {
+  .sceneImage,
+  .wordImage { filter: none; }
 }

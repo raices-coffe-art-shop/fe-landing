@@ -4,17 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import type { BrandLogo } from "@/sanity/lib/siteSettings";
+import { SocialPlatformIcon } from "@/components/SocialPlatformIcon";
 
 type NavIcon = "home" | "story" | "territory" | "people" | "art" | "catalog" | "visit" | "links" | "contact";
 
 type NavLink = { label: string; href: string; icon: NavIcon };
-
-type WindowWithLenis = Window & {
-  lenis?: {
-    stop?: () => void;
-    start?: () => void;
-  };
-};
 
 const desktopLinks: NavLink[] = [
   { label: "Inicio", href: "/#inicio", icon: "home" },
@@ -24,6 +18,7 @@ const desktopLinks: NavLink[] = [
   { label: "Arte", href: "/arte", icon: "art" },
   { label: "Catálogo", href: "/catalogo", icon: "catalog" },
   { label: "Comunidad", href: "/#comunidad", icon: "people" },
+  { label: "Links", href: "/links", icon: "links" },
   { label: "Visítanos", href: "/#visita", icon: "visit" }
 ];
 
@@ -35,6 +30,7 @@ const mobileLinks: NavLink[] = [
   { label: "Arte", href: "/arte", icon: "art" },
   { label: "Catálogo", href: "/catalogo", icon: "catalog" },
   { label: "Comunidad", href: "/#comunidad", icon: "people" },
+  { label: "Links", href: "/links", icon: "links" },
   { label: "Visítanos", href: "/#visita", icon: "visit" }
 ];
 
@@ -71,10 +67,28 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
   const shouldReturnFocus = useRef(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 48);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    let frame = 0;
+    let previous = false;
+
+    const update = () => {
+      frame = 0;
+      const next = window.scrollY > 48;
+      if (next === previous) return;
+      previous = next;
+      setScrolled(next);
+    };
+
+    const requestUpdate = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    previous = window.scrollY > 48;
+    setScrolled(previous);
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   useEffect(() => {
@@ -85,7 +99,7 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
 
-    const lenis = (window as WindowWithLenis).lenis;
+    const lenis = window.__raicesLenis;
     lenis?.stop?.();
 
     const backgroundElements = Array.from(
@@ -94,8 +108,8 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
     const previousInert = backgroundElements.map((element) => element.inert);
     backgroundElements.forEach((element) => { element.inert = true; });
 
-    // SmoothScroll does not currently expose its Lenis instance globally. These
-    // listeners prevent Lenis and native scrolling from reacting behind the panel.
+    // Además de pausar Lenis, estos listeners evitan que el scroll nativo
+    // reaccione detrás del panel en dispositivos táctiles.
     const preventBackgroundScroll = (event: Event) => {
       const target = event.target as Node | null;
       if (target && menuRef.current?.contains(target)) return;
@@ -182,7 +196,8 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
   };
 
   return (
-    <header className={`site-header ${scrolled ? "is-scrolled" : ""} ${open ? "is-open" : ""}`}>
+    <>
+      <header className={`site-header ${scrolled ? "is-scrolled" : ""} ${open ? "is-open" : ""}`}>
       <div className="header-inner">
         <Link href="/" className="brand" aria-label="Raíces, inicio">
           <img className="brand-logo" src={brandLogo.src} alt={brandLogo.alt} width={52} height={52} />
@@ -194,7 +209,7 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
             <a key={href} href={href}><NavSvg icon={icon} />{label}</a>
           ))}
           <a className="nav-cta" href={contactHref} target="_blank" rel="noreferrer">
-            <NavSvg icon="contact" />Conversemos
+            <SocialPlatformIcon platform="whatsapp" className="nav-whatsapp-icon" /><span>Conversemos</span>
           </a>
         </nav>
 
@@ -207,8 +222,9 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
           aria-controls={navigationId}
           aria-label={open ? "Cerrar menú" : "Abrir menú"}
         >
-          <span>{open ? "Cerrar" : "Menú"}</span>
+          <span className="menu-button-label">{open ? "Cerrar" : "Menú"}</span>
           <span className="menu-button-lines" aria-hidden="true">
+            <span />
             <span />
             <span />
           </span>
@@ -235,10 +251,24 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
             </a>
           ))}
           <a className="mobile-wa" href={contactHref} target="_blank" rel="noreferrer" onClick={() => closeMenu()} tabIndex={open ? 0 : -1}>
-            Escribir por WhatsApp ↗
+            <SocialPlatformIcon platform="whatsapp" className="mobile-wa-icon" />
+            <span>Escribir por WhatsApp</span>
           </a>
         </nav>
       </div>
-    </header>
+
+      </header>
+
+      <a
+        className={`floating-whatsapp ${open ? "is-hidden" : ""}`}
+        href={contactHref}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Escribir a Raíces por WhatsApp"
+      >
+        <SocialPlatformIcon platform="whatsapp" className="floating-whatsapp-icon" />
+        <span>WhatsApp</span>
+      </a>
+    </>
   );
 }

@@ -1,8 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import QRCode from "qrcode";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { SocialPlatformIcon } from "@/components/SocialPlatformIcon";
+import { heroImages } from "@/data/heroImages";
 import type { BrandLogo, SocialLink, SocialPlatform } from "@/sanity/lib/siteSettings";
+
+const LINKS_HERO_INTERVAL_MS = 7200;
+const LINKS_HERO_TRANSITION_MS = 1350;
 
 type LinkItem = {
   id: string;
@@ -139,14 +145,27 @@ function socialLinksToItems(links: SocialLink[]): LinkItem[] {
 }
 
 function LinkIcon({ type }: { type: LinkItem["icon"] }) {
+  const socialTypes: SocialPlatform[] = [
+    "whatsapp",
+    "instagram",
+    "facebook",
+    "tiktok",
+    "youtube",
+    "email",
+    "other",
+  ];
+
+  if (socialTypes.includes(type as SocialPlatform)) {
+    return (
+      <SocialPlatformIcon
+        platform={type as SocialPlatform}
+        className="link-card-icon social-platform-icon"
+      />
+    );
+  }
+
   return (
     <svg className="link-card-icon" viewBox="0 0 64 64" aria-hidden="true">
-      {type === "whatsapp" && (
-        <>
-          <path d="M16 50l3.5-10.5a20 20 0 1 1 8.1 6.8L16 50Z" />
-          <path d="M25.5 22.8c1.4-1.1 2.7-.7 3.4.9l1.1 2.6c.4.9.2 1.7-.5 2.4l-1.1 1c1.7 3.3 4.2 5.7 7.6 7.1l1-1.2c.7-.8 1.5-1 2.5-.6l2.8 1.1c1.5.7 1.9 2 .8 3.4-1 1.3-2.5 2-4.4 2-7.7-.1-16.6-8.3-17.2-16.1-.1-1.1.3-2 1.1-2.6Z" />
-        </>
-      )}
       {type === "catalog" && (
         <>
           <path d="M18 13h19c5 0 9 4 9 9v29H25a7 7 0 0 1-7-7V13Z" />
@@ -173,26 +192,40 @@ function LinkIcon({ type }: { type: LinkItem["icon"] }) {
           <path d="M26 27a6 6 0 1 0 12 0 6 6 0 0 0-12 0Z" />
         </>
       )}
-      {type === "instagram" && (
-        <>
-          <rect x="16" y="16" width="32" height="32" rx="10" />
-          <path d="M25 32a7 7 0 1 0 14 0 7 7 0 0 0-14 0Z" />
-          <path d="M41.5 22.5h.1" />
-        </>
-      )}
-      {type === "facebook" && <><path d="M36 18h8v-8h-8c-7 0-12 5-12 12v7h-7v8h7v17h9V37h8l2-8H33v-7c0-2.4 1.2-4 3-4Z" /></>}
-      {type === "tiktok" && <><path d="M35 12v25.5A11.5 11.5 0 1 1 25.5 26" /><path d="M35 12c2.2 7 6.9 11.1 14 12" /></>}
-      {type === "youtube" && <><path d="M14 24c0-5 3-7 18-7s18 2 18 7v16c0 5-3 7-18 7s-18-2-18-7V24Z" /><path d="m29 27 10 5-10 5V27Z" /></>}
-      {type === "email" && <><path d="M13 19h38v26H13V19Z" /><path d="m15 21 17 14 17-14" /></>}
-      {type === "other" && <><path d="M24 20h-3a10 10 0 0 0 0 20h8" /><path d="M40 20h3a10 10 0 0 1 0 20h-8" /><path d="M25 32h14" /></>}
     </svg>
   );
 }
 
 function LinkQr({ item }: { item: LinkItem }) {
+  const [qrCode, setQrCode] = useState(item.qrCode);
+
+  useEffect(() => {
+    let cancelled = false;
+    const value = /^(https?:|mailto:|tel:)/i.test(item.href)
+      ? item.href
+      : new URL(item.href, window.location.origin).toString();
+
+    QRCode.toDataURL(value, {
+      width: 320,
+      margin: 1,
+      errorCorrectionLevel: "H",
+      color: { dark: "#2b211c", light: "#f4efe5" },
+    })
+      .then((dataUrl) => {
+        if (!cancelled) setQrCode(dataUrl);
+      })
+      .catch(() => {
+        if (!cancelled) setQrCode(item.qrCode);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [item.href, item.qrCode]);
+
   return (
     <div className="link-qr" aria-label={`Código QR para ${item.label}`}>
-      <img className="link-qr-code" src={item.qrCode} alt="" />
+      <img className="link-qr-code" src={qrCode} alt="" />
       <span className="link-qr-image">
         <img src={item.qrImage} alt="" />
       </span>
@@ -212,7 +245,94 @@ function isExternalLink(url: string) {
 export function LinksHub({ brandLogo, socialLinks }: LinksHubProps) {
   const primaryLinks = [...socialLinksToItems(socialLinks), ...editorialLinks];
   const [shared, setShared] = useState(false);
-  const [openId, setOpenId] = useState(primaryLinks[0].id);
+  const [openId, setOpenId] = useState(primaryLinks[0]?.id ?? "catalogo");
+  const [activeHeroImage, setActiveHeroImage] = useState(0);
+  const [previousHeroImage, setPreviousHeroImage] = useState<number | null>(null);
+  const [heroRotationVersion, setHeroRotationVersion] = useState(0);
+  const heroCardRef = useRef<HTMLElement>(null);
+  const heroNearViewportRef = useRef(true);
+  const clearPreviousHeroTimerRef = useRef(0);
+
+  const visibleHeroImageIndexes = useMemo(() => {
+    if (previousHeroImage === null || previousHeroImage === activeHeroImage) {
+      return [activeHeroImage];
+    }
+    return [previousHeroImage, activeHeroImage];
+  }, [activeHeroImage, previousHeroImage]);
+
+  const changeHeroImage = useCallback((nextIndex: number, resetAutoRotation = false) => {
+    if (!heroImages.length) return;
+
+    const normalizedIndex = (nextIndex + heroImages.length) % heroImages.length;
+    setActiveHeroImage((current) => {
+      if (current === normalizedIndex) return current;
+
+      setPreviousHeroImage(current);
+      window.clearTimeout(clearPreviousHeroTimerRef.current);
+      clearPreviousHeroTimerRef.current = window.setTimeout(
+        () => setPreviousHeroImage(null),
+        LINKS_HERO_TRANSITION_MS + 120,
+      );
+      return normalizedIndex;
+    });
+
+    if (resetAutoRotation) {
+      setHeroRotationVersion((version) => version + 1);
+    }
+  }, []);
+
+  const showPreviousHeroImage = () => {
+    changeHeroImage(activeHeroImage - 1, true);
+  };
+
+  const showNextHeroImage = () => {
+    changeHeroImage(activeHeroImage + 1, true);
+  };
+
+  useEffect(() => {
+    const card = heroCardRef.current;
+    if (!card || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        heroNearViewportRef.current = entry.isIntersecting;
+      },
+      { rootMargin: "320px 0px" },
+    );
+
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!heroImages.length || document.hidden) return;
+    const preload = new window.Image();
+    preload.src = heroImages[(activeHeroImage + 1) % heroImages.length].src;
+  }, [activeHeroImage]);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches || heroImages.length < 2) return;
+
+    const interval = window.setInterval(() => {
+      if (!heroNearViewportRef.current || document.hidden) return;
+      setActiveHeroImage((current) => {
+        const next = (current + 1) % heroImages.length;
+        setPreviousHeroImage(current);
+        window.clearTimeout(clearPreviousHeroTimerRef.current);
+        clearPreviousHeroTimerRef.current = window.setTimeout(
+          () => setPreviousHeroImage(null),
+          LINKS_HERO_TRANSITION_MS + 120,
+        );
+        return next;
+      });
+    }, LINKS_HERO_INTERVAL_MS);
+
+    return () => {
+      window.clearInterval(interval);
+      window.clearTimeout(clearPreviousHeroTimerRef.current);
+    };
+  }, [heroRotationVersion]);
 
   const sharePage = async () => {
     const payload = {
@@ -273,8 +393,22 @@ export function LinksHub({ brandLogo, socialLinks }: LinksHubProps) {
           </button>
         </div>
 
-        <section className="links-hero-card">
-          <div className="links-hero-photo" aria-hidden="true" />
+        <section ref={heroCardRef} className="links-hero-card">
+          <div className="links-hero-media" aria-hidden="true">
+            {visibleHeroImageIndexes.map((index) => {
+              const image = heroImages[index];
+              return (
+                <div
+                  key={image.src}
+                  className={`links-hero-photo ${activeHeroImage === index ? "is-active" : "is-previous"}`}
+                  style={{
+                    backgroundImage: `url("${image.src}")`,
+                    backgroundPosition: image.linksPosition ?? "center 50%",
+                  }}
+                />
+              );
+            })}
+          </div>
           <div className="links-hero-glow" aria-hidden="true" />
           <div className="links-hero-content">
             <div className="links-kicker-row">
@@ -293,6 +427,47 @@ export function LinksHub({ brandLogo, socialLinks }: LinksHubProps) {
               <span>Catálogo vivo</span>
               <span>Historias reales</span>
             </div>
+          </div>
+
+          <div className="links-hero-controls" aria-label="Selector de imágenes del proyecto">
+            <button
+              className="links-hero-arrow"
+              type="button"
+              onClick={showPreviousHeroImage}
+              aria-label="Mostrar imagen anterior"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m14.5 5-7 7 7 7" />
+              </svg>
+            </button>
+
+            <div className="links-hero-dots" role="group" aria-label="Elegir imagen">
+              {heroImages.map((image, index) => (
+                <button
+                  key={image.src}
+                  className={index === activeHeroImage ? "is-active" : ""}
+                  type="button"
+                  onClick={() => changeHeroImage(index, true)}
+                  aria-label={`Mostrar imagen ${index + 1}: ${image.alt}`}
+                  aria-current={index === activeHeroImage ? "true" : undefined}
+                />
+              ))}
+            </div>
+
+            <span className="links-hero-count" aria-live="polite">
+              {String(activeHeroImage + 1).padStart(2, "0")} / {String(heroImages.length).padStart(2, "0")}
+            </span>
+
+            <button
+              className="links-hero-arrow"
+              type="button"
+              onClick={showNextHeroImage}
+              aria-label="Mostrar imagen siguiente"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9.5 5 7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </section>
 

@@ -1,17 +1,46 @@
-# Sanity Revalidation Webhook
+# Webhook de revalidación
 
-Configure this webhook in Sanity Manage for the production dataset.
+La aplicación expone `POST /api/revalidate` y valida la firma de Sanity con `SANITY_REVALIDATE_SECRET`.
 
-- Method: `POST`
+## Variables necesarias
+
+```env
+NEXT_PUBLIC_SANITY_PROJECT_ID=...
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_REVALIDATE_SECRET=...
+```
+
+`SANITY_REVALIDATE_SECRET` debe tener el mismo valor en Vercel y en el webhook de Sanity. Nunca debe llevar el prefijo `NEXT_PUBLIC_`.
+
+## Configuración en Sanity Manage
+
 - URL: `https://DOMINIO/api/revalidate`
-- Filter: `_type == "siteSettings"`
-- Secret: same value as `SANITY_REVALIDATE_SECRET` in hosting
-- Trigger on: create, update, delete
-- Drafts and versions: off
+- Dataset: `production`
+- Método: `POST`
+- Filtro:
 
-The endpoint validates the Sanity signature with `parseBody` from `next-sanity/webhook`.
-When the published `siteSettings` document changes, it invalidates the `siteSettings` cache tag
-and the public routes that render the shared logo or social links.
+```groq
+_type in ["siteSettings", "catalogCategory", "catalogItem"]
+```
 
-For local testing, expose `http://localhost:3000/api/revalidate` through a secure tunnel and use
-that tunnel URL in Sanity Manage.
+- Proyección:
+
+```groq
+{
+  "_type": coalesce(after()._type, before()._type),
+  "slug": coalesce(after().slug.current, before().slug.current),
+  "previousSlug": before().slug.current
+}
+```
+
+- Triggers: Create, Update y Delete
+- Drafts: desactivado
+- Versions: desactivado
+- Secret: el mismo valor de `SANITY_REVALIDATE_SECRET`
+
+## Respuestas esperadas
+
+- Petición firmada válida: `200`
+- Petición manual sin firma: `401`
+- Secreto ausente en el servidor: `500`
+- Tipo de documento no administrado: `200` con `revalidated: false`

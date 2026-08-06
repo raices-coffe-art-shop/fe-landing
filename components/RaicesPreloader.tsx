@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const RAICES_PRELOADER_ENABLED = true;
@@ -12,11 +13,17 @@ export const RAICES_PRELOADER_TIMING = {
 type LoaderState = "visible" | "exiting" | "hidden";
 
 export function RaicesPreloader() {
+  const pathname = usePathname();
+  const isStudioRoute = pathname === "/studio" || pathname.startsWith("/studio/");
   const [state, setState] = useState<LoaderState>(
-    RAICES_PRELOADER_ENABLED ? "visible" : "hidden",
+    RAICES_PRELOADER_ENABLED && !isStudioRoute ? "visible" : "hidden",
   );
 
   useEffect(() => {
+    if (isStudioRoute) {
+      setState("hidden");
+      return;
+    }
     if (!RAICES_PRELOADER_ENABLED || state === "hidden") return;
 
     const previousBodyOverflow = document.body.style.overflow;
@@ -68,9 +75,9 @@ export function RaicesPreloader() {
       document.body.style.overflow = previousBodyOverflow;
       document.documentElement.style.overflow = previousHtmlOverflow;
     };
-  }, []);
+  }, [isStudioRoute]);
 
-  if (state === "hidden") return null;
+  if (isStudioRoute || state === "hidden") return null;
 
   return (
     <div

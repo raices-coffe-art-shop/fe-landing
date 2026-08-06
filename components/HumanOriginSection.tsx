@@ -34,6 +34,7 @@ export function HumanOriginSection() {
               width={773}
               height={639}
               loading="lazy"
+              decoding="async"
             />
             <figcaption>
               <p>{humanOrigin.notes[0].text}</p>

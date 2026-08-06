@@ -1,22 +1,19 @@
 import { contactChannels } from "@/data/social";
 import { FooterRoot } from "@/components/FooterRoot";
+import { SocialPlatformIcon } from "@/components/SocialPlatformIcon";
 import { getPrimarySocialHref, getSiteSettings, type SocialLink, type SocialPlatform } from "@/sanity/lib/siteSettings";
-
-function SocialIcon({ platform }: { platform: SocialPlatform }) {
-  const label = platform === "other" ? "link" : platform;
-  return <span aria-hidden="true">{label.slice(0, 2).toUpperCase()}</span>;
-}
 
 function isExternalLink(url: string) {
   return url.startsWith("http://") || url.startsWith("https://");
 }
 
 function FooterSocialLinks({ links }: { links: SocialLink[] }) {
-  if (links.length === 0) return null;
+  const socialOnly = links.filter((link) => ["whatsapp", "instagram", "facebook"].includes(link.platform));
+  if (socialOnly.length === 0) return null;
 
   return (
     <div className="footer-social-links" aria-label="Redes sociales">
-      {links.map((link) => (
+      {socialOnly.map((link) => (
         <a
           key={`${link.platform}-${link.url}`}
           href={link.url}
@@ -24,8 +21,8 @@ function FooterSocialLinks({ links }: { links: SocialLink[] }) {
           rel={isExternalLink(link.url) ? "noreferrer" : undefined}
           aria-label={link.label}
         >
-          <SocialIcon platform={link.platform} />
-          {link.label}
+          <SocialPlatformIcon platform={link.platform} />
+          <span>{link.label}</span>
         </a>
       ))}
     </div>
@@ -34,6 +31,8 @@ function FooterSocialLinks({ links }: { links: SocialLink[] }) {
 
 export async function Footer() {
   const settings = await getSiteSettings();
+  const whatsapp = settings.socialLinks.find((link) => link.platform === "whatsapp");
+  const email = settings.socialLinks.find((link) => link.platform === "email");
   const whatsappHref = getPrimarySocialHref(settings, "whatsapp", contactChannels.whatsappHref);
   const emailHref = getPrimarySocialHref(settings, "email", `mailto:${contactChannels.email}`);
 
@@ -51,7 +50,13 @@ export async function Footer() {
         <div><span>Visita</span><p>Lima, Perú<br /><a href="#visita">Cómo llegar</a></p></div>
         <div>
           <span>Contacto</span>
-          <p><a href={whatsappHref}>{contactChannels.whatsappDisplay}</a><br /><a href={emailHref}>{contactChannels.email}</a></p>
+          <p>
+            <a href={whatsappHref} target={isExternalLink(whatsappHref) ? "_blank" : undefined} rel={isExternalLink(whatsappHref) ? "noreferrer" : undefined}>
+              {whatsapp?.label || "WhatsApp"}
+            </a>
+            <br />
+            <a href={emailHref}>{email?.label || "Correo electrónico"}</a>
+          </p>
           <FooterSocialLinks links={settings.socialLinks} />
         </div>
         <div><span>Explora</span><p><a href="/#personas">Personas</a><br /><a href="/catalogo">Catálogo</a><br /><a href="/arte">Arte</a><br /><a href="/comunidad">Comunidad</a></p></div>

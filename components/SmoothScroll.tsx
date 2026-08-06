@@ -1,45 +1,78 @@
 "use client";
 
 import Lenis from "lenis";
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
+
 export function SmoothScroll() {
+  const pathname = usePathname();
+  const isStudioRoute = pathname === "/studio" || pathname.startsWith("/studio/");
+
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reduced.matches) return;
+    // Sanity Studio administra paneles con scroll propio. En pantallas táctiles
+    // el scroll nativo también es más fluido y consume menos trabajo del hilo principal.
+    const coarsePointer = window.matchMedia("(pointer: coarse)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (isStudioRoute || coarsePointer.matches || reducedMotion.matches) return;
 
     const lenis = new Lenis({
-      lerp: 0.092,
+      lerp: 0.12,
       smoothWheel: true,
-      wheelMultiplier: 0.88,
-      touchMultiplier: 1.08,
+      wheelMultiplier: 0.95,
+      touchMultiplier: 1,
       syncTouch: false,
-      duration: 1.08,
+      allowNestedScroll: false,
+      prevent: (node: HTMLElement) => Boolean(
+        node.closest?.("[data-lenis-prevent], [role='dialog'], .mobile-menu, iframe"),
+      ),
       anchors: {
         offset: -76,
-        duration: 1,
+        duration: 0.86,
       },
+      stopInertiaOnNavigate: true,
       infinite: false,
     });
-    const notifySmoothScroll = () => {
-      window.dispatchEvent(new Event("raices:smooth-scroll"));
-    };
+
+    window.__raicesLenis = lenis;
 
     let frame = 0;
+    let running = true;
     const raf = (time: number) => {
+      if (!running) return;
       lenis.raf(time);
       frame = requestAnimationFrame(raf);
     };
 
-    lenis.on("scroll", notifySmoothScroll);
+    const startLoop = () => {
+      if (running) return;
+      running = true;
+      frame = requestAnimationFrame(raf);
+    };
+
+    const stopLoop = () => {
+      running = false;
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+    };
+
+    const onVisibilityChange = () => {
+      if (document.hidden) stopLoop();
+      else startLoop();
+    };
+
     frame = requestAnimationFrame(raf);
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
-      lenis.off("scroll", notifySmoothScroll);
-      cancelAnimationFrame(frame);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      stopLoop();
       lenis.destroy();
+      if (window.__raicesLenis === lenis) {
+        window.__raicesLenis = undefined;
+      }
     };
-  }, []);
+  }, [isStudioRoute]);
 
   return null;
 }

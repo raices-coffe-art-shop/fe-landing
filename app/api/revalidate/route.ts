@@ -2,20 +2,46 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { parseBody } from "next-sanity/webhook";
 import { SITE_SETTINGS_TAG } from "@/sanity/lib/siteSettings";
+import { CATALOG_CATEGORIES_TAG, CATALOG_TAG, catalogItemTag } from "@/sanity/lib/catalog";
 
 type SanityWebhookBody = {
   _id?: string;
-  _type?: string;
+  _type?: "siteSettings" | "catalogCategory" | "catalogItem" | string;
+  slug?: string | null;
+  previousSlug?: string | null;
 };
 
-const staticSiteSettingsPaths = ["/", "/links", "/arte", "/catalogo", "/comunidad"];
+const siteSettingsPaths = ["/", "/links", "/arte", "/catalogo", "/comunidad"];
+const siteSettingsDynamicPaths = ["/archivo/[slug]", "/arte/[slug]", "/catalogo/[slug]", "/personas/[slug]"] as const;
 
-const dynamicSiteSettingsPaths = [
-  "/archivo/[slug]",
-  "/arte/[slug]",
-  "/catalogo/[slug]",
-  "/personas/[slug]",
-] as const;
+function revalidateSiteSettings() {
+  revalidateTag(SITE_SETTINGS_TAG, { expire: 0 });
+  for (const path of siteSettingsPaths) revalidatePath(path);
+  for (const path of siteSettingsDynamicPaths) revalidatePath(path, "page");
+}
+
+function revalidateCatalogCategory() {
+  revalidateTag(CATALOG_CATEGORIES_TAG, { expire: 0 });
+  revalidateTag(CATALOG_TAG, { expire: 0 });
+  revalidatePath("/");
+  revalidatePath("/catalogo");
+  revalidatePath("/catalogo/[slug]", "page");
+}
+
+function revalidateCatalogItem(slug?: string | null, previousSlug?: string | null) {
+  revalidateTag(CATALOG_TAG, { expire: 0 });
+  revalidateTag(CATALOG_CATEGORIES_TAG, { expire: 0 });
+
+  const slugs = new Set([slug, previousSlug].filter((value): value is string => Boolean(value)));
+  for (const itemSlug of slugs) {
+    revalidateTag(catalogItemTag(itemSlug), { expire: 0 });
+    revalidatePath(`/catalogo/${itemSlug}`);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/catalogo");
+  revalidatePath("/catalogo/[slug]", "page");
+}
 
 export async function POST(request: NextRequest) {
   const secret = process.env.SANITY_REVALIDATE_SECRET;
@@ -36,32 +62,32 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, message: "Invalid signature" }, { status: 401 });
   }
 
-  const documentType = parsed.body?._type;
+  const body = parsed.body;
+  if (!body?._type) {
+    return NextResponse.json({ ok: false, message: "Missing document type" }, { status: 400 });
+  }
 
-  if (documentType !== SITE_SETTINGS_TAG) {
+  if (body._type === "siteSettings") {
+    revalidateSiteSettings();
+  } else if (body._type === "catalogCategory") {
+    revalidateCatalogCategory();
+  } else if (body._type === "catalogItem") {
+    revalidateCatalogItem(body.slug, body.previousSlug);
+  } else {
     return NextResponse.json({
       ok: true,
       revalidated: false,
       message: "Ignored document type",
-      type: documentType ?? null,
+      type: body._type,
     });
-  }
-
-  revalidateTag(SITE_SETTINGS_TAG, { expire: 0 });
-
-  for (const path of staticSiteSettingsPaths) {
-    revalidatePath(path);
-  }
-
-  for (const path of dynamicSiteSettingsPaths) {
-    revalidatePath(path, "page");
   }
 
   return NextResponse.json({
     ok: true,
     revalidated: true,
-    tag: SITE_SETTINGS_TAG,
-    paths: [...staticSiteSettingsPaths, ...dynamicSiteSettingsPaths],
+    type: body._type,
+    slug: body.slug ?? null,
+    previousSlug: body.previousSlug ?? null,
   });
 }
 
