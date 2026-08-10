@@ -9,8 +9,11 @@ export const metadata: Metadata = {
     "Raíces conecta Ayacucho con Lima a través de productos, alimentos, arte e historias de las personas que los hacen posibles.",
   metadataBase: new URL("https://raices-cafe-cultura.example"),
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    shortcut: "/icon.svg",
+    icon: [
+      { url: "/favicon.ico", sizes: "180x180" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
     apple: "/apple-icon.png",
   },
   openGraph: {
