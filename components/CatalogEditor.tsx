@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { products } from "@/data/site";
+import { products } from "@/data/products";
 import { contactChannels } from "@/data/social";
 import { EditorialImage } from "./EditorialImage";
 
