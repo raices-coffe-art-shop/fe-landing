@@ -163,6 +163,7 @@
 .brandLogo {
   width: clamp(160px, 15vw, 300px);
   height: auto;
+  border-radius: 18px;
 }
 
 .brandWordmark {

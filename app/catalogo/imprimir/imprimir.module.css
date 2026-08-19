@@ -226,11 +226,6 @@
 }
 
 @media print {
-  :global(html),
-  :global(body) {
-    background: #fff !important;
-  }
-
   .page {
     min-height: auto;
     padding: 0;
