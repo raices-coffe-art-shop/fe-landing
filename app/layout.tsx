@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import { RaicesPreloader } from "@/components/RaicesPreloader";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { getSiteUrl } from "@/lib/siteUrl";
 import "./globals.css";
 
+const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+
 export const metadata: Metadata = {
-  title: "Raíces — Café y cultura",
+  title: {
+    default: "Raíces — Café y Cultura | Café ayacuchano y arte en Lima",
+    template: "%s | Raíces — Café y Cultura",
+  },
   description:
     "Raíces conecta Ayacucho con Lima a través de productos, alimentos, arte e historias de las personas que los hacen posibles.",
-  metadataBase: new URL("https://raices-cafe-cultura.example"),
+  metadataBase: new URL(getSiteUrl()),
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "180x180" },
@@ -17,12 +23,24 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
   openGraph: {
-    title: "Raíces — Café y cultura",
+    siteName: "Raíces — Café y Cultura",
+    title: "Raíces — Café y Cultura | Café ayacuchano y arte en Lima",
     description:
       "Productos, alimentos, arte e historias para compartir Ayacucho en Lima a través de las personas.",
     type: "website",
-    locale: "es_PE"
-  }
+    locale: "es_PE",
+    url: "/",
+    images: [
+      {
+        url: "/media/raices/raices-local-entrada.webp",
+        alt: "Local de Raíces Café y Cultura en Lima",
+      },
+    ],
+  },
+  twitter: { card: "summary_large_image" },
+  ...(googleSiteVerification
+    ? { verification: { google: googleSiteVerification } }
+    : {}),
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
