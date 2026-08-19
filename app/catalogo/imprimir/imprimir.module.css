@@ -1,0 +1,267 @@
+/* Carta imprimible: en pantalla se ve como una hoja centrada (preview);
+   en @media print se convierte en el documento A4 real. */
+
+.page {
+  min-height: 100vh;
+  background: var(--paper);
+  padding: 48px 16px 96px;
+  font-family: var(--sans);
+  color: var(--ink);
+}
+
+.sheet {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff8ed;
+  padding: 56px 64px 48px;
+  box-shadow: 0 18px 48px rgba(43, 33, 28, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+
+.logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.wordmark {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+.category {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  break-inside: auto;
+}
+
+.categoryTitle {
+  margin: 0 0 6px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+  break-after: avoid;
+}
+
+.categoryNote {
+  margin: -2px 0 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.item {
+  break-inside: avoid;
+}
+
+.itemRow {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.itemName {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.leader {
+  flex: 1;
+  border-bottom: 1.5px dotted rgba(43, 33, 28, 0.45);
+  transform: translateY(-3px);
+}
+
+.itemPrice {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.itemInquiry {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.itemDescription {
+  margin: 2px 0 0;
+  max-width: 60ch;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.emptyNote {
+  margin: 24px 0;
+  font-family: var(--serif);
+  font-size: 17px;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  break-inside: avoid;
+}
+
+.qr {
+  width: 88px;
+  height: 88px;
+  border: 1px solid var(--line);
+}
+
+.footerCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footerLead {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.footerUrl {
+  margin: 0;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.footerContact {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
+}
+
+.footerContact p {
+  margin: 0;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.printButton {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 23px;
+  border: 1px solid transparent;
+  background: var(--green-deep);
+  color: #fff8ed;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  box-shadow: 0 10px 28px rgba(38, 55, 45, 0.35);
+}
+
+.printButton:hover {
+  background: var(--green);
+}
+
+@page {
+  size: A4;
+  margin: 14mm 16mm;
+}
+
+@media print {
+  :global(html),
+  :global(body) {
+    background: #fff !important;
+  }
+
+  .page {
+    min-height: auto;
+    padding: 0;
+    background: #fff;
+  }
+
+  .sheet {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    box-shadow: none;
+    gap: 20px;
+  }
+
+  .printButton {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .sheet {
+    padding: 36px 24px 32px;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .footerContact {
+    margin-left: 0;
+    text-align: left;
+  }
+}
