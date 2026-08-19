@@ -3,18 +3,19 @@
 import Lenis from "lenis";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { isChromelessRoute } from "@/lib/chromelessRoutes";
 
 
 export function SmoothScroll() {
   const pathname = usePathname();
-  const isStudioRoute = pathname === "/studio" || pathname.startsWith("/studio/");
+  const isChromeless = isChromelessRoute(pathname);
 
   useEffect(() => {
-    // Sanity Studio administra paneles con scroll propio. En pantallas táctiles
-    // el scroll nativo también es más fluido y consume menos trabajo del hilo principal.
+    // Studio, la carta imprimible y la vista TV usan scroll nativo. En pantallas
+    // táctiles el scroll nativo también es más fluido y consume menos trabajo del hilo principal.
     const coarsePointer = window.matchMedia("(pointer: coarse)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (isStudioRoute || coarsePointer.matches || reducedMotion.matches) return;
+    if (isChromeless || coarsePointer.matches || reducedMotion.matches) return;
 
     const lenis = new Lenis({
       lerp: 0.12,
@@ -72,7 +73,7 @@ export function SmoothScroll() {
         window.__raicesLenis = undefined;
       }
     };
-  }, [isStudioRoute]);
+  }, [isChromeless]);
 
   return null;
 }

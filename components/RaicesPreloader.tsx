@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { isChromelessRoute } from "@/lib/chromelessRoutes";
 
 export const RAICES_PRELOADER_ENABLED = true;
 export const RAICES_PRELOADER_TIMING = {
@@ -14,13 +15,13 @@ type LoaderState = "visible" | "exiting" | "hidden";
 
 export function RaicesPreloader() {
   const pathname = usePathname();
-  const isStudioRoute = pathname === "/studio" || pathname.startsWith("/studio/");
+  const isChromeless = isChromelessRoute(pathname);
   const [state, setState] = useState<LoaderState>(
-    RAICES_PRELOADER_ENABLED && !isStudioRoute ? "visible" : "hidden",
+    RAICES_PRELOADER_ENABLED && !isChromeless ? "visible" : "hidden",
   );
 
   useEffect(() => {
-    if (isStudioRoute) {
+    if (isChromeless) {
       setState("hidden");
       return;
     }
@@ -75,9 +76,9 @@ export function RaicesPreloader() {
       document.body.style.overflow = previousBodyOverflow;
       document.documentElement.style.overflow = previousHtmlOverflow;
     };
-  }, [isStudioRoute]);
+  }, [isChromeless]);
 
-  if (isStudioRoute || state === "hidden") return null;
+  if (isChromeless || state === "hidden") return null;
 
   return (
     <div
