@@ -11,6 +11,9 @@ import { getCatalogItemBySlug, getRelatedCatalogItems } from "@/sanity/lib/catal
 import { formatCatalogPrice, shouldDisplayCatalogPrice } from "@/sanity/lib/catalogShared";
 import { buildCatalogInquiryHref } from "@/sanity/lib/inquiry";
 import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd, productJsonLd } from "@/lib/structuredData";
+import { absoluteUrl } from "@/lib/siteUrl";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -52,6 +55,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <>
+      <JsonLd data={productJsonLd(product, settings.showCatalogPrices)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Inicio", url: absoluteUrl("/") },
+          { name: "Catálogo", url: absoluteUrl("/catalogo") },
+          { name: product.title, url: absoluteUrl(`/catalogo/${product.slug}`) },
+        ])}
+      />
       <SiteHeader />
       <main className="detail-page catalog-detail-page">
         <section className="detail-hero catalog-detail-hero">

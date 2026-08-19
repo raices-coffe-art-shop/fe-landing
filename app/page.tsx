@@ -15,6 +15,8 @@ import { ContinuousRoots } from "@/components/ContinuousRoots";
 import { SocialPurposeSection } from "@/components/SocialPurposeSection";
 import { contactChannels } from "@/data/social";
 import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
+import { JsonLd } from "@/components/JsonLd";
+import { cafeJsonLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = {
   title: { absolute: "Raíces — Café y Cultura | Café ayacuchano y arte en Lima" },
@@ -60,6 +62,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={cafeJsonLd()} />
       <SiteHeader />
       <main>
         <Hero />

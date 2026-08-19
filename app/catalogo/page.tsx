@@ -5,6 +5,8 @@ import { CatalogCollection } from "@/components/CatalogCollection";
 import { contactChannels } from "@/data/social";
 import { getCatalogCategories, getCatalogItems } from "@/sanity/lib/catalog";
 import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
+import { JsonLd } from "@/components/JsonLd";
+import { menuJsonLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = {
   title: "Catálogo",
@@ -32,6 +34,7 @@ export default async function CatalogoPage({ searchParams }: CatalogoPageProps) 
 
   return (
     <>
+      <JsonLd data={menuJsonLd(items, categories, settings.showCatalogPrices)} />
       <SiteHeader />
       <main>
         <section className="catalogo-hero">
