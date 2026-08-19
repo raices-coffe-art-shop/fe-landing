@@ -3,8 +3,10 @@ import { LinksHub } from "@/components/LinksHub";
 import { getSiteSettings } from "@/sanity/lib/siteSettings";
 
 export const metadata: Metadata = {
-  title: "Enlaces — Raíces Café y Cultura",
+  title: "Enlaces",
   description: "Todos los enlaces de Raíces: WhatsApp, catálogo, historias, ubicación e Instagram.",
+  alternates: { canonical: "/links" },
+  openGraph: { url: "/links", title: "Enlaces de Raíces — Café y Cultura" },
 };
 
 export default async function LinksPage() {

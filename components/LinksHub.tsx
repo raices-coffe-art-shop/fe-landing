@@ -417,6 +417,7 @@ export function LinksHub({ brandLogo, socialLinks }: LinksHubProps) {
             </div>
             <h1 className="links-identity">
               <img src={brandLogo.src} alt={brandLogo.alt} width={168} height={168} />
+              <span className="sr-only">Raíces — Café y Cultura</span>
             </h1>
             <p>
               Un enlace único para entrar al universo del proyecto: sabores, personas y escenas que siguen contando el origen.

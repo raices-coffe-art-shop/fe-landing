@@ -1,11 +1,32 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { artShopSlides } from "@/data/art";
 
 export function generateStaticParams() {
   return artShopSlides.map((item) => ({ slug: item.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const item = artShopSlides.find((entry) => entry.slug === slug);
+  if (!item) {
+    return { title: "Obra no encontrada", robots: { index: false } };
+  }
+
+  return {
+    title: `${item.eyebrow} — Arte en Raíces`,
+    description: item.text,
+    alternates: { canonical: `/arte/${item.slug}` },
+    openGraph: {
+      url: `/arte/${item.slug}`,
+      title: `${item.eyebrow} — Arte en Raíces`,
+      description: item.text,
+      images: [{ url: item.left, alt: item.leftAlt }],
+    },
+  };
 }
 
 export default async function ArtShopPage({ params }: { params: Promise<{ slug: string }> }) {

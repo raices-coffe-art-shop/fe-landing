@@ -19,12 +19,16 @@ type ProductPageProps = {
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = await getCatalogItemBySlug(slug);
-  if (!product) return { title: "Producto no encontrado — Raíces" };
+  if (!product) {
+    return { title: "Producto no encontrado", robots: { index: false } };
+  }
 
   return {
-    title: product.seo?.title || `${product.title} — Catálogo Raíces`,
+    title: product.seo?.title || product.title,
     description: product.seo?.description || product.shortDescription,
+    alternates: { canonical: `/catalogo/${product.slug}` },
     openGraph: {
+      url: `/catalogo/${product.slug}`,
       title: product.seo?.title || product.title,
       description: product.seo?.description || product.shortDescription,
       images: [{ url: product.mainImage.src, alt: product.mainImage.alt }],

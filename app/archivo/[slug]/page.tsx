@@ -1,11 +1,33 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { archiveCategories } from "@/data/documentary";
 
 export function generateStaticParams() {
   return archiveCategories.map((category) => ({ slug: category.id }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const category = archiveCategories.find((item) => item.id === slug);
+  if (!category) {
+    return { title: "Categoría no encontrada", robots: { index: false } };
+  }
+
+  const image = category.media[0];
+  return {
+    title: `${category.title} — Archivo de origen`,
+    description: category.summary,
+    alternates: { canonical: `/archivo/${category.id}` },
+    openGraph: {
+      url: `/archivo/${category.id}`,
+      title: `${category.title} — Archivo de origen`,
+      description: category.summary,
+      ...(image?.src ? { images: [{ url: image.src, alt: image.alt ?? category.title }] } : {}),
+    },
+  };
 }
 
 export default async function ArchiveCategoryPage({ params }: { params: Promise<{ slug: string }> }) {

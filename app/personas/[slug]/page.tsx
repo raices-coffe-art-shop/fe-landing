@@ -1,11 +1,33 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { people } from "@/data/site";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
 
 export function generateStaticParams() {
   return people.map((person) => ({ slug: person.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const person = people.find((item) => item.slug === slug);
+  if (!person) {
+    return { title: "Persona no encontrada", robots: { index: false } };
+  }
+
+  const portrait = person.portraitGallery?.[0];
+  return {
+    title: `${person.name} — ${person.role}`,
+    description: person.summary,
+    alternates: { canonical: `/personas/${person.slug}` },
+    openGraph: {
+      url: `/personas/${person.slug}`,
+      title: `${person.name} — ${person.role}`,
+      description: person.summary,
+      ...(portrait?.src ? { images: [{ url: portrait.src, alt: portrait.alt }] } : {}),
+    },
+  };
 }
 
 export default async function PersonPage({ params }: { params: Promise<{ slug: string }> }) {

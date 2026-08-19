@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Hero } from "@/components/Hero";
 import { CulturalMap } from "@/components/CulturalMap";
@@ -14,6 +15,19 @@ import { ContinuousRoots } from "@/components/ContinuousRoots";
 import { SocialPurposeSection } from "@/components/SocialPurposeSection";
 import { contactChannels } from "@/data/social";
 import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
+
+export const metadata: Metadata = {
+  title: { absolute: "Raíces — Café y Cultura | Café ayacuchano y arte en Lima" },
+  description:
+    "Cafetería y tienda cultural en Lima: café ayacuchano de origen, cacao, alimentos, arte y las historias de las personas que los hacen posibles.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+    title: "Raíces — Café y Cultura | Café ayacuchano y arte en Lima",
+    description:
+      "Café ayacuchano de origen, alimentos, arte e historias para compartir Ayacucho en Lima.",
+  },
+};
 
 function VisitSocialIcon({ platform }: { platform: "whatsapp" | "instagram" | "facebook" }) {
   return (

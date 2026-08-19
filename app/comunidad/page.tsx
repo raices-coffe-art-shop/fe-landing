@@ -23,8 +23,10 @@ const blocks = [
 ];
 
 export const metadata: Metadata = {
-  title: "Comunidad — Raíces Café y Cultura",
-  description: "Personas, visitas, actividades y encuentros que ocurren dentro de Raíces."
+  title: "Comunidad",
+  description: "Personas, visitas, actividades y encuentros que ocurren dentro de Raíces.",
+  alternates: { canonical: "/comunidad" },
+  openGraph: { url: "/comunidad", title: "Comunidad de Raíces — Café y Cultura" },
 };
 
 export default function ComunidadPage() {

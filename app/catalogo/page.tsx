@@ -7,8 +7,11 @@ import { getCatalogCategories, getCatalogItems } from "@/sanity/lib/catalog";
 import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
 
 export const metadata: Metadata = {
-  title: "Catálogo — Raíces Café y Cultura",
-  description: "Catálogo de Raíces: café, alimentos, arte y piezas vinculadas con Ayacucho, administradas desde Sanity Studio.",
+  title: "Catálogo",
+  description:
+    "La carta de Raíces: café ayacuchano, cacao, alimentos y arte con nombre, procedencia e historia. Consulta y pide por WhatsApp en Lima.",
+  alternates: { canonical: "/catalogo" },
+  openGraph: { url: "/catalogo", title: "Catálogo de Raíces — Café y Cultura" },
 };
 
 type CatalogoPageProps = {
