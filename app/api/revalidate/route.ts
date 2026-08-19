@@ -11,7 +11,7 @@ type SanityWebhookBody = {
   previousSlug?: string | null;
 };
 
-const siteSettingsPaths = ["/", "/links", "/arte", "/catalogo", "/comunidad"];
+const siteSettingsPaths = ["/", "/links", "/arte", "/catalogo", "/catalogo/imprimir", "/comunidad"];
 const siteSettingsDynamicPaths = ["/archivo/[slug]", "/arte/[slug]", "/catalogo/[slug]", "/personas/[slug]"] as const;
 
 function revalidateSiteSettings() {
@@ -25,6 +25,7 @@ function revalidateCatalogCategory() {
   revalidateTag(CATALOG_TAG, { expire: 0 });
   revalidatePath("/");
   revalidatePath("/catalogo");
+  revalidatePath("/catalogo/imprimir");
   revalidatePath("/catalogo/[slug]", "page");
 }
 
@@ -40,6 +41,7 @@ function revalidateCatalogItem(slug?: string | null, previousSlug?: string | nul
 
   revalidatePath("/");
   revalidatePath("/catalogo");
+  revalidatePath("/catalogo/imprimir");
   revalidatePath("/catalogo/[slug]", "page");
 }
 
