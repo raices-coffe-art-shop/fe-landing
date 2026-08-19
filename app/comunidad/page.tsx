@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { baseOpenGraph } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
 import { communitySection } from "@/data/social";
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   title: "Comunidad",
   description: "Personas, visitas, actividades y encuentros que ocurren dentro de Raíces.",
   alternates: { canonical: "/comunidad" },
-  openGraph: { url: "/comunidad", title: "Comunidad de Raíces — Café y Cultura" },
+  openGraph: { ...baseOpenGraph, url: "/comunidad", title: "Comunidad de Raíces — Café y Cultura" },
 };
 
 export default function ComunidadPage() {

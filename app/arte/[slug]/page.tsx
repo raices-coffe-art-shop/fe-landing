@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { artShopSlides } from "@/data/art";
+import { baseOpenGraph } from "@/lib/seo";
 
 export function generateStaticParams() {
   return artShopSlides.map((item) => ({ slug: item.slug }));
@@ -21,6 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: item.text,
     alternates: { canonical: `/arte/${item.slug}` },
     openGraph: {
+      ...baseOpenGraph,
       url: `/arte/${item.slug}`,
       title: `${item.eyebrow} — Arte en Raíces`,
       description: item.text,

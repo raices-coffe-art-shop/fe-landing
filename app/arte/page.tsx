@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { baseOpenGraph } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
 import { CulturalSplitShowcase } from "@/components/CulturalSplitShowcase";
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
   title: "Arte",
   description: "La obra de Lized y el lugar del arte dentro de Raíces.",
   alternates: { canonical: "/arte" },
-  openGraph: { url: "/arte", title: "Arte en Raíces — Café y Cultura" },
+  openGraph: { ...baseOpenGraph, url: "/arte", title: "Arte en Raíces — Café y Cultura" },
 };
 
 export default function ArtePage() {

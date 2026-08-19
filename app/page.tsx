@@ -17,6 +17,7 @@ import { contactChannels } from "@/data/social";
 import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
 import { JsonLd } from "@/components/JsonLd";
 import { cafeJsonLd } from "@/lib/structuredData";
+import { baseOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: { absolute: "Raíces — Café y Cultura | Café ayacuchano y arte en Lima" },
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
     "Cafetería y tienda cultural en Lima: café ayacuchano de origen, cacao, alimentos, arte y las historias de las personas que los hacen posibles.",
   alternates: { canonical: "/" },
   openGraph: {
+    ...baseOpenGraph,
     url: "/",
     title: "Raíces — Café y Cultura | Café ayacuchano y arte en Lima",
     description:

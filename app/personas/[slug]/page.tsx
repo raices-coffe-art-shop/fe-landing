@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { people } from "@/data/site";
+import { baseOpenGraph } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
 
@@ -22,6 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: person.summary,
     alternates: { canonical: `/personas/${person.slug}` },
     openGraph: {
+      ...baseOpenGraph,
       url: `/personas/${person.slug}`,
       title: `${person.name} — ${person.role}`,
       description: person.summary,

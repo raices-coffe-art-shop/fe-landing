@@ -7,13 +7,14 @@ import { getCatalogCategories, getCatalogItems } from "@/sanity/lib/catalog";
 import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
 import { JsonLd } from "@/components/JsonLd";
 import { menuJsonLd } from "@/lib/structuredData";
+import { baseOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Catálogo",
   description:
     "La carta de Raíces: café ayacuchano, cacao, alimentos y arte con nombre, procedencia e historia. Consulta y pide por WhatsApp en Lima.",
   alternates: { canonical: "/catalogo" },
-  openGraph: { url: "/catalogo", title: "Catálogo de Raíces — Café y Cultura" },
+  openGraph: { ...baseOpenGraph, url: "/catalogo", title: "Catálogo de Raíces — Café y Cultura" },
 };
 
 type CatalogoPageProps = {

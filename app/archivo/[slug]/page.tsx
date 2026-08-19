@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { archiveCategories } from "@/data/documentary";
+import { baseOpenGraph } from "@/lib/seo";
 
 export function generateStaticParams() {
   return archiveCategories.map((category) => ({ slug: category.id }));
@@ -22,6 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: category.summary,
     alternates: { canonical: `/archivo/${category.id}` },
     openGraph: {
+      ...baseOpenGraph,
       url: `/archivo/${category.id}`,
       title: `${category.title} — Archivo de origen`,
       description: category.summary,

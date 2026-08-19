@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { baseOpenGraph } from "@/lib/seo";
 import { LinksHub } from "@/components/LinksHub";
 import { getSiteSettings } from "@/sanity/lib/siteSettings";
 
@@ -6,7 +7,7 @@ export const metadata: Metadata = {
   title: "Enlaces",
   description: "Todos los enlaces de Raíces: WhatsApp, catálogo, historias, ubicación e Instagram.",
   alternates: { canonical: "/links" },
-  openGraph: { url: "/links", title: "Enlaces de Raíces — Café y Cultura" },
+  openGraph: { ...baseOpenGraph, url: "/links", title: "Enlaces de Raíces — Café y Cultura" },
 };
 
 export default async function LinksPage() {

@@ -14,6 +14,7 @@ import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbJsonLd, productJsonLd } from "@/lib/structuredData";
 import { absoluteUrl } from "@/lib/siteUrl";
+import { baseOpenGraph } from "@/lib/seo";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -31,6 +32,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     description: product.seo?.description || product.shortDescription,
     alternates: { canonical: `/catalogo/${product.slug}` },
     openGraph: {
+      ...baseOpenGraph,
       url: `/catalogo/${product.slug}`,
       title: product.seo?.title || product.title,
       description: product.seo?.description || product.shortDescription,
