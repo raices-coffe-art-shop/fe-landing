@@ -1,0 +1,269 @@
+/* Carta para TV: kiosco fullscreen oscuro, tipografía dimensionada para
+   leerse a 2-3 metros en una pantalla 1080p o 4K. */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 10%, rgba(228, 187, 114, 0.06), transparent 60%),
+    linear-gradient(135deg, var(--green-deep) 0%, var(--ink) 100%);
+  color: #fff8ed;
+  font-family: var(--sans);
+}
+
+.cursorHidden {
+  cursor: none;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 3.5vh, 64px);
+  padding: clamp(48px, 5vw, 120px) clamp(48px, 6vw, 132px) clamp(56px, 7vh, 96px);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+  pointer-events: none;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slideHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.eyebrow {
+  margin: 0 0 clamp(10px, 1.4vh, 20px);
+  font-size: clamp(14px, 1vw, 22px);
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #e4bb72;
+}
+
+.categoryTitle {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: clamp(24px, 1.7vw, 38px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #e4bb72;
+}
+
+.categoryPage {
+  color: rgba(228, 187, 114, 0.65);
+}
+
+.origin {
+  margin: 0;
+  font-size: clamp(14px, 1vw, 22px);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 229, 0.55);
+  white-space: nowrap;
+}
+
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 clamp(48px, 5vw, 96px);
+  align-content: start;
+}
+
+.itemsTwoColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.item {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(20px, 2vw, 40px);
+  padding: clamp(12px, 1.8vh, 26px) 0;
+  border-bottom: 1px solid rgba(244, 239, 229, 0.12);
+}
+
+.itemCopy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.7vh, 10px);
+}
+
+.itemName {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(40px, 3.2vw, 74px);
+  font-weight: 500;
+  line-height: 1.05;
+  color: #fff8ed;
+}
+
+.itemDescription {
+  margin: 0;
+  font-size: clamp(19px, 1.35vw, 30px);
+  line-height: 1.35;
+  color: rgba(244, 239, 229, 0.72);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.itemPrice {
+  margin: 0 0 0 auto;
+  font-size: clamp(32px, 2.5vw, 58px);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #e4bb72;
+  white-space: nowrap;
+}
+
+.itemInquiry {
+  margin: 0 0 0 auto;
+  font-size: clamp(22px, 1.8vw, 42px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(228, 187, 114, 0.65);
+  white-space: nowrap;
+}
+
+.brandSlide {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(64px, 8vw, 160px);
+}
+
+.brandIdentity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 2.4vh, 32px);
+  text-align: center;
+}
+
+.brandLogo {
+  width: clamp(160px, 15vw, 300px);
+  height: auto;
+}
+
+.brandWordmark {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(64px, 6vw, 120px);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.brandTagline {
+  margin: 0;
+  font-size: clamp(15px, 1.2vw, 24px);
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #e4bb72;
+}
+
+.qrCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 1.8vh, 24px);
+  background: #fff8ed;
+  color: var(--ink);
+  border-radius: 24px;
+  padding: clamp(32px, 3.4vw, 56px);
+}
+
+.qrImage {
+  width: clamp(180px, 14vw, 260px);
+  height: auto;
+}
+
+.qrLead {
+  margin: 0;
+  font-size: clamp(18px, 1.4vw, 28px);
+  font-weight: 600;
+}
+
+.qrUrl {
+  margin: 0;
+  font-size: clamp(14px, 1.1vw, 22px);
+  color: var(--ink-soft);
+}
+
+.progress {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(20px, 3vh, 40px);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progressDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(228, 187, 114, 0.35);
+}
+
+.progressActive {
+  position: relative;
+  width: 32px;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(228, 187, 114, 0.35);
+  overflow: hidden;
+}
+
+.progressFill {
+  position: absolute;
+  inset: 0;
+  background: #e4bb72;
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation-name: tvProgress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes tvProgress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    transform: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .progressFill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
