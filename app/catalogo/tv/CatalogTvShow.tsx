@@ -88,6 +88,17 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
     };
   }, []);
 
+  // Las fotos de categoría son pocas (una por categoría): precargarlas evita
+  // que la primera vuelta del carrusel muestre huecos durante el crossfade.
+  useEffect(() => {
+    for (const slide of slides) {
+      if (slide.kind === "category" && slide.image) {
+        const preload = new window.Image();
+        preload.src = slide.image.src;
+      }
+    }
+  }, [slides]);
+
   // Una TV encendida durante días: recargar recoge contenido nuevo de Sanity
   // y evita la deriva de memoria del navegador del televisor.
   useEffect(() => {
@@ -134,23 +145,34 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
               </div>
               <p className={styles.origin}>Ayacucho · Lima</p>
             </header>
-            <ul className={`${styles.items} ${slide.items.length > 4 ? styles.itemsTwoColumns : ""}`}>
-              {slide.items.map((item) => (
-                <li key={item.id} className={styles.item}>
-                  <div className={styles.itemCopy}>
-                    <p className={styles.itemName}>{item.title}</p>
-                    {item.shortDescription && (
-                      <p className={styles.itemDescription}>{item.shortDescription}</p>
+            <div className={`${styles.slideBody} ${slide.image ? "" : styles.slideBodyNoPhoto}`}>
+              {slide.image && (
+                <figure className={styles.slidePhoto}>
+                  <img src={slide.image.src} alt={slide.image.alt} />
+                </figure>
+              )}
+              <ul
+                className={`${styles.items} ${
+                  !slide.image && slide.items.length > 4 ? styles.itemsTwoColumns : ""
+                }`}
+              >
+                {slide.items.map((item) => (
+                  <li key={item.id} className={styles.item}>
+                    <div className={styles.itemCopy}>
+                      <p className={styles.itemName}>{item.title}</p>
+                      {item.shortDescription && (
+                        <p className={styles.itemDescription}>{item.shortDescription}</p>
+                      )}
+                    </div>
+                    {item.priceLabel ? (
+                      <p className={styles.itemPrice}>{item.priceLabel}</p>
+                    ) : (
+                      <p className={styles.itemInquiry}>Consultar</p>
                     )}
-                  </div>
-                  {item.priceLabel ? (
-                    <p className={styles.itemPrice}>{item.priceLabel}</p>
-                  ) : (
-                    <p className={styles.itemInquiry}>Consultar</p>
-                  )}
-                </li>
-              ))}
-            </ul>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </section>
         );
       })}

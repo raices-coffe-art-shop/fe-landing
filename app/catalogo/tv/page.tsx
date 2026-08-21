@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import QRCode from "qrcode";
-import { getCatalogItems } from "@/sanity/lib/catalog";
+import { getCatalogCategories, getCatalogItems } from "@/sanity/lib/catalog";
 import { getSiteSettings } from "@/sanity/lib/siteSettings";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { buildTvSlides } from "./slides";
@@ -30,8 +30,12 @@ export default async function CartaTvPage({ searchParams }: TvPageProps) {
   const resolvedSearchParams = await searchParams;
   const intervalMs = resolveIntervalMs(resolvedSearchParams.s);
 
-  const [items, settings] = await Promise.all([getCatalogItems(), getSiteSettings()]);
-  const slides = buildTvSlides(items, settings.showCatalogPrices);
+  const [items, categories, settings] = await Promise.all([
+    getCatalogItems(),
+    getCatalogCategories(),
+    getSiteSettings(),
+  ]);
+  const slides = buildTvSlides(items, settings.showCatalogPrices, categories);
 
   const catalogUrl = `${getSiteUrl()}/catalogo`;
   const qrDataUrl = await QRCode.toDataURL(catalogUrl, {

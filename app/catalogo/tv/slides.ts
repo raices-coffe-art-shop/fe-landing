@@ -1,7 +1,10 @@
-import type { CatalogItem } from "@/sanity/lib/catalogTypes";
+import type { CatalogCategory, CatalogItem } from "@/sanity/lib/catalogTypes";
+import { resolveCategoryImage } from "@/lib/categoryImage";
 import { formatCatalogPrice, shouldDisplayCatalogPrice } from "@/sanity/lib/catalogShared";
 
-export const TV_MAX_ITEMS_PER_SLIDE = 8;
+// Con la foto lateral la lista dispone de menos ancho y alto útil: 5 productos
+// por slide entran completos en 1080p sin recortar el último ni encoger los nombres.
+export const TV_MAX_ITEMS_PER_SLIDE = 5;
 
 export type TvMenuItem = {
   id: string;
@@ -17,13 +20,19 @@ export type TvSlide =
       categoryTitle: string;
       page: number;
       pageCount: number;
+      image: { src: string; alt: string } | null;
       items: TvMenuItem[];
     }
   | { kind: "brand" };
 
 // Precomputa todo server-side: el cliente recibe props serializables y no
 // arrastra la lógica de precios. priceLabel null ⇒ se muestra "Consultar".
-export function buildTvSlides(items: CatalogItem[], showCatalogPrices: boolean): TvSlide[] {
+export function buildTvSlides(
+  items: CatalogItem[],
+  showCatalogPrices: boolean,
+  categories: CatalogCategory[] = [],
+): TvSlide[] {
+  const categoriesById = new Map(categories.map((category) => [category.id, category]));
   const groups = new Map<string, { title: string; order: number; items: CatalogItem[] }>();
   for (const item of items) {
     const existing = groups.get(item.category.id);
@@ -45,6 +54,9 @@ export function buildTvSlides(items: CatalogItem[], showCatalogPrices: boolean):
 
   for (const [categoryId, group] of sortedGroups) {
     const sortedItems = [...group.items].sort((a, b) => a.order - b.order);
+    // La misma foto acompaña a todas las páginas de la categoría: así el layout
+    // no cambia de forma entre una página y la siguiente.
+    const image = resolveCategoryImage(categoriesById.get(categoryId), sortedItems);
     const pageCount = Math.ceil(sortedItems.length / TV_MAX_ITEMS_PER_SLIDE);
     for (let page = 0; page < pageCount; page += 1) {
       const pageItems = sortedItems.slice(
@@ -57,6 +69,7 @@ export function buildTvSlides(items: CatalogItem[], showCatalogPrices: boolean):
         categoryTitle: group.title,
         page: page + 1,
         pageCount,
+        image: image ? { src: image.src, alt: image.alt } : null,
         items: pageItems.map((item) => ({
           id: item.id,
           title: item.title,

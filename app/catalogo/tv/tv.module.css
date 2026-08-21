@@ -74,6 +74,37 @@
   white-space: nowrap;
 }
 
+/* Foto de la categoría a un lado y lista al otro: la foto se ve completa y el
+   texto conserva todo su contraste sobre el fondo verde (legible a varios metros). */
+.slideBody {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+  gap: clamp(32px, 3.5vw, 72px);
+  align-items: stretch;
+}
+
+.slideBodyNoPhoto {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.slidePhoto {
+  margin: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(228, 187, 114, 0.28);
+}
+
+.slidePhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .items {
   margin: 0;
   padding: 0;
@@ -142,6 +173,28 @@
   text-transform: uppercase;
   color: rgba(228, 187, 114, 0.65);
   white-space: nowrap;
+}
+
+/* Con foto lateral la lista tiene menos ancho: se baja un punto la escala para
+   que quepan los 5 productos completos sin perder legibilidad a distancia. */
+.slideBody:not(.slideBodyNoPhoto) .itemName {
+  font-size: clamp(34px, 2.6vw, 60px);
+}
+
+.slideBody:not(.slideBodyNoPhoto) .itemDescription {
+  font-size: clamp(17px, 1.15vw, 26px);
+}
+
+.slideBody:not(.slideBodyNoPhoto) .itemPrice {
+  font-size: clamp(28px, 2.1vw, 48px);
+}
+
+.slideBody:not(.slideBodyNoPhoto) .itemInquiry {
+  font-size: clamp(20px, 1.6vw, 38px);
+}
+
+.slideBody:not(.slideBodyNoPhoto) .item {
+  padding: clamp(10px, 1.4vh, 22px) 0;
 }
 
 .brandSlide {
