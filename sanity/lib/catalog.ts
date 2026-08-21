@@ -41,6 +41,8 @@ type SanityCategory = {
   title?: string;
   slug?: string;
   description?: string;
+  image?: SanityImageSource;
+  imageAlt?: string;
   order?: number;
   isVisible?: boolean;
   itemCount?: number;
@@ -84,6 +86,11 @@ type SanityCatalogItem = {
   seo?: CatalogItem["seo"];
 };
 
+// La imagen de categoría se usa en la carta impresa (~65 mm de ancho, >300 dpi)
+// y en la franja lateral de la vista TV, por eso el formato apaisado amplio.
+const CATEGORY_IMAGE_WIDTH = 1600;
+const CATEGORY_IMAGE_HEIGHT = 1100;
+
 const fallbackImage: CatalogImage = {
   src: "/ayacucho-sacsamarca.webp",
   alt: "Paisaje de Ayacucho",
@@ -110,12 +117,32 @@ function reportCatalogError(scope: string, error: unknown) {
   }
 }
 
+// A diferencia de normalizeImage, aquí NO se cae a la foto de paisaje: devolver
+// undefined permite que las vistas apliquen el respaldo por producto.
+function normalizeCategoryImage(category: SanityCategory | undefined): CatalogImage | undefined {
+  if (!category?.image) return undefined;
+  const src = urlForImage(category.image)
+    ?.width(CATEGORY_IMAGE_WIDTH)
+    .height(CATEGORY_IMAGE_HEIGHT)
+    .fit("crop")
+    .auto("format")
+    .url();
+  if (!src) return undefined;
+  return {
+    src,
+    alt: category.imageAlt?.trim() || category.title?.trim() || "Categoría del catálogo de Raíces",
+    width: CATEGORY_IMAGE_WIDTH,
+    height: CATEGORY_IMAGE_HEIGHT,
+  };
+}
+
 function normalizeCategory(category: SanityCategory | undefined): CatalogCategory {
   return {
     id: category?._id || "uncategorized",
     title: category?.title?.trim() || "Sin categoría",
     slug: category?.slug?.trim() || "sin-categoria",
     description: category?.description?.trim() || undefined,
+    image: normalizeCategoryImage(category),
     order: typeof category?.order === "number" ? category.order : 999,
     isVisible: category?.isVisible !== false,
     itemCount: typeof category?.itemCount === "number" ? category.itemCount : 0,

@@ -35,6 +35,8 @@ export const featuredCatalogItemsQuery = defineQuery(`
       title,
       "slug": slug.current,
       description,
+      image,
+      imageAlt,
       order,
       isVisible
     },
@@ -79,6 +81,8 @@ export const catalogItemsQuery = defineQuery(`
       title,
       "slug": slug.current,
       description,
+      image,
+      imageAlt,
       order,
       isVisible
     },
@@ -118,6 +122,8 @@ export const catalogCategoriesQuery = defineQuery(`
     title,
     "slug": slug.current,
     description,
+    image,
+    imageAlt,
     order,
     isVisible,
     "itemCount": 0
@@ -138,6 +144,8 @@ export const catalogItemBySlugQuery = defineQuery(`
       title,
       "slug": slug.current,
       description,
+      image,
+      imageAlt,
       order,
       isVisible
     },
@@ -186,6 +194,8 @@ export const relatedCatalogItemsQuery = defineQuery(`
       title,
       "slug": slug.current,
       description,
+      image,
+      imageAlt,
       order,
       isVisible
     },

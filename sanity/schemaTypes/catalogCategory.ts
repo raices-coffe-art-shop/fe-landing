@@ -30,6 +30,21 @@ export const catalogCategory = defineType({
       validation: (Rule) => Rule.max(300),
     }),
     defineField({
+      name: "image",
+      title: "Imagen de la categoría",
+      type: "image",
+      options: { hotspot: true },
+      description:
+        "Se usa en la carta impresa y en la pantalla del local. Si se deja vacía, se toma la foto del primer producto destacado de la categoría.",
+    }),
+    defineField({
+      name: "imageAlt",
+      title: "Texto alternativo de la imagen",
+      type: "string",
+      description: "Describe la foto para lectores de pantalla.",
+      validation: (Rule) => Rule.max(180),
+    }),
+    defineField({
       name: "order",
       title: "Orden",
       type: "number",
@@ -49,11 +64,12 @@ export const catalogCategory = defineType({
     { title: "Nombre A–Z", name: "titleAsc", by: [{ field: "title", direction: "asc" }] },
   ],
   preview: {
-    select: { title: "title", order: "order", visible: "isVisible" },
-    prepare({ title, order, visible }) {
+    select: { title: "title", order: "order", visible: "isVisible", media: "image" },
+    prepare({ title, order, visible, media }) {
       return {
         title: title || "Categoría sin nombre",
         subtitle: `Orden ${typeof order === "number" ? order : "—"} · ${visible === false ? "oculta" : "visible"}`,
+        media,
       };
     },
   },

@@ -27,6 +27,7 @@ export type CatalogCategory = {
   title: string;
   slug: string;
   description?: string;
+  image?: CatalogImage;
   order: number;
   isVisible: boolean;
   itemCount: number;
