@@ -54,11 +54,47 @@
 }
 
 .category {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px 18px;
   break-inside: auto;
 }
+
+/* Con fotos, la lista queda a la izquierda y la columna de imágenes a la derecha,
+   siguiendo la referencia de carta impresa que entregó el cliente. */
+.categoryWithPhotos {
+  grid-template-columns: minmax(0, 1fr) 58mm;
+  align-items: start;
+}
+
+.categoryWithPhotos .categoryTitle,
+.categoryWithPhotos .categoryNote {
+  grid-column: 1 / -1;
+}
+
+.categoryPhotos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  break-inside: avoid;
+}
+
+.categoryPhoto {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  /* Fondo papel: si la foto no carga, el bloque conserva su alto y la
+     paginación no cambia. */
+  background: rgba(43, 33, 28, 0.06);
+  break-inside: avoid;
+}
+
+.photoSm { height: 32mm; }
+
+.photoMd { height: 48mm; }
+
+.photoLg { height: 44mm; }
 
 .categoryTitle {
   margin: 0 0 6px;
@@ -207,10 +243,37 @@
   height: 0;
 }
 
-.printButton {
+.printActions {
   position: fixed;
   right: 24px;
   bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.printToggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 50px;
+  padding: 0 18px;
+  background: #fff8ed;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.25s ease;
+  box-shadow: 0 10px 28px rgba(43, 33, 28, 0.18);
+}
+
+.printToggle:hover {
+  background: var(--paper-deep);
+}
+
+.printButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -231,6 +294,11 @@
 
 .printButton:hover {
   background: var(--green);
+}
+
+.printButton:disabled {
+  opacity: 0.75;
+  cursor: progress;
 }
 
 /* Margen 0: así el navegador no imprime fecha, título ni URL en los bordes.
@@ -254,13 +322,16 @@
     background: #fff;
     box-shadow: none;
     gap: 20px;
+    /* Sin esto los navegadores descartan imágenes y fondos al imprimir. */
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 
   .printSpacer {
     height: 14mm;
   }
 
-  .printButton {
+  .printActions {
     display: none;
   }
 }
@@ -268,6 +339,17 @@
 @media (max-width: 640px) {
   .sheet {
     padding: 36px 24px 32px;
+  }
+
+  .categoryWithPhotos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .categoryPhoto,
+  .photoSm,
+  .photoMd,
+  .photoLg {
+    height: 150px;
   }
 
   .footer {

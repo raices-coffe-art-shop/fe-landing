@@ -7,6 +7,7 @@ import type { CatalogItem } from "@/sanity/lib/catalog";
 import { formatCatalogPrice, shouldDisplayCatalogPrice } from "@/sanity/lib/catalogShared";
 import { getSiteSettings } from "@/sanity/lib/siteSettings";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { resizeCatalogImage, resolveCategoryPhotos } from "@/lib/categoryImage";
 import { PrintActions } from "./PrintActions";
 import styles from "./imprimir.module.css";
 
@@ -19,6 +20,7 @@ type CategoryGroup = {
   id: string;
   title: string;
   description?: string;
+  image?: CatalogItem["category"]["image"];
   order: number;
   items: CatalogItem[];
 };
@@ -35,6 +37,7 @@ function groupByCategory(items: CatalogItem[]): CategoryGroup[] {
         id: item.category.id,
         title: item.category.title,
         description: item.category.description,
+        image: item.category.image,
         order: item.category.order,
         items: [item],
       });
@@ -45,7 +48,30 @@ function groupByCategory(items: CatalogItem[]): CategoryGroup[] {
     .map((group) => ({ ...group, items: [...group.items].sort((a, b) => a.order - b.order) }));
 }
 
-export default async function ImprimirCartaPage() {
+// La columna mide 58 mm: a 300 dpi son ~685 px de ancho. Se pide algo más para
+// tener margen en impresoras de mayor densidad, sin inflar el peso del PDF.
+const PRINT_PHOTO_WIDTH = 760;
+const PRINT_PHOTO_HEIGHT = 620;
+
+// Un producto ocupa ~15 mm de alto en la lista, así que la columna de fotos se
+// dimensiona con la cantidad de productos para que ambas terminen a la par.
+function resolvePhotoLayout(itemCount: number) {
+  if (itemCount >= 5) return { count: 2, heightClass: "photoLg" } as const;
+  if (itemCount >= 3) return { count: 1, heightClass: "photoMd" } as const;
+  return { count: 1, heightClass: "photoSm" } as const;
+}
+
+type ImprimirPageProps = {
+  searchParams: Promise<{ fotos?: string | string[] }>;
+};
+
+export default async function ImprimirCartaPage({ searchParams }: ImprimirPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const fotosParam = Array.isArray(resolvedSearchParams.fotos)
+    ? resolvedSearchParams.fotos[0]
+    : resolvedSearchParams.fotos;
+  const withPhotos = fotosParam !== "no";
+
   const [items, settings] = await Promise.all([getCatalogItems(), getSiteSettings()]);
   const groups = groupByCategory(items);
   const siteUrl = getSiteUrl();
@@ -84,8 +110,17 @@ export default async function ImprimirCartaPage() {
             La carta se está actualizando. Escanea el código para ver el catálogo en línea.
           </p>
         ) : (
-          groups.map((group) => (
-            <section key={group.id} className={styles.category}>
+          groups.map((group) => {
+            const layout = resolvePhotoLayout(group.items.length);
+            const photos = (
+              withPhotos ? resolveCategoryPhotos(group.image, group.items, layout.count) : []
+            ).map((photo) => resizeCatalogImage(photo, PRINT_PHOTO_WIDTH, PRINT_PHOTO_HEIGHT));
+
+            return (
+            <section
+              key={group.id}
+              className={`${styles.category} ${photos.length > 0 ? styles.categoryWithPhotos : ""}`}
+            >
               <h2 className={styles.categoryTitle}>{group.title}</h2>
               {group.description && <p className={styles.categoryNote}>{group.description}</p>}
               <ul className={styles.items}>
@@ -111,8 +146,23 @@ export default async function ImprimirCartaPage() {
                   );
                 })}
               </ul>
+              {photos.length > 0 && (
+                <aside className={styles.categoryPhotos}>
+                  {photos.map((photo) => (
+                    <img
+                      key={photo.src}
+                      className={`${styles.categoryPhoto} ${styles[layout.heightClass]}`}
+                      src={photo.src}
+                      alt={photo.alt}
+                      loading="eager"
+                      decoding="async"
+                    />
+                  ))}
+                </aside>
+              )}
             </section>
-          ))
+            );
+          })
         )}
 
         <footer className={styles.footer}>
@@ -135,7 +185,7 @@ export default async function ImprimirCartaPage() {
         </td></tr></tbody>
         <tfoot><tr><td><div className={styles.printSpacer} /></td></tr></tfoot>
       </table>
-      <PrintActions />
+      <PrintActions withPhotos={withPhotos} />
     </main>
   );
 }
