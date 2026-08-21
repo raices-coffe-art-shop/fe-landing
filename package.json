@@ -15,7 +15,8 @@
     "sanity:backfill-price-visibility": "node scripts/backfill-price-visibility.mjs",
     "sanity:backfill-social-links": "node scripts/backfill-official-social-links.mjs",
     "sanity:migrate-availability:dry": "node --env-file=.env.local scripts/migrate-availability-boolean.mjs --dry-run",
-    "sanity:migrate-availability": "node --env-file=.env.local scripts/migrate-availability-boolean.mjs"
+    "sanity:migrate-availability": "node --env-file=.env.local scripts/migrate-availability-boolean.mjs",
+    "sanity:audit-slugs": "node scripts/audit-slugs.mjs"
   },
   "dependencies": {
     "lenis": "^1.3.25",

@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { YesNoBooleanInput } from "../components/YesNoBooleanInput";
+import { isUniqueSlugWithinType } from "../lib/slugUniqueness";
 
 const currencies = [
   { title: "Soles (PEN)", value: "PEN" },
@@ -51,7 +52,7 @@ export const catalogItem = defineType({
       description: "Es la parte final de la dirección de esta ficha. Por ejemplo, “cafe-molido” crea /catalogo/cafe-molido. Normalmente basta con pulsar el botón Generate/Generar y no tocarlo después de publicar.",
       type: "slug",
       group: "content",
-      options: { source: "title", maxLength: 96 },
+      options: { source: "title", maxLength: 96, isUnique: isUniqueSlugWithinType },
       validation: (Rule) => Rule.required(),
     }),
     defineField({

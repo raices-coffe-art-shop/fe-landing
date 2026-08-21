@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { YesNoBooleanInput } from "../components/YesNoBooleanInput";
+import { isUniqueSlugWithinType } from "../lib/slugUniqueness";
 
 export const catalogCategory = defineType({
   name: "catalogCategory",
@@ -22,7 +23,7 @@ export const catalogCategory = defineType({
       title: "Dirección web (slug)",
       description: "Es el identificador usado en direcciones y filtros internos. Normalmente pulsa Generate/Generar a partir del nombre. Evita cambiarlo después de que la categoría ya se use en el sitio.",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      options: { source: "title", maxLength: 96, isUnique: isUniqueSlugWithinType },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
