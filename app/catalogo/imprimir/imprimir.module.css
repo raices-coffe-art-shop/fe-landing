@@ -194,6 +194,19 @@
   color: var(--ink-soft);
 }
 
+.printTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.printTable td {
+  padding: 0;
+}
+
+.printSpacer {
+  height: 0;
+}
+
 .printButton {
   position: fixed;
   right: 24px;
@@ -220,9 +233,11 @@
   background: var(--green);
 }
 
+/* Margen 0: así el navegador no imprime fecha, título ni URL en los bordes.
+   Los márgenes reales los ponen .printSpacer (arriba/abajo, en cada página) y .sheet (laterales). */
 @page {
   size: A4;
-  margin: 14mm 16mm;
+  margin: 0;
 }
 
 @media print {
@@ -235,10 +250,14 @@
   .sheet {
     max-width: none;
     margin: 0;
-    padding: 0;
+    padding: 0 16mm;
     background: #fff;
     box-shadow: none;
     gap: 20px;
+  }
+
+  .printSpacer {
+    height: 14mm;
   }
 
   .printButton {

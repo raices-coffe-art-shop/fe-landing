@@ -61,6 +61,11 @@ export default async function ImprimirCartaPage() {
 
   return (
     <main className={styles.page}>
+      {/* El navegador imprime fecha, título y URL en los márgenes de la hoja. Con @page margin: 0
+          desaparecen, y la tabla repite estos espaciadores como margen en cada página impresa. */}
+      <table className={styles.printTable}>
+        <thead><tr><td><div className={styles.printSpacer} /></td></tr></thead>
+        <tbody><tr><td>
       <div className={styles.sheet}>
         <header className={styles.header}>
           <img
@@ -127,6 +132,9 @@ export default async function ImprimirCartaPage() {
           </div>
         </footer>
       </div>
+        </td></tr></tbody>
+        <tfoot><tr><td><div className={styles.printSpacer} /></td></tr></tfoot>
+      </table>
       <PrintActions />
     </main>
   );
