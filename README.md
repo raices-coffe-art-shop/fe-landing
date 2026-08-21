@@ -77,3 +77,7 @@ El favicon oficial se encuentra en:
 - `app/apple-icon.png`
 
 Ambos usan el grano de cacao de Raíces. El navegador puede conservar el favicon anterior en caché; tras cambiarlo, usa una recarga forzada o una ventana privada.
+
+## Ayuda editorial de Sanity
+
+El Studio incluye un botón de información en los campos para explicar su uso en lenguaje no técnico. La guía complementaria está en `docs/SANITY_GUIA_SIMPLE.md`. Para detalles técnicos de esta entrega, revisar `CAMBIOS_SANITY_AYUDA.md`.

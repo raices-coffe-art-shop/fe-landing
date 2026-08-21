@@ -27,7 +27,10 @@ export type CatalogCategory = {
   title: string;
   slug: string;
   description?: string;
+<<<<<<< Updated upstream
   image?: CatalogImage;
+=======
+>>>>>>> Stashed changes
   order: number;
   isVisible: boolean;
   itemCount: number;
@@ -47,7 +50,11 @@ export type CatalogItem = {
   gallery: CatalogImage[];
   producerOrCreator?: string;
   presentations: string[];
+<<<<<<< Updated upstream
+  availability?: boolean;
+=======
   availability?: string;
+>>>>>>> Stashed changes
   process?: string;
   ingredients: string[];
   allergens: string[];

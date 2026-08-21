@@ -97,6 +97,7 @@ temp/
 /raices-*.gif
 /raices-*.mp4
 /raices-*.mov
+<<<<<<< Updated upstream
 # Flutter/Dart files do not belong to this Next.js project
 /.dart_tool/
 /.flutter-plugins
@@ -132,3 +133,7 @@ temp/
 *.tsbuildinfo
 /.codex-backup/
 /_revision_zips/
+=======
+# TypeScript build cache
+*.tsbuildinfo
+>>>>>>> Stashed changes

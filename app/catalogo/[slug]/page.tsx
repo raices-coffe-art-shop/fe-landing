@@ -106,7 +106,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <div><dt>Procedencia</dt><dd>{product.origin}</dd></div>
               {product.region && <div><dt>Territorio</dt><dd>{product.region}</dd></div>}
               {displayPrice && <div><dt>Precio</dt><dd><strong>{formattedPrice}</strong></dd></div>}
-              {product.availability && <div><dt>Disponibilidad</dt><dd>{product.availability}</dd></div>}
+              {typeof product.availability === "boolean" && <div><dt>Disponible para comprar</dt><dd>{product.availability ? "Sí" : "No"}</dd></div>}
               {product.producerOrCreator && <div><dt>Productor o creador</dt><dd>{product.producerOrCreator}</dd></div>}
             </dl>
           </aside>

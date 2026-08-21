@@ -13,7 +13,9 @@
     "catalog:migrate": "node --env-file=.env.local scripts/migrate-catalog.mjs",
     "sanity:verify-read": "node scripts/verify-sanity-read.mjs",
     "sanity:backfill-price-visibility": "node scripts/backfill-price-visibility.mjs",
-    "sanity:backfill-social-links": "node scripts/backfill-official-social-links.mjs"
+    "sanity:backfill-social-links": "node scripts/backfill-official-social-links.mjs",
+    "sanity:migrate-availability:dry": "node --env-file=.env.local scripts/migrate-availability-boolean.mjs --dry-run",
+    "sanity:migrate-availability": "node --env-file=.env.local scripts/migrate-availability-boolean.mjs"
   },
   "dependencies": {
     "lenis": "^1.3.25",

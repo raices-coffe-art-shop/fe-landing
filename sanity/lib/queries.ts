@@ -2,13 +2,11 @@ import { defineQuery } from "next-sanity";
 
 export const siteSettingsQuery = defineQuery(`
   *[_type == "siteSettings" && _id == "siteSettings"][0]{
-    title,
     brandLogo,
     brandLogoAlt,
     showCatalogPrices,
     "socialLinks": socialLinks[] | order(order asc){
       platform,
-      customPlatformName,
       label,
       url,
       isVisible,

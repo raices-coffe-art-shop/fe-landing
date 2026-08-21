@@ -19,7 +19,6 @@ export type BrandLogo = {
 
 export type SocialLink = {
   platform: SocialPlatform;
-  customPlatformName?: string;
   label: string;
   url: string;
   isVisible: boolean;

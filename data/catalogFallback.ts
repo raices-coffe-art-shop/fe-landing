@@ -255,7 +255,7 @@ export const fallbackCatalogItems: CatalogItem[] = productSeed.map((product, ind
   gallery: [],
   producerOrCreator: product.producerOrCreator,
   presentations: [],
-  availability: "Consultar disponibilidad",
+  availability: true,
   process: undefined,
   ingredients: [],
   allergens: [],

@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { YesNoBooleanInput } from "../components/YesNoBooleanInput";
 
 export const siteSettings = defineType({
   name: "siteSettings",
@@ -10,7 +11,6 @@ export const siteSettings = defineType({
     { name: "social", title: "Redes sociales" },
   ],
   initialValue: {
-    title: "Configuración del sitio",
     brandLogoAlt: "Raíces — Café y Cultura",
     showCatalogPrices: true,
     socialLinks: [
@@ -54,18 +54,9 @@ export const siteSettings = defineType({
   },
   fields: [
     defineField({
-      name: "title",
-      title: "Título interno",
-      description: "Solo sirve para reconocer este documento dentro de Sanity.",
-      type: "string",
-      group: "brand",
-      initialValue: "Configuración del sitio",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: "brandLogo",
       title: "Logo principal",
-      description: "La misma imagen se usa en navbar, footer y /links.",
+      description: "Es el logo oficial que usa el sitio en zonas como la navegación, el pie de página y /links. Cambiarlo aquí puede cambiarlo en varias partes de la web a la vez.",
       type: "image",
       group: "brand",
       options: { hotspot: true },
@@ -73,7 +64,8 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "brandLogoAlt",
-      title: "Texto alternativo del logo",
+      title: "Descripción del logo",
+      description: "Texto accesible que identifica el logo cuando la imagen no puede verse o se usa un lector de pantalla. Debe describir la marca, por ejemplo “Raíces — Café y Cultura”, no una lista de palabras clave.",
       type: "string",
       group: "brand",
       initialValue: "Raíces — Café y Cultura",
@@ -81,16 +73,17 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "showCatalogPrices",
-      title: "Mostrar precios en todo el catálogo",
-      description: "Control general. Al desactivarlo se ocultan todos los precios en la portada, /catalogo y las fichas, sin borrar los montos guardados.",
+      title: "¿Permitir mostrar precios en el sitio?",
+      description: "Este es el control GENERAL de precios. Sí = cada producto puede mostrar su precio si también tiene activada su propia opción “¿Mostrar el precio de este producto?”. No = se ocultan todos los precios del sitio de una sola vez, sin borrar los montos guardados.",
       type: "boolean",
       group: "catalog",
       initialValue: true,
+      components: { input: YesNoBooleanInput },
     }),
     defineField({
       name: "socialLinks",
-      title: "Redes sociales",
-      description: "Administra las URLs, el orden y la visibilidad del footer y de /links.",
+      title: "Redes sociales y contacto",
+      description: "Aquí administras los enlaces de WhatsApp, correo y redes que aparecen en el footer y en /links. Puedes cambiar la dirección, el texto, el orden o decidir si cada enlace es visible.",
       type: "array",
       group: "social",
       options: { sortable: true },

@@ -15,7 +15,9 @@ function itemOffer(item: CatalogItem, showCatalogPrices: boolean) {
       price: item.price,
       priceCurrency: item.currency,
       url: absoluteUrl(`/catalogo/${item.slug}`),
-      availability: "https://schema.org/InStock",
+      ...(typeof item.availability === "boolean"
+        ? { availability: item.availability ? "https://schema.org/InStock" : "https://schema.org/OutOfStock" }
+        : {}),
     },
   };
 }

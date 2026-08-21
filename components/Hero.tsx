@@ -196,10 +196,14 @@ export function Hero() {
 
         <div className={`${styles.copy} page-shell`}>
           <p className="eyebrow light">Ayacucho y cultura</p>
+<<<<<<< Updated upstream
           <h1>
             Raíces
             <span className="sr-only"> — Café y Cultura: café ayacuchano, alimentos y arte de Ayacucho en Lima</span>
           </h1>
+=======
+          <h1>Raíces</h1>
+>>>>>>> Stashed changes
           <p className={styles.lead}>Un espacio en Lima donde Ayacucho se comparte a través de sus sabores, sus personas, su arte y sus historias.</p>
           <p className={styles.lead}>Raíces reúne productos, alimentos, obras y relatos vinculados con Ayacucho. Cada elemento del espacio busca conservar su procedencia y reconocer a las personas que lo producen, elaboran o crean.</p>
           <div className={styles.actions}>
