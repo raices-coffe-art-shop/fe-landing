@@ -180,11 +180,7 @@ for (const product of seed.products) {
       mainImageAlt: product.mainImageAlt,
       producerOrCreator: product.producerOrCreator,
       presentations: product.presentations || [],
-<<<<<<< Updated upstream
       availability: typeof product.availability === "boolean" ? product.availability : true,
-=======
-      availability: product.availability,
->>>>>>> Stashed changes
       process: product.process,
       ingredients: product.ingredients || [],
       allergens: product.allergens || [],

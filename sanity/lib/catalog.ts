@@ -2,15 +2,12 @@ import "server-only";
 
 import { cache } from "react";
 import type { SanityImageSource } from "@sanity/image-url";
-<<<<<<< Updated upstream
 import {
   fallbackCatalogCategories,
   fallbackCatalogItems,
   getFallbackCatalogItemBySlug,
   getFallbackRelatedCatalogItems,
 } from "@/data/catalogFallback";
-=======
->>>>>>> Stashed changes
 import type {
   CatalogCategory,
   CatalogImage,
@@ -44,11 +41,8 @@ type SanityCategory = {
   title?: string;
   slug?: string;
   description?: string;
-<<<<<<< Updated upstream
   image?: SanityImageSource;
   imageAlt?: string;
-=======
->>>>>>> Stashed changes
   order?: number;
   isVisible?: boolean;
   itemCount?: number;
@@ -76,11 +70,7 @@ type SanityCatalogItem = {
   gallery?: SanityGalleryImage[];
   producerOrCreator?: string;
   presentations?: string[];
-<<<<<<< Updated upstream
   availability?: boolean | string;
-=======
-  availability?: string;
->>>>>>> Stashed changes
   process?: string;
   ingredients?: string[];
   allergens?: string[];
@@ -96,14 +86,11 @@ type SanityCatalogItem = {
   seo?: CatalogItem["seo"];
 };
 
-<<<<<<< Updated upstream
 // La imagen de categoría se usa en la carta impresa (~65 mm de ancho, >300 dpi)
 // y en la franja lateral de la vista TV, por eso el formato apaisado amplio.
 const CATEGORY_IMAGE_WIDTH = 1600;
 const CATEGORY_IMAGE_HEIGHT = 1100;
 
-=======
->>>>>>> Stashed changes
 const fallbackImage: CatalogImage = {
   src: "/ayacucho-sacsamarca.webp",
   alt: "Paisaje de Ayacucho",
@@ -130,7 +117,6 @@ function reportCatalogError(scope: string, error: unknown) {
   }
 }
 
-<<<<<<< Updated upstream
 // A diferencia de normalizeImage, aquí NO se cae a la foto de paisaje: devolver
 // undefined permite que las vistas apliquen el respaldo por producto.
 function normalizeCategoryImage(category: SanityCategory | undefined): CatalogImage | undefined {
@@ -150,18 +136,13 @@ function normalizeCategoryImage(category: SanityCategory | undefined): CatalogIm
   };
 }
 
-=======
->>>>>>> Stashed changes
 function normalizeCategory(category: SanityCategory | undefined): CatalogCategory {
   return {
     id: category?._id || "uncategorized",
     title: category?.title?.trim() || "Sin categoría",
     slug: category?.slug?.trim() || "sin-categoria",
     description: category?.description?.trim() || undefined,
-<<<<<<< Updated upstream
     image: normalizeCategoryImage(category),
-=======
->>>>>>> Stashed changes
     order: typeof category?.order === "number" ? category.order : 999,
     isVisible: category?.isVisible !== false,
     itemCount: typeof category?.itemCount === "number" ? category.itemCount : 0,
@@ -188,16 +169,12 @@ function normalizeItem(item: SanityCatalogItem): CatalogItem | null {
     category: normalizeCategory(item.category),
     subcategory: item.subcategory?.trim() || undefined,
     origin: item.origin?.trim() || "Ayacucho",
-<<<<<<< Updated upstream
     region: (() => {
       const origin = item.origin?.trim() || "Ayacucho";
       const region = item.region?.trim();
       if (!region || region.toLocaleLowerCase("es") === origin.toLocaleLowerCase("es")) return undefined;
       return region;
     })(),
-=======
-    region: item.region?.trim() || undefined,
->>>>>>> Stashed changes
     shortDescription: item.shortDescription?.trim() || `Conoce más sobre ${title}.`,
     description: Array.isArray(item.description) ? item.description : [],
     mainImage: normalizeImage(item.mainImage, item.mainImageAlt?.trim() || title),
@@ -206,16 +183,12 @@ function normalizeItem(item: SanityCatalogItem): CatalogItem | null {
       : [],
     producerOrCreator: item.producerOrCreator?.trim() || undefined,
     presentations: Array.isArray(item.presentations) ? item.presentations.filter(Boolean) : [],
-<<<<<<< Updated upstream
     availability:
       typeof item.availability === "boolean"
         ? item.availability
         : typeof item.availability === "string"
           ? !["no", "false", "agotado", "no disponible", "sin stock"].includes(item.availability.trim().toLowerCase())
           : undefined,
-=======
-    availability: item.availability?.trim() || undefined,
->>>>>>> Stashed changes
     process: item.process?.trim() || undefined,
     ingredients: Array.isArray(item.ingredients) ? item.ingredients.filter(Boolean) : [],
     allergens: Array.isArray(item.allergens) ? item.allergens.filter(Boolean) : [],
@@ -241,11 +214,7 @@ function normalizeItems(items: SanityCatalogItem[] | null | undefined) {
 }
 
 export const getFeaturedCatalogItems = cache(async (): Promise<CatalogItem[]> => {
-<<<<<<< Updated upstream
   if (!sanityClient) return fallbackCatalogItems.filter((item) => item.isFeatured).slice(0, 6);
-=======
-  if (!sanityClient) return [];
->>>>>>> Stashed changes
   try {
     const items = await sanityClient.fetch<SanityCatalogItem[]>(
       featuredCatalogItemsQuery,
@@ -255,54 +224,34 @@ export const getFeaturedCatalogItems = cache(async (): Promise<CatalogItem[]> =>
     return normalizeItems(items).filter((item) => item.isFeatured).slice(0, 6);
   } catch (error) {
     reportCatalogError("getFeaturedCatalogItems", error);
-<<<<<<< Updated upstream
     return fallbackCatalogItems.filter((item) => item.isFeatured).slice(0, 6);
-=======
-    return [];
->>>>>>> Stashed changes
   }
 });
 
 export const getCatalogItems = cache(async (): Promise<CatalogItem[]> => {
-<<<<<<< Updated upstream
   if (!sanityClient) return fallbackCatalogItems;
-=======
-  if (!sanityClient) return [];
->>>>>>> Stashed changes
   try {
     const items = await sanityClient.fetch<SanityCatalogItem[]>(
       catalogItemsQuery,
       {},
       fetchOptions([CATALOG_TAG]),
     );
-<<<<<<< Updated upstream
     const normalized = normalizeItems(items);
     return normalized.length > 0 ? normalized : fallbackCatalogItems;
   } catch (error) {
     reportCatalogError("getCatalogItems", error);
     return fallbackCatalogItems;
-=======
-    return normalizeItems(items);
-  } catch (error) {
-    reportCatalogError("getCatalogItems", error);
-    return [];
->>>>>>> Stashed changes
   }
 });
 
 export const getCatalogCategories = cache(async (): Promise<CatalogCategory[]> => {
-<<<<<<< Updated upstream
   if (!sanityClient) return fallbackCatalogCategories;
-=======
-  if (!sanityClient) return [];
->>>>>>> Stashed changes
   try {
     const categories = await sanityClient.fetch<SanityCategory[]>(
       catalogCategoriesQuery,
       {},
       fetchOptions([CATALOG_CATEGORIES_TAG, CATALOG_TAG]),
     );
-<<<<<<< Updated upstream
     const normalized = (categories || [])
       .map(normalizeCategory)
       .filter((category) => category.isVisible)
@@ -311,25 +260,12 @@ export const getCatalogCategories = cache(async (): Promise<CatalogCategory[]> =
   } catch (error) {
     reportCatalogError("getCatalogCategories", error);
     return fallbackCatalogCategories;
-=======
-    return (categories || [])
-      .map(normalizeCategory)
-      .filter((category) => category.isVisible)
-      .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"));
-  } catch (error) {
-    reportCatalogError("getCatalogCategories", error);
-    return [];
->>>>>>> Stashed changes
   }
 });
 
 export const getCatalogItemBySlug = cache(async (slug: string): Promise<CatalogItem | null> => {
-<<<<<<< Updated upstream
   if (!slug) return null;
   if (!sanityClient) return getFallbackCatalogItemBySlug(slug);
-=======
-  if (!sanityClient || !slug) return null;
->>>>>>> Stashed changes
   try {
     const item = await sanityClient.fetch<SanityCatalogItem | null>(
       catalogItemBySlugQuery,
@@ -337,31 +273,20 @@ export const getCatalogItemBySlug = cache(async (slug: string): Promise<CatalogI
       fetchOptions([CATALOG_TAG, catalogItemTag(slug)]),
     );
     const normalized = item ? normalizeItem(item) : null;
-<<<<<<< Updated upstream
     return normalized?.isActive && normalized.category.isVisible
       ? normalized
       : getFallbackCatalogItemBySlug(slug);
   } catch (error) {
     reportCatalogError(`getCatalogItemBySlug(${slug})`, error);
     return getFallbackCatalogItemBySlug(slug);
-=======
-    return normalized?.isActive && normalized.category.isVisible ? normalized : null;
-  } catch (error) {
-    reportCatalogError(`getCatalogItemBySlug(${slug})`, error);
-    return null;
->>>>>>> Stashed changes
   }
 });
 
 export const getRelatedCatalogItems = cache(async (categoryId: string, slug: string): Promise<CatalogItem[]> => {
-<<<<<<< Updated upstream
   if (!categoryId || !slug) return [];
   if (!sanityClient || categoryId.startsWith("fallback-category-")) {
     return getFallbackRelatedCatalogItems(categoryId, slug);
   }
-=======
-  if (!sanityClient || !categoryId || !slug) return [];
->>>>>>> Stashed changes
   try {
     const items = await sanityClient.fetch<SanityCatalogItem[]>(
       relatedCatalogItemsQuery,
