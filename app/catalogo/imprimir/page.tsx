@@ -121,9 +121,10 @@ export default async function ImprimirCartaPage({ searchParams }: ImprimirPagePr
               key={group.id}
               className={`${styles.category} ${photos.length > 0 ? styles.categoryWithPhotos : ""}`}
             >
-              <h2 className={styles.categoryTitle}>{group.title}</h2>
-              {group.description && <p className={styles.categoryNote}>{group.description}</p>}
-              <ul className={styles.items}>
+              <div className={styles.categoryBody}>
+                <h2 className={styles.categoryTitle}>{group.title}</h2>
+                {group.description && <p className={styles.categoryNote}>{group.description}</p>}
+                <ul className={styles.items}>
                 {group.items.map((item) => {
                   const price = shouldDisplayCatalogPrice(item, settings.showCatalogPrices)
                     ? formatCatalogPrice(item)
@@ -145,7 +146,8 @@ export default async function ImprimirCartaPage({ searchParams }: ImprimirPagePr
                     </li>
                   );
                 })}
-              </ul>
+                </ul>
+              </div>
               {photos.length > 0 && (
                 <aside className={styles.categoryPhotos}>
                   {photos.map((photo) => (

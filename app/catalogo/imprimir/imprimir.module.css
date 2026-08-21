@@ -67,9 +67,13 @@
   align-items: start;
 }
 
-.categoryWithPhotos .categoryTitle,
-.categoryWithPhotos .categoryNote {
-  grid-column: 1 / -1;
+/* Todo el texto de la categoría vive en una sola columna, así la columna de
+   fotos empieza a la misma altura que el título. */
+.categoryBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .categoryPhotos {
@@ -344,6 +348,7 @@
   .categoryWithPhotos {
     grid-template-columns: minmax(0, 1fr);
   }
+
 
   .categoryPhoto,
   .photoSm,
