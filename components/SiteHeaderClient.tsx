@@ -6,7 +6,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { BrandLogo } from "@/sanity/lib/siteSettings";
 import { SocialPlatformIcon } from "@/components/SocialPlatformIcon";
 
-type NavIcon = "home" | "story" | "territory" | "people" | "art" | "catalog" | "visit" | "links" | "contact";
+type NavIcon = "home" | "story" | "territory" | "people" | "community" | "art" | "catalog" | "visit" | "links" | "contact";
 
 type NavLink = { label: string; href: string; icon: NavIcon };
 
@@ -17,7 +17,7 @@ const desktopLinks: NavLink[] = [
   { label: "Territorio", href: "/#territorio", icon: "territory" },
   { label: "Arte", href: "/arte", icon: "art" },
   { label: "Catálogo", href: "/catalogo", icon: "catalog" },
-  { label: "Comunidad", href: "/#comunidad", icon: "people" },
+  { label: "Comunidad", href: "/#comunidad", icon: "community" },
   { label: "Links", href: "/links", icon: "links" },
   { label: "Visítanos", href: "/#visita", icon: "visit" }
 ];
@@ -29,7 +29,7 @@ const mobileLinks: NavLink[] = [
   { label: "Territorio", href: "/#territorio", icon: "territory" },
   { label: "Arte", href: "/arte", icon: "art" },
   { label: "Catálogo", href: "/catalogo", icon: "catalog" },
-  { label: "Comunidad", href: "/#comunidad", icon: "people" },
+  { label: "Comunidad", href: "/#comunidad", icon: "community" },
   { label: "Links", href: "/links", icon: "links" },
   { label: "Visítanos", href: "/#visita", icon: "visit" }
 ];
@@ -41,6 +41,7 @@ function NavSvg({ icon }: { icon: NavIcon }) {
       {icon === "story" && <><path d="M4.5 5.5c3.5-1.5 6-.7 7.5 2 1.5-2.7 4-3.5 7.5-2v13c-3.5-1.5-6-.7-7.5 2-1.5-2.7-4-3.5-7.5-2v-13Z" /><path d="M12 7.5v13" /></>}
       {icon === "territory" && <><path d="m3.5 18 5.2-9 3.8 6.1 2.3-3.4 5.7 6.3" /><path d="M8.7 9 11 5l3.8 6.7" /></>}
       {icon === "people" && <><path d="M5 19c1.1-3.2 3.4-4.8 7-4.8s5.9 1.6 7 4.8" /><path d="M8.5 8.8a3.5 3.5 0 1 0 7 0 3.5 3.5 0 0 0-7 0Z" /></>}
+      {icon === "community" && <><circle cx="12" cy="6.2" r="2.1" /><circle cx="5.6" cy="15.2" r="2.1" /><circle cx="18.4" cy="15.2" r="2.1" /><path d="M10.7 8 7 13.4M13.3 8l3.7 5.4M7.7 15.2h8.6" /></>}
       {icon === "art" && <><path d="M12 3.8c4.8 0 8.5 3.2 8.5 7.3 0 2.6-1.8 4.1-4 4.1h-1.2c-1 0-1.6.7-1.3 1.7.4 1.4-.6 3.3-2.8 3.3-4.1 0-7.7-3.5-7.7-8.2 0-4.6 3.7-8.2 8.5-8.2Z" /><path d="M7.6 11.1h.1M9.4 7.7h.1M13.5 7.3h.1M16.5 10.3h.1" /></>}
       {icon === "catalog" && <><path d="M6 4.5h9a3 3 0 0 1 3 3v12H8.5A2.5 2.5 0 0 1 6 17V4.5Z" /><path d="M8.5 4.5V17a2.5 2.5 0 0 0 2.5 2.5" /><path d="M10.5 9h4M10.5 12h3" /></>}
       {icon === "visit" && <><path d="M12 21s6-6.1 6-11A6 6 0 0 0 6 10c0 4.9 6 11 6 11Z" /><path d="M9.7 10a2.3 2.3 0 1 0 4.6 0 2.3 2.3 0 0 0-4.6 0Z" /></>}

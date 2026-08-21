@@ -520,41 +520,6 @@ export function LinksHub({ brandLogo, socialLinks }: LinksHubProps) {
           })}
         </section>
 
-        <section className="links-story-card">
-          <div className="links-story-copy">
-            <p>Historia destacada</p>
-            <h2>Pedro Ñahui Atao</h2>
-            <blockquote>
-              Una historia para leer con calma: café ayacuchano, memoria familiar y trabajo visible detrás de cada taza.
-            </blockquote>
-            <Link href="/personas/pedro-nahui-atao">Abrir historia</Link>
-          </div>
-          <div className="links-story-art" aria-hidden="true">
-            <span>01</span>
-            <div>
-              <i />
-              <i />
-              <i />
-            </div>
-            <small>Retrato editorial</small>
-          </div>
-        </section>
-
-        <section className="links-footer-grid" aria-label="Información adicional">
-          <div>
-            <span>Visitas</span>
-            <p>Coordina antes de venir. La experiencia se entiende mejor alrededor de una mesa.</p>
-          </div>
-          <div>
-            <span>Pedidos</span>
-            <p>Usa WhatsApp para consultas, disponibilidad y entregas.</p>
-          </div>
-          <div>
-            <span>Origen</span>
-            <p>Ayacucho no se usa como decoración; se presenta con voz propia.</p>
-          </div>
-        </section>
-
         <footer className="links-footer">
           <span>Raíces — Café y Cultura</span>
           <span>Una mesa, varios caminos</span>
