@@ -35,7 +35,6 @@ type CatalogItem = {
   note: string;
   procedencia: string;
   subcategory: string;
-  tone: string;
   image: string;
   price: string;
 };
@@ -48,7 +47,6 @@ const seed: CatalogItem[] = products.map((product) => ({
   procedencia: product.procedencia,
   subcategory: product.subcategory,
   note: product.note,
-  tone: product.tone,
   image: product.image,
   price: defaultPrices[product.name] ?? "0.00"
 }));
@@ -176,7 +174,7 @@ export function CatalogEditor() {
 
         <div className="catalog-rail page-shell">
           {filtered.map((product, index) => (
-            <article key={product.id} className={`product-card tone-${product.tone} ${editing ? "is-editing" : ""}`}>
+            <article key={product.id} className={`product-card ${editing ? "is-editing" : ""}`}>
               <div className="product-image">
                 <EditorialImage src={product.image} alt={product.name} position={index === 0 ? "center 62%" : "center"} />
                 <span className="product-number">0{index + 1}</span>

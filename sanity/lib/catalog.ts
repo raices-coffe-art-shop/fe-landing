@@ -79,7 +79,6 @@ type SanityCatalogItem = {
   price?: number;
   showPrice?: boolean;
   currency?: CatalogItem["currency"];
-  tone?: CatalogItem["tone"];
   isActive?: boolean;
   isFeatured?: boolean;
   order?: number;
@@ -197,7 +196,6 @@ function normalizeItem(item: SanityCatalogItem): CatalogItem | null {
     price: typeof item.price === "number" && Number.isFinite(item.price) && item.price >= 0 ? item.price : undefined,
     showPrice: item.showPrice !== false,
     currency: item.currency === "USD" ? "USD" : "PEN",
-    tone: item.tone || "green",
     isActive: item.isActive !== false,
     isFeatured: item.isFeatured === true,
     order: typeof item.order === "number" ? item.order : 999,

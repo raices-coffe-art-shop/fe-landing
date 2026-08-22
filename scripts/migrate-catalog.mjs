@@ -189,7 +189,6 @@ for (const product of seed.products) {
       price: typeof product.price === "number" ? product.price : undefined,
       currency: product.currency === "USD" ? "USD" : "PEN",
       showPrice: product.showPrice !== false,
-      tone: product.tone || "green",
       isActive: product.isActive !== false,
       isFeatured: product.isFeatured === true,
       order: product.order,

@@ -56,7 +56,6 @@ export type CatalogItem = {
   price?: number;
   showPrice: boolean;
   currency: "PEN" | "USD";
-  tone: "green" | "honey" | "cacao" | "clay" | "retablo" | "ink";
   isActive: boolean;
   isFeatured: boolean;
   order: number;

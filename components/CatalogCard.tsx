@@ -41,7 +41,7 @@ export function CatalogCard({
   const displayPrice = formattedPrice && shouldDisplayCatalogPrice(item, showCatalogPrices);
 
   return (
-    <article className={`product-card catalog-card tone-${item.tone} catalog-card-${variant}`}>
+    <article className={`product-card catalog-card catalog-card-${variant}`}>
       <div className="product-image catalog-card-image">
         <EditorialImage src={item.mainImage.src} alt={item.mainImage.alt} />
         <span className="product-number">{number}</span>

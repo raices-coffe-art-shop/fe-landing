@@ -7,6 +7,5 @@ export const products = fallbackCatalogItems.map((item) => ({
 	procedencia: item.origin,
 	subcategory: item.subcategory ?? item.category.title,
 	note: item.shortDescription,
-	tone: item.tone,
 	image: item.mainImage.src,
 }));

@@ -8,15 +8,6 @@ const currencies = [
   { title: "Dólares (USD)", value: "USD" },
 ];
 
-const tones = [
-  { title: "Verde", value: "green" },
-  { title: "Miel", value: "honey" },
-  { title: "Cacao", value: "cacao" },
-  { title: "Arcilla", value: "clay" },
-  { title: "Retablo", value: "retablo" },
-  { title: "Tinta", value: "ink" },
-];
-
 export const catalogItem = defineType({
   name: "catalogItem",
   title: "Producto de catálogo",
@@ -33,7 +24,6 @@ export const catalogItem = defineType({
     isFeatured: false,
     order: 100,
     origin: "Ayacucho",
-    tone: "green",
     currency: "PEN",
     showPrice: true,
     availability: true,
@@ -271,15 +261,15 @@ export const catalogItem = defineType({
       group: "details",
       validation: (Rule) => Rule.max(260),
     }),
+    // Compatibilidad silenciosa con documentos antiguos: el campo ya no aparece
+    // en Studio ni lo usa el frontend, pero reconocerlo evita avisos de
+    // “Unknown field” mientras existan productos viejos que aún lo guarden.
     defineField({
       name: "tone",
-      title: "Tono visual",
-      description: "Elige el color/acento con el que este producto puede identificarse visualmente en algunas partes del sitio. No cambia el producto ni su categoría; es únicamente una decisión de presentación.",
+      title: "Tono visual (obsoleto)",
       type: "string",
-      group: "publishing",
-      options: { list: tones, layout: "radio" },
-      initialValue: "green",
-      validation: (Rule) => Rule.required(),
+      hidden: true,
+      readOnly: true,
     }),
     defineField({
       name: "isActive",

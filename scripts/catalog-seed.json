@@ -35,7 +35,6 @@
       "mainImageAlt": "Café preparado — Ayacucho",
       "producerOrCreator": "Pedro Ñahui Atao",
       "inquiryMessage": "Hola, quisiera consultar por Café preparado.",
-      "tone": "green",
       "isActive": true,
       "isFeatured": true,
       "order": 10
@@ -52,7 +51,6 @@
       "mainImageAlt": "Granos de café — VRAEM, Ayacucho",
       "producerOrCreator": "Pedro Ñahui Atao",
       "inquiryMessage": "Hola, quisiera consultar por Granos de café.",
-      "tone": "green",
       "isActive": true,
       "isFeatured": true,
       "order": 20
@@ -69,7 +67,6 @@
       "mainImageAlt": "Café molido — VRAEM, Ayacucho",
       "producerOrCreator": "Pedro Ñahui Atao",
       "inquiryMessage": "Hola, quisiera consultar por Café molido.",
-      "tone": "green",
       "isActive": true,
       "isFeatured": true,
       "order": 30
@@ -86,7 +83,6 @@
       "mainImageAlt": "Cacao — Ayacucho",
       "producerOrCreator": "Dina",
       "inquiryMessage": "Hola, quisiera consultar por Cacao.",
-      "tone": "cacao",
       "isActive": true,
       "isFeatured": true,
       "order": 40
@@ -102,7 +98,6 @@
       "image": "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?auto=format&fit=crop&w=1200&q=82",
       "mainImageAlt": "Chocolate con panela — Ayacucho",
       "inquiryMessage": "Hola, quisiera consultar por Chocolate con panela.",
-      "tone": "cacao",
       "isActive": true,
       "isFeatured": true,
       "order": 50
@@ -119,7 +114,6 @@
       "mainImageAlt": "Miel — Ayacucho",
       "producerOrCreator": "Fortunato",
       "inquiryMessage": "Hola, quisiera consultar por Miel.",
-      "tone": "honey",
       "isActive": true,
       "isFeatured": true,
       "order": 60
@@ -136,7 +130,6 @@
       "mainImageAlt": "Polen — Ayacucho",
       "producerOrCreator": "Fortunato",
       "inquiryMessage": "Hola, quisiera consultar por Polen.",
-      "tone": "honey",
       "isActive": true,
       "isFeatured": false,
       "order": 70
@@ -152,7 +145,6 @@
       "image": "https://images.unsplash.com/photo-1498557850523-fd3d118b962e?auto=format&fit=crop&w=1200&q=82",
       "mainImageAlt": "Arándanos — Ayacucho",
       "inquiryMessage": "Hola, quisiera consultar por Arándanos.",
-      "tone": "green",
       "isActive": true,
       "isFeatured": false,
       "order": 80
@@ -168,7 +160,6 @@
       "image": "https://images.unsplash.com/photo-1605478371310-a9f1e96b4ff4?auto=format&fit=crop&w=1200&q=82",
       "mainImageAlt": "Mermeladas — Ayacucho",
       "inquiryMessage": "Hola, quisiera consultar por Mermeladas.",
-      "tone": "honey",
       "isActive": true,
       "isFeatured": false,
       "order": 90
@@ -184,7 +175,6 @@
       "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=82",
       "mainImageAlt": "Pan chapla — Ayacucho",
       "inquiryMessage": "Hola, quisiera consultar por Pan chapla.",
-      "tone": "clay",
       "isActive": true,
       "isFeatured": false,
       "order": 100
@@ -200,7 +190,6 @@
       "image": "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=1200&q=82",
       "mainImageAlt": "Postres — Raíces, Lima",
       "inquiryMessage": "Hola, quisiera consultar por Postres.",
-      "tone": "clay",
       "isActive": true,
       "isFeatured": false,
       "order": 110
@@ -216,7 +205,6 @@
       "image": "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?auto=format&fit=crop&w=1200&q=82",
       "mainImageAlt": "Queso — Ayacucho",
       "inquiryMessage": "Hola, quisiera consultar por Queso.",
-      "tone": "clay",
       "isActive": true,
       "isFeatured": false,
       "order": 120
@@ -233,7 +221,6 @@
       "mainImageAlt": "Cuadros de Lized — Obra de Lized",
       "producerOrCreator": "Lized",
       "inquiryMessage": "Hola, quisiera consultar por Cuadros de Lized.",
-      "tone": "retablo",
       "isActive": true,
       "isFeatured": false,
       "order": 130
@@ -249,7 +236,6 @@
       "image": "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1200&q=82",
       "mainImageAlt": "Retablos — Ayacucho",
       "inquiryMessage": "Hola, quisiera consultar por Retablos.",
-      "tone": "retablo",
       "isActive": true,
       "isFeatured": false,
       "order": 140
@@ -265,7 +251,6 @@
       "image": "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=1200&q=82",
       "mainImageAlt": "Toritos de Ayacucho — Ayacucho",
       "inquiryMessage": "Hola, quisiera consultar por Toritos de Ayacucho.",
-      "tone": "ink",
       "isActive": true,
       "isFeatured": false,
       "order": 150
@@ -281,7 +266,6 @@
       "image": "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1200&q=82",
       "mainImageAlt": "Manualidades — Ayacucho",
       "inquiryMessage": "Hola, quisiera consultar por Manualidades.",
-      "tone": "ink",
       "isActive": true,
       "isFeatured": false,
       "order": 160
