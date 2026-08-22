@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { YesNoBooleanInput } from "../components/YesNoBooleanInput";
+import { AutoSlugInput } from "../components/AutoSlugInput";
 import { isUniqueSlugWithinType } from "../lib/slugUniqueness";
 
 const currencies = [
@@ -48,12 +49,23 @@ export const catalogItem = defineType({
     }),
     defineField({
       name: "slug",
-      title: "Dirección web (slug)",
-      description: "Es la parte final de la dirección de esta ficha. Por ejemplo, “cafe-molido” crea /catalogo/cafe-molido. Normalmente basta con pulsar el botón Generate/Generar y no tocarlo después de publicar.",
+      title: "Dirección web (automática)",
+      description: "Se genera automáticamente a partir del título. No tienes que escribir ni editar nada aquí. Por ejemplo, “Café molido” crea /catalogo/cafe-molido. Si otro producto ya usa esa dirección, el sistema elegirá automáticamente cafe-molido-2, cafe-molido-3, etc.",
       type: "slug",
       group: "content",
-      options: { source: "title", maxLength: 96, isUnique: isUniqueSlugWithinType },
-      validation: (Rule) => Rule.required(),
+      components: { input: AutoSlugInput },
+      validation: (Rule) => [
+        Rule.required(),
+        Rule.custom(async (value, context) => {
+          const current = value?.current?.trim();
+          if (!current) return true;
+          if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(current)) {
+            return "La dirección web se genera automáticamente. No debe contener /, espacios ni caracteres especiales.";
+          }
+          const unique = await isUniqueSlugWithinType(value, context);
+          return unique || "Ya existe otro elemento con esta dirección web.";
+        }),
+      ],
     }),
     defineField({
       name: "category",

@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { YesNoBooleanInput } from "../components/YesNoBooleanInput";
+import { AutoSlugInput } from "../components/AutoSlugInput";
 import { isUniqueSlugWithinType } from "../lib/slugUniqueness";
 
 export const catalogCategory = defineType({
@@ -20,11 +21,22 @@ export const catalogCategory = defineType({
     }),
     defineField({
       name: "slug",
-      title: "Dirección web (slug)",
-      description: "Es el identificador usado en direcciones y filtros internos. Normalmente pulsa Generate/Generar a partir del nombre. Evita cambiarlo después de que la categoría ya se use en el sitio.",
+      title: "Dirección web (automática)",
+      description: "Se genera automáticamente a partir del nombre de la categoría. No tienes que escribir ni editar nada aquí. Si otra categoría ya usa esa dirección, el sistema añadirá un número de forma automática.",
       type: "slug",
-      options: { source: "title", maxLength: 96, isUnique: isUniqueSlugWithinType },
-      validation: (Rule) => Rule.required(),
+      components: { input: AutoSlugInput },
+      validation: (Rule) => [
+        Rule.required(),
+        Rule.custom(async (value, context) => {
+          const current = value?.current?.trim();
+          if (!current) return true;
+          if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(current)) {
+            return "La dirección web se genera automáticamente. No debe contener /, espacios ni caracteres especiales.";
+          }
+          const unique = await isUniqueSlugWithinType(value, context);
+          return unique || "Ya existe otro elemento con esta dirección web.";
+        }),
+      ],
     }),
     defineField({
       name: "description",
