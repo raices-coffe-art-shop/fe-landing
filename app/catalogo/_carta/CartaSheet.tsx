@@ -47,11 +47,10 @@ function groupByCategory(items: CatalogItem[]): CategoryGroup[] {
     .map((group) => ({ ...group, items: [...group.items].sort((a, b) => a.order - b.order) }));
 }
 
-// La caja mide 58 × 86 mm (retrato), la proporción de las fotos que se toman en
-// el local. A 300 dpi son ~685 × 1016 px; se pide algo más para dar margen a
-// impresoras de mayor densidad sin inflar el peso del PDF.
+// La caja es cuadrada de 58 mm: a 300 dpi son ~685 px de lado. Se pide algo más
+// para dar margen a impresoras de mayor densidad sin inflar el peso del PDF.
 const PRINT_PHOTO_WIDTH = 760;
-const PRINT_PHOTO_HEIGHT = 1130;
+const PRINT_PHOTO_HEIGHT = 760;
 
 type CartaSheetProps = {
   /** Muestra la columna de fotografías junto a cada categoría. */

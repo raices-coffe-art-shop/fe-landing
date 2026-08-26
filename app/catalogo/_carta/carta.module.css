@@ -86,9 +86,9 @@
 .categoryPhoto {
   display: block;
   width: 100%;
-  /* Retrato: es la proporción real de las fotos que se toman en el local, así
-     la taza entra completa en lugar de quedar recortada arriba y abajo. */
-  height: 86mm;
+  /* Cuadrada: formato estable para la columna. Pendiente que el cliente envíe
+     fotografías mejor encuadradas para este espacio. */
+  height: 58mm;
   object-fit: cover;
   border: 1px solid var(--line);
   /* Fondo papel: si la foto no carga, el bloque conserva su alto y la
@@ -348,7 +348,7 @@
 
 
   .categoryPhoto {
-    height: 240px;
+    height: 200px;
   }
 
   .footer {
