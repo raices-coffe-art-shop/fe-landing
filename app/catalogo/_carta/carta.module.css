@@ -86,6 +86,9 @@
 .categoryPhoto {
   display: block;
   width: 100%;
+  /* Retrato: es la proporción real de las fotos que se toman en el local, así
+     la taza entra completa en lugar de quedar recortada arriba y abajo. */
+  height: 86mm;
   object-fit: cover;
   border: 1px solid var(--line);
   /* Fondo papel: si la foto no carga, el bloque conserva su alto y la
@@ -93,12 +96,6 @@
   background: rgba(43, 33, 28, 0.06);
   break-inside: avoid;
 }
-
-.photoSm { height: 32mm; }
-
-.photoMd { height: 48mm; }
-
-.photoLg { height: 44mm; }
 
 .categoryTitle {
   margin: 0 0 6px;
@@ -350,11 +347,8 @@
   }
 
 
-  .categoryPhoto,
-  .photoSm,
-  .photoMd,
-  .photoLg {
-    height: 150px;
+  .categoryPhoto {
+    height: 240px;
   }
 
   .footer {

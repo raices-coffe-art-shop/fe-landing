@@ -52,6 +52,14 @@ export function resizeCatalogImage(image: CatalogImage, width: number, height: n
     if (!url.searchParams.has("w")) return image;
     url.searchParams.set("w", String(width));
     if (url.searchParams.has("h")) url.searchParams.set("h", String(height));
+    // Las fotos del local son verticales y las cajas de la carta no tienen su
+    // misma proporción: sin esto el recorte parte por el centro geométrico y se
+    // come la taza. El CDN de Sanity elige la zona con más contenido, y respeta
+    // el punto de interés si el equipo lo marcó en el Studio.
+    if (url.hostname.endsWith("sanity.io")) {
+      url.searchParams.set("fit", "crop");
+      url.searchParams.set("crop", "entropy");
+    }
     return { ...image, src: url.toString(), width, height };
   } catch {
     return image;

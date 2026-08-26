@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./imprimir.module.css";
+import styles from "./carta.module.css";
 
 type PrintActionsProps = {
   withPhotos: boolean;
