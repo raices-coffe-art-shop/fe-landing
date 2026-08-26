@@ -45,6 +45,7 @@ type SanityCategory = {
   imageAlt?: string;
   order?: number;
   isVisible?: boolean;
+  showInPrintedMenu?: boolean;
   itemCount?: number;
 };
 
@@ -144,6 +145,7 @@ function normalizeCategory(category: SanityCategory | undefined): CatalogCategor
     image: normalizeCategoryImage(category),
     order: typeof category?.order === "number" ? category.order : 999,
     isVisible: category?.isVisible !== false,
+    showInPrintedMenu: category?.showInPrintedMenu !== false,
     itemCount: typeof category?.itemCount === "number" ? category.itemCount : 0,
   };
 }

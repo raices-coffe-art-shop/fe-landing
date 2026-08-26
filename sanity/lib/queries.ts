@@ -36,7 +36,8 @@ export const featuredCatalogItemsQuery = defineQuery(`
       image,
       imageAlt,
       order,
-      isVisible
+      isVisible,
+      showInPrintedMenu
     },
     subcategory,
     origin,
@@ -81,7 +82,8 @@ export const catalogItemsQuery = defineQuery(`
       image,
       imageAlt,
       order,
-      isVisible
+      isVisible,
+      showInPrintedMenu
     },
     subcategory,
     origin,
@@ -122,6 +124,7 @@ export const catalogCategoriesQuery = defineQuery(`
     imageAlt,
     order,
     isVisible,
+    showInPrintedMenu,
     "itemCount": 0
   }
 `);
@@ -143,7 +146,8 @@ export const catalogItemBySlugQuery = defineQuery(`
       image,
       imageAlt,
       order,
-      isVisible
+      isVisible,
+      showInPrintedMenu
     },
     subcategory,
     origin,
@@ -192,7 +196,8 @@ export const relatedCatalogItemsQuery = defineQuery(`
       image,
       imageAlt,
       order,
-      isVisible
+      isVisible,
+      showInPrintedMenu
     },
     subcategory,
     origin,

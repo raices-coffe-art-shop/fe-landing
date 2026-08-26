@@ -8,6 +8,7 @@ import { formatCatalogPrice, shouldDisplayCatalogPrice } from "@/sanity/lib/cata
 import { getSiteSettings } from "@/sanity/lib/siteSettings";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { resizeCatalogImage, resolveCategoryPhotos } from "@/lib/categoryImage";
+import { filterPrintedMenuItems } from "@/lib/printedMenu";
 import { PrintActions } from "./PrintActions";
 import styles from "./imprimir.module.css";
 
@@ -73,7 +74,7 @@ export default async function ImprimirCartaPage({ searchParams }: ImprimirPagePr
   const withPhotos = fotosParam !== "no";
 
   const [items, settings] = await Promise.all([getCatalogItems(), getSiteSettings()]);
-  const groups = groupByCategory(items);
+  const groups = groupByCategory(filterPrintedMenuItems(items));
   const siteUrl = getSiteUrl();
   const catalogUrl = `${siteUrl}/catalogo`;
   const catalogDisplayUrl = catalogUrl.replace(/^https?:\/\//, "");

@@ -212,6 +212,8 @@ export const fallbackCatalogCategories: CatalogCategory[] = categorySeed.map((ca
   description: undefined,
   order: category.order,
   isVisible: true,
+  // Arte se vende en el local pero no forma parte de la carta del café.
+  showInPrintedMenu: category.slug !== "arte",
   itemCount: productSeed.filter((product) => product.category === category.title).length,
 }));
 

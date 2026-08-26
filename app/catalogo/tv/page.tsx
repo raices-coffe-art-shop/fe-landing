@@ -3,6 +3,7 @@ import QRCode from "qrcode";
 import { getCatalogCategories, getCatalogItems } from "@/sanity/lib/catalog";
 import { getSiteSettings } from "@/sanity/lib/siteSettings";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { filterPrintedMenuItems } from "@/lib/printedMenu";
 import { buildTvSlides } from "./slides";
 import { CatalogTvShow } from "./CatalogTvShow";
 
@@ -35,7 +36,7 @@ export default async function CartaTvPage({ searchParams }: TvPageProps) {
     getCatalogCategories(),
     getSiteSettings(),
   ]);
-  const slides = buildTvSlides(items, settings.showCatalogPrices, categories);
+  const slides = buildTvSlides(filterPrintedMenuItems(items), settings.showCatalogPrices, categories);
 
   const catalogUrl = `${getSiteUrl()}/catalogo`;
   const qrDataUrl = await QRCode.toDataURL(catalogUrl, {

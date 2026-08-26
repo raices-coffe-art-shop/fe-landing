@@ -10,6 +10,7 @@ export const catalogCategory = defineType({
   initialValue: {
     order: 100,
     isVisible: true,
+    showInPrintedMenu: true,
   },
   fields: [
     defineField({
@@ -78,6 +79,15 @@ export const catalogCategory = defineType({
       name: "isVisible",
       title: "¿Mostrar esta categoría en el sitio?",
       description: "Sí = la categoría puede aparecer públicamente y sus productos pueden mostrarse. No = se oculta toda la categoría y, con ella, sus productos, sin borrar nada. No indica si un producto está disponible para comprar.",
+      type: "boolean",
+      initialValue: true,
+      components: { input: YesNoBooleanInput },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "showInPrintedMenu",
+      title: "¿Mostrar en la carta del café?",
+      description: "Sí = la categoría aparece en la carta que se imprime y en la pantalla del local. No = se queda solo en el catálogo de la web. Úsalo para lo que no se consume en la mesa, como el arte o las piezas artesanales.",
       type: "boolean",
       initialValue: true,
       components: { input: YesNoBooleanInput },

@@ -30,6 +30,7 @@ export type CatalogCategory = {
   image?: CatalogImage;
   order: number;
   isVisible: boolean;
+  showInPrintedMenu: boolean;
   itemCount: number;
 };
 
