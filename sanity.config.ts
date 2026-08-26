@@ -11,7 +11,7 @@ const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
 if (!projectId) throw new Error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID");
 if (!dataset) throw new Error("Missing NEXT_PUBLIC_SANITY_DATASET");
 
-const hiddenRootTypes = new Set(["siteSettings", "catalogItem", "catalogCategory", "socialLink", "seo"]);
+const hiddenRootTypes = new Set(["siteSettings", "catalogItem", "catalogCategory", "socialLink", "seo", "post"]);
 
 export default defineConfig({
   name: "default",
@@ -48,6 +48,11 @@ export default defineConfig({
                     S.documentTypeListItem("catalogCategory").title("Categorías"),
                   ]),
               ),
+            S.listItem()
+              .id("posts")
+              .title("Publicaciones")
+              .schemaType("post")
+              .child(S.documentTypeList("post").title("Publicaciones")),
             ...S.documentTypeListItems().filter((item) => {
               const id = item.getId();
               return id ? !hiddenRootTypes.has(id) : true;

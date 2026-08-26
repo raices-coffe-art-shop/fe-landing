@@ -20,7 +20,7 @@ SANITY_REVALIDATE_SECRET=...
 - Filtro:
 
 ```groq
-_type in ["siteSettings", "catalogCategory", "catalogItem"]
+_type in ["siteSettings", "catalogCategory", "catalogItem", "post"]
 ```
 
 - Proyección:

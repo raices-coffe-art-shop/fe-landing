@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { parseBody } from "next-sanity/webhook";
 import { SITE_SETTINGS_TAG } from "@/sanity/lib/siteSettings";
 import { CATALOG_CATEGORIES_TAG, CATALOG_TAG, catalogItemTag } from "@/sanity/lib/catalog";
+import { POSTS_TAG, postTag } from "@/sanity/lib/posts";
 
 type SanityWebhookBody = {
   _id?: string;
-  _type?: "siteSettings" | "catalogCategory" | "catalogItem" | string;
+  _type?: "siteSettings" | "catalogCategory" | "catalogItem" | "post" | string;
   slug?: string | null;
   previousSlug?: string | null;
 };
@@ -47,6 +48,19 @@ function revalidateCatalogItem(slug?: string | null, previousSlug?: string | nul
   revalidatePath("/catalogo/[slug]", "page");
 }
 
+function revalidatePost(slug?: string | null, previousSlug?: string | null) {
+  revalidateTag(POSTS_TAG, { expire: 0 });
+
+  const slugs = new Set([slug, previousSlug].filter((value): value is string => Boolean(value)));
+  for (const postSlug of slugs) {
+    revalidateTag(postTag(postSlug), { expire: 0 });
+    revalidatePath(`/publicaciones/${postSlug}`);
+  }
+
+  revalidatePath("/publicaciones");
+  revalidatePath("/publicaciones/[slug]", "page");
+}
+
 export async function POST(request: NextRequest) {
   const secret = process.env.SANITY_REVALIDATE_SECRET;
 
@@ -77,6 +91,8 @@ export async function POST(request: NextRequest) {
     revalidateCatalogCategory();
   } else if (body._type === "catalogItem") {
     revalidateCatalogItem(body.slug, body.previousSlug);
+  } else if (body._type === "post") {
+    revalidatePost(body.slug, body.previousSlug);
   } else {
     return NextResponse.json({
       ok: true,

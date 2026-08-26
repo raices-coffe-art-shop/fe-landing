@@ -227,3 +227,42 @@ export const relatedCatalogItemsQuery = defineQuery(`
     seo
   }
 `);
+
+// Publicaciones: solo las marcadas como publicadas y con fecha ya alcanzada,
+// de la más reciente a la más antigua.
+export const postsQuery = defineQuery(`
+  *[
+    _type == "post" &&
+    coalesce(isPublished, false) == true &&
+    defined(slug.current)
+  ] | order(publishedAt desc){
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    coverImage,
+    coverImageAlt,
+    publishedAt,
+    author,
+    seo
+  }
+`);
+
+export const postBySlugQuery = defineQuery(`
+  *[
+    _type == "post" &&
+    slug.current == $slug &&
+    coalesce(isPublished, false) == true
+  ][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    body,
+    coverImage,
+    coverImageAlt,
+    publishedAt,
+    author,
+    seo
+  }
+`);

@@ -131,3 +131,33 @@ export function breadcrumbJsonLd(crumbs: Array<{ name: string; url: string }>): 
     })),
   };
 }
+
+// Una publicación del blog. Google usa BlogPosting para mostrar fecha y autor
+// en resultados y en Discover.
+export function articleJsonLd(post: {
+  title: string;
+  slug: string;
+  excerpt: string;
+  coverImage: { src: string };
+  publishedAt: string;
+  author?: string;
+}): Record<string, unknown> {
+  const url = absoluteUrl(`/publicaciones/${post.slug}`);
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    image: post.coverImage.src,
+    datePublished: post.publishedAt,
+    inLanguage: "es-PE",
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    url,
+    author: { "@type": "Organization", name: post.author?.trim() || business.name },
+    publisher: {
+      "@type": "Organization",
+      name: business.name,
+      logo: { "@type": "ImageObject", url: absoluteUrl("/raices-logo-lg.png") },
+    },
+  };
+}
