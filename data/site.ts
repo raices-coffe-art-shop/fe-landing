@@ -63,7 +63,7 @@ export const people: Person[] = [
     slug: "fortunato-miel",
     name: "Fortunato Melgar Rojas",
     shortName: "Fortunato",
-    role: "El señor de la miel",
+    role: "Productor de miel",
     region: "Ayacucho",
     category: "Miel y alimentos",
     product: "Miel",
