@@ -178,6 +178,20 @@ img { max-width: 100%; }
   transition: background .35s ease, color .35s ease, border-color .35s ease;
   border-bottom: 1px solid transparent;
 }
+/* El hero rota entre varias fotografías y algunas tienen cielos claros: este
+   velo asegura que el menú se lea siempre, sin oscurecer la imagen. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(24, 19, 16, .55), rgba(24, 19, 16, 0));
+  opacity: 1;
+  transition: opacity .35s ease;
+}
+.site-header.is-scrolled::before {
+  opacity: 0;
+}
 .site-header.is-scrolled {
   color: var(--ink);
   background: rgba(244, 239, 229, .92);
@@ -185,6 +199,7 @@ img { max-width: 100%; }
   border-color: rgba(43, 33, 28, .12);
 }
 .header-inner {
+  position: relative;
   width: min(1420px, calc(100% - 48px));
   height: 82px;
   margin: auto;

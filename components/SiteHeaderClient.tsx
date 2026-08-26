@@ -6,53 +6,19 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { BrandLogo } from "@/sanity/lib/siteSettings";
 import { SocialPlatformIcon } from "@/components/SocialPlatformIcon";
 
-type NavIcon = "home" | "story" | "territory" | "people" | "community" | "art" | "catalog" | "posts" | "visit" | "links" | "contact";
+type NavLink = { label: string; href: string };
 
-type NavLink = { label: string; href: string; icon: NavIcon };
-
-const desktopLinks: NavLink[] = [
-  { label: "Inicio", href: "/#inicio", icon: "home" },
-  { label: "Nuestra historia", href: "/#historia", icon: "story" },
-  { label: "Personas", href: "/#personas", icon: "people" },
-  { label: "Territorio", href: "/#territorio", icon: "territory" },
-  { label: "Arte", href: "/arte", icon: "art" },
-  { label: "Catálogo", href: "/catalogo", icon: "catalog" },
-  { label: "Comunidad", href: "/#comunidad", icon: "community" },
-  { label: "Publicaciones", href: "/publicaciones", icon: "posts" },
-  { label: "Links", href: "/links", icon: "links" },
-  { label: "Visítanos", href: "/#visita", icon: "visit" }
+// Seis destinos en el orden en que se recorre la marca: del relato al producto
+// y cierre en la visita. Territorio y Comunidad quedan dentro de la portada, y
+// Links vive en el pie, que es su lugar natural.
+const navLinks: NavLink[] = [
+  { label: "Historia", href: "/#historia" },
+  { label: "Personas", href: "/#personas" },
+  { label: "Arte", href: "/arte" },
+  { label: "Catálogo", href: "/catalogo" },
+  { label: "Publicaciones", href: "/publicaciones" },
+  { label: "Visítanos", href: "/#visita" },
 ];
-
-const mobileLinks: NavLink[] = [
-  { label: "Inicio", href: "/#inicio", icon: "home" },
-  { label: "Nuestra historia", href: "/#historia", icon: "story" },
-  { label: "Personas", href: "/#personas", icon: "people" },
-  { label: "Territorio", href: "/#territorio", icon: "territory" },
-  { label: "Arte", href: "/arte", icon: "art" },
-  { label: "Catálogo", href: "/catalogo", icon: "catalog" },
-  { label: "Comunidad", href: "/#comunidad", icon: "community" },
-  { label: "Publicaciones", href: "/publicaciones", icon: "posts" },
-  { label: "Links", href: "/links", icon: "links" },
-  { label: "Visítanos", href: "/#visita", icon: "visit" }
-];
-
-function NavSvg({ icon }: { icon: NavIcon }) {
-  return (
-    <svg className="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
-      {icon === "home" && <><path d="M3.5 11.4 12 4l8.5 7.4" /><path d="M5.5 10.6V20h13v-9.4" /><path d="M9.5 20v-5h5v5" /></>}
-      {icon === "story" && <><path d="M4.5 5.5c3.5-1.5 6-.7 7.5 2 1.5-2.7 4-3.5 7.5-2v13c-3.5-1.5-6-.7-7.5 2-1.5-2.7-4-3.5-7.5-2v-13Z" /><path d="M12 7.5v13" /></>}
-      {icon === "territory" && <><path d="m3.5 18 5.2-9 3.8 6.1 2.3-3.4 5.7 6.3" /><path d="M8.7 9 11 5l3.8 6.7" /></>}
-      {icon === "people" && <><path d="M5 19c1.1-3.2 3.4-4.8 7-4.8s5.9 1.6 7 4.8" /><path d="M8.5 8.8a3.5 3.5 0 1 0 7 0 3.5 3.5 0 0 0-7 0Z" /></>}
-      {icon === "community" && <><circle cx="12" cy="6.2" r="2.1" /><circle cx="5.6" cy="15.2" r="2.1" /><circle cx="18.4" cy="15.2" r="2.1" /><path d="M10.7 8 7 13.4M13.3 8l3.7 5.4M7.7 15.2h8.6" /></>}
-      {icon === "art" && <><path d="M12 3.8c4.8 0 8.5 3.2 8.5 7.3 0 2.6-1.8 4.1-4 4.1h-1.2c-1 0-1.6.7-1.3 1.7.4 1.4-.6 3.3-2.8 3.3-4.1 0-7.7-3.5-7.7-8.2 0-4.6 3.7-8.2 8.5-8.2Z" /><path d="M7.6 11.1h.1M9.4 7.7h.1M13.5 7.3h.1M16.5 10.3h.1" /></>}
-      {icon === "catalog" && <><path d="M6 4.5h9a3 3 0 0 1 3 3v12H8.5A2.5 2.5 0 0 1 6 17V4.5Z" /><path d="M8.5 4.5V17a2.5 2.5 0 0 0 2.5 2.5" /><path d="M10.5 9h4M10.5 12h3" /></>}
-      {icon === "visit" && <><path d="M12 21s6-6.1 6-11A6 6 0 0 0 6 10c0 4.9 6 11 6 11Z" /><path d="M9.7 10a2.3 2.3 0 1 0 4.6 0 2.3 2.3 0 0 0-4.6 0Z" /></>}
-      {icon === "posts" && <><path d="M6 5.5h12v13H6z" /><path d="M9 9.5h6M9 13h6M9 16h3" /></>}
-      {icon === "links" && <><path d="M9.2 14.8 7.8 16.2a3.4 3.4 0 0 1-4.8-4.8l2.4-2.4a3.4 3.4 0 0 1 4.8 0" /><path d="m14.8 9.2 1.4-1.4a3.4 3.4 0 0 1 4.8 4.8l-2.4 2.4a3.4 3.4 0 0 1-4.8 0" /><path d="m8.8 15.2 6.4-6.4" /></>}
-      {icon === "contact" && <><path d="M4.5 5.5h15v10h-8l-4.5 4v-4H4.5v-10Z" /><path d="M8 9h8M8 12h5" /></>}
-    </svg>
-  );
-}
 
 type SiteHeaderClientProps = {
   brandLogo: BrandLogo;
@@ -209,8 +175,8 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
         </Link>
 
         <nav className="desktop-nav" aria-label="Navegación principal">
-          {desktopLinks.map(({ label, href, icon }) => (
-            <a key={href} href={href}><NavSvg icon={icon} />{label}</a>
+          {navLinks.map(({ label, href }) => (
+            <a key={href} href={href}>{label}</a>
           ))}
           <a className="nav-cta" href={contactHref} target="_blank" rel="noreferrer">
             <SocialPlatformIcon platform="whatsapp" className="nav-whatsapp-icon" /><span>Conversemos</span>
@@ -249,9 +215,9 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
       >
         <nav aria-label="Navegación móvil">
           <p>Explora Raíces</p>
-          {mobileLinks.map(({ label, href, icon }, index) => (
+          {navLinks.map(({ label, href }, index) => (
             <a key={href} href={href} onClick={() => closeMenu()} tabIndex={open ? 0 : -1}>
-              <span>{String(index + 1).padStart(2, "0")}</span><NavSvg icon={icon} />{label}
+              <span>{String(index + 1).padStart(2, "0")}</span>{label}
             </a>
           ))}
           <a className="mobile-wa" href={contactHref} target="_blank" rel="noreferrer" onClick={() => closeMenu()} tabIndex={open ? 0 : -1}>
