@@ -125,7 +125,6 @@ export const catalogItem = defineType({
       type: "image",
       group: "media",
       options: { hotspot: true },
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "mainImageAlt",
@@ -133,7 +132,15 @@ export const catalogItem = defineType({
       description: "Describe brevemente lo que se ve en la foto para personas que usan lectores de pantalla y para que los buscadores entiendan la imagen. Ejemplo: “Bolsa de café ayacuchano en grano sobre una mesa”. No llenes este campo con tags o palabras repetidas.",
       type: "string",
       group: "media",
-      validation: (Rule) => Rule.required().min(3).max(180),
+      hidden: ({ document }) => !document?.mainImage,
+      validation: (Rule) =>
+        Rule.max(180).custom((value, context) => {
+          const document = context.document as { mainImage?: unknown } | undefined;
+          if (!document?.mainImage) return true;
+          const text = typeof value === "string" ? value.trim() : "";
+          if (text.length < 3) return "Describe brevemente la imagen.";
+          return true;
+        }),
     }),
     defineField({
       name: "gallery",

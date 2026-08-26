@@ -1,0 +1,242 @@
+{
+  "origenes": {
+    "cafe": {
+      "historia": "En mi búsqueda por un grano que represente a Ayacucho, a su gente resiliente y a su profunda historia, encontré el auténtico café ayacuchano. Me contacté con Pedrito y, tras varias charlas compartiendo la misma visión y corazón, fue el primero en darme la mano: «¡Adelante hermano, siga con su proyecto!». Lo que más atesoro de aquellas primeras conversaciones es que nacieron en quechua, con Lized como puente y traductora.",
+      "ficha": "Finca La Fortuna de Pedro · Nueva Unión, Ayna - San Francisco (VRAEM, Ayacucho). Variedad: blend de Caturra y Bourbon, cultivado entre 1,600 y 2,000 m.s.n.m. Puntaje SCA: 84 – 86 puntos (café de especialidad).",
+      "cata": "Notas de cata: cacao puro, caramelo, frutos secos y delicadas notas a frutos amarillos. Perfil: acidez brillante, dulzor natural y cuerpo balanceado con posgusto prolongado."
+    },
+    "cacao": {
+      "historia": "Nuestro chocolate proviene directamente del VRAEM, cosechado en la finca de la Ing. Agrónoma Dina Campos en Pichari (Cusco). Decidimos trabajar juntos no solo por la altísima calidad y pureza de su cacao, sino por su profundo amor y compromiso hacia su familia, su tierra y su valiosa labor junto a la comunidad Asháninka.",
+      "ficha": "Cacao puro fino de aroma · Pichari, VRAEM (Cusco, Perú). Productora: Ing. Agrónoma Dina Campos. Impacto social: trabajo directo con la comunidad Asháninka.",
+      "cata": "Perfil sensorial: intenso sabor a chocolate puro, notas tostadas, untuosidad sedosa y dulzor natural."
+    }
+  },
+  "categories": [
+    {
+      "slug": "clasicos",
+      "title": "Clásicos",
+      "order": 10,
+      "description": "Nuestro café ayacuchano en sus preparaciones esenciales. Todos vienen acompañados de un mini alfajor tipo gouraud francés.",
+      "showInPrintedMenu": true
+    },
+    {
+      "slug": "filtrados-y-metodos",
+      "title": "Filtrados & Métodos",
+      "order": 20,
+      "description": "Extracciones lentas que revelan los aromas del grano. Acompañados de un mini alfajor tipo gouraud francés.",
+      "showInPrintedMenu": true
+    },
+    {
+      "slug": "con-leche",
+      "title": "Con Leche",
+      "order": 30,
+      "description": "Espresso y leche vaporizada en sus distintas proporciones. Acompañados de un mini alfajor tipo gouraud francés.",
+      "showInPrintedMenu": true
+    },
+    {
+      "slug": "opciones-frias",
+      "title": "Opciones Frías",
+      "order": 40,
+      "description": "Café frío para los días de calor, en formatos de 12 y 16 onzas.",
+      "showInPrintedMenu": true
+    },
+    {
+      "slug": "bebidas-de-chocolate",
+      "title": "Bebidas de Chocolate",
+      "order": 50,
+      "description": "Cacao puro fino de aroma del VRAEM, en versión caliente y helada.",
+      "showInPrintedMenu": true
+    }
+  ],
+  "categoryUpdates": [
+    {
+      "slug": "cafe-y-cacao",
+      "title": "Para llevar",
+      "newSlug": "para-llevar",
+      "order": 70,
+      "description": "Café en grano, molido y cacao de origen para preparar en casa.",
+      "showInPrintedMenu": true
+    },
+    {
+      "slug": "alimentos",
+      "order": 60,
+      "showInPrintedMenu": true
+    },
+    {
+      "slug": "arte",
+      "order": 80,
+      "showInPrintedMenu": false
+    }
+  ],
+  "deactivate": ["cafe-preparado"],
+  "products": [
+    {
+      "slug": "espresso",
+      "title": "Espresso",
+      "categorySlug": "clasicos",
+      "order": 10,
+      "price": 6,
+      "shortDescription": "Extracción concentrada e intensa bajo presión.",
+      "origen": "cafe",
+      "photo": "Espresso.jpg",
+      "mainImageAlt": "Taza de espresso con un mini alfajor, sobre mesa de madera y textil ayacuchano",
+      "isFeatured": true
+    },
+    {
+      "slug": "americano",
+      "title": "Americano",
+      "categorySlug": "clasicos",
+      "order": 20,
+      "price": 7,
+      "shortDescription": "Espresso diluido en agua caliente. Conserva los aromas y notas sutiles del café.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "cafe-pasado",
+      "title": "Café Pasado",
+      "categorySlug": "clasicos",
+      "order": 30,
+      "price": 7,
+      "shortDescription": "Concentrado de extracción lenta tradicional, con sabor casero y reconfortante.",
+      "origen": "cafe",
+      "photo": "cafe-pasado.jpg",
+      "mainImageAlt": "Café pasado servido en taza sobre mesa de madera",
+      "isFeatured": true
+    },
+    {
+      "slug": "cafe-moka",
+      "title": "Café Moka",
+      "categorySlug": "clasicos",
+      "order": 40,
+      "price": 8.5,
+      "shortDescription": "Intenso, preparado en cafetera italiana tradicional.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "cafe-francesa",
+      "title": "Café Francesa",
+      "categorySlug": "filtrados-y-metodos",
+      "order": 10,
+      "price": 8.5,
+      "shortDescription": "Prensa francesa: infusión con gran textura y aromas envolventes.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "cafe-v60",
+      "title": "Café V60",
+      "categorySlug": "filtrados-y-metodos",
+      "order": 20,
+      "price": 9,
+      "shortDescription": "Extracción por goteo; taza suave, brillante y muy aromática.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "cappuccino",
+      "title": "Cappuccino",
+      "categorySlug": "con-leche",
+      "order": 10,
+      "price": 11,
+      "shortDescription": "Espresso con leche vaporizada y una corona de espuma densa y cremosa.",
+      "origen": "cafe",
+      "photo": "Capuccino.jpg",
+      "mainImageAlt": "Cappuccino con arte latte servido en taza blanca",
+      "isFeatured": true
+    },
+    {
+      "slug": "latte",
+      "title": "Latte",
+      "categorySlug": "con-leche",
+      "order": 20,
+      "price": 9,
+      "shortDescription": "Espresso equilibrado con abundante leche vaporizada y textura sedosa.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "cafe-con-leche",
+      "title": "Café con Leche",
+      "categorySlug": "con-leche",
+      "order": 30,
+      "price": 9,
+      "shortDescription": "Combinación clásica de café pasado o espresso con leche caliente a partes iguales.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "cortado-macchiato",
+      "title": "Cortado / Macchiato",
+      "categorySlug": "con-leche",
+      "order": 40,
+      "price": 9,
+      "shortDescription": "Espresso concentrado “cortado” con un toque de leche vaporizada y fina espuma.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "flat-white-llampu",
+      "title": "Flat White (Llampu)",
+      "categorySlug": "con-leche",
+      "order": 50,
+      "price": 11,
+      "shortDescription": "Doble shot de espresso servido con una capa fina de leche microespumada.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "chiri-muxsa",
+      "title": "Chiri Muxsa (16 oz)",
+      "categorySlug": "opciones-frias",
+      "order": 10,
+      "price": 16,
+      "shortDescription": "Nuestra opción saludable a un frappuccino: café espresso, leche, hielo licuado y algarrobina; textura cremosa y refrescante.",
+      "origen": "cafe",
+      "photo": "Chiri-Muxsa.jpg",
+      "mainImageAlt": "Chiri Muxsa, bebida fría de café con algarrobina en vaso alto",
+      "isFeatured": true
+    },
+    {
+      "slug": "ice-latte",
+      "title": "Ice Latte (16 oz)",
+      "categorySlug": "opciones-frias",
+      "order": 20,
+      "price": 16,
+      "shortDescription": "Espresso mezclado con leche fría y cubos de hielo.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "ice-americano",
+      "title": "Ice Americano (16 oz)",
+      "categorySlug": "opciones-frias",
+      "order": 30,
+      "price": 14,
+      "shortDescription": "Espresso servido sobre agua helada y cubos de hielo.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "cold-brew",
+      "title": "Cold Brew (12 oz)",
+      "categorySlug": "opciones-frias",
+      "order": 40,
+      "price": 14,
+      "shortDescription": "Café infusionado en frío por inmersión prolongada (12 a 24 h); sabor dulce, cuerpo suave y refrescante.",
+      "origen": "cafe"
+    },
+    {
+      "slug": "qoni-chocolate",
+      "title": "Qoñi Chocolate",
+      "categorySlug": "bebidas-de-chocolate",
+      "order": 10,
+      "price": 13,
+      "shortDescription": "Chocolate caliente tradicional con cacao puro de origen. Preparación espesa, aromática y reconfortante, acompañada de un suave marshmallow.",
+      "origen": "cacao",
+      "photo": "Quñi-Chocolate.jpg",
+      "mainImageAlt": "Qoñi Chocolate, chocolate caliente servido en taza con marshmallow",
+      "isFeatured": true
+    },
+    {
+      "slug": "chiri-chocolate",
+      "title": "Chiri Chocolate",
+      "categorySlug": "bebidas-de-chocolate",
+      "order": 20,
+      "price": 15,
+      "shortDescription": "Bebida fría refrescante y sedosa a base de puro cacao del VRAEM, leche fresca batida y cubos de hielo.",
+      "origen": "cacao"
+    }
+  ]
+}
