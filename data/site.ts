@@ -61,9 +61,9 @@ export const people: Person[] = [
   },
   {
     slug: "fortunato-miel",
-    name: "Fortunato",
+    name: "Fortunato Melgar Rojas",
     shortName: "Fortunato",
-    role: "Productor de miel",
+    role: "El señor de la miel",
     region: "Ayacucho",
     category: "Miel y alimentos",
     product: "Miel",
@@ -76,7 +76,7 @@ export const people: Person[] = [
     ],
     status: "documentada",
     portraitTone: "honey",
-    initials: "FO",
+    initials: "FM",
     portraitGallery: personCardPhotos.fortunato,
     facts: [
       { label: "Producto", value: "Miel" },
@@ -90,7 +90,7 @@ export const people: Person[] = [
   },
   {
     slug: "dina-cacao",
-    name: "Dina",
+    name: "Dina Torres",
     shortName: "Dina",
     role: "Productora y transformadora de cacao",
     region: "Ayacucho",
@@ -105,7 +105,7 @@ export const people: Person[] = [
     ],
     status: "documentada",
     portraitTone: "clay",
-    initials: "DI",
+    initials: "DT",
     portraitGallery: personCardPhotos.dina,
     facts: [
       { label: "Producto", value: "Cacao y derivados" },

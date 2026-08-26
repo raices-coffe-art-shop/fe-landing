@@ -66,7 +66,7 @@ const productSeed: FallbackProduct[] = [
     shortDescription: "Cacao y derivados vinculados con procesos de transformación local.",
     image: "https://images.unsplash.com/photo-1575377427642-087cf684f29d?auto=format&fit=crop&w=1200&q=82",
     price: 32,
-    producerOrCreator: "Dina",
+    producerOrCreator: "Dina Torres",
   },
   {
     slug: "chocolate-panela",
@@ -89,7 +89,7 @@ const productSeed: FallbackProduct[] = [
     shortDescription: "Miel vinculada con floración, paisaje y trabajo de origen.",
     image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=1200&q=82",
     price: 28,
-    producerOrCreator: "Fortunato",
+    producerOrCreator: "Fortunato Melgar Rojas",
   },
   {
     slug: "polen",
@@ -101,7 +101,7 @@ const productSeed: FallbackProduct[] = [
     shortDescription: "Producto asociado al trabajo apícola.",
     image: "https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=1200&q=82",
     price: 24,
-    producerOrCreator: "Fortunato",
+    producerOrCreator: "Fortunato Melgar Rojas",
   },
   {
     slug: "arandanos",
