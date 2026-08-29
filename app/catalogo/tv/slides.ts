@@ -18,6 +18,7 @@ export type TvSlide =
       kind: "category";
       key: string;
       categoryTitle: string;
+      subCategoryTitle: string | null;
       page: number;
       pageCount: number;
       image: { src: string; alt: string } | null;
@@ -57,17 +58,39 @@ export function buildTvSlides(
     // La misma foto acompaña a todas las páginas de la categoría: así el layout
     // no cambia de forma entre una página y la siguiente.
     const image = resolveCategoryImage(categoriesById.get(categoryId), sortedItems);
-    const pageCount = Math.ceil(sortedItems.length / TV_MAX_ITEMS_PER_SLIDE);
-    for (let page = 0; page < pageCount; page += 1) {
-      const pageItems = sortedItems.slice(
-        page * TV_MAX_ITEMS_PER_SLIDE,
-        (page + 1) * TV_MAX_ITEMS_PER_SLIDE,
+
+    // Se pagina por subsección, no solo por categoría: una pantalla nunca mezcla
+    // "Triples" con "Especiales", igual que en la carta de papel.
+    const subGroups: Array<{ title: string | null; items: CatalogItem[] }> = [];
+    for (const item of sortedItems) {
+      const title = item.subcategory?.trim() || null;
+      const current = subGroups.find((subGroup) => subGroup.title === title);
+      if (current) current.items.push(item);
+      else subGroups.push({ title, items: [item] });
+    }
+
+    // El contador de páginas es por categoría para que la pantalla siga diciendo
+    // "2 de 5" y no se reinicie en cada subsección.
+    const pageCount = subGroups.reduce(
+      (total, subGroup) => total + Math.ceil(subGroup.items.length / TV_MAX_ITEMS_PER_SLIDE),
+      0,
+    );
+    let page = 0;
+
+    for (const subGroup of subGroups) {
+      const subPages = Math.ceil(subGroup.items.length / TV_MAX_ITEMS_PER_SLIDE);
+      for (let subPage = 0; subPage < subPages; subPage += 1) {
+      const pageItems = subGroup.items.slice(
+        subPage * TV_MAX_ITEMS_PER_SLIDE,
+        (subPage + 1) * TV_MAX_ITEMS_PER_SLIDE,
       );
+      page += 1;
       slides.push({
         kind: "category",
-        key: `${categoryId}-${page + 1}`,
+        key: `${categoryId}-${page}`,
         categoryTitle: group.title,
-        page: page + 1,
+        subCategoryTitle: subGroup.title,
+        page,
         pageCount,
         image: image ? { src: image.src, alt: image.alt } : null,
         items: pageItems.map((item) => ({
@@ -79,6 +102,7 @@ export function buildTvSlides(
             : null,
         })),
       });
+      }
     }
   }
 

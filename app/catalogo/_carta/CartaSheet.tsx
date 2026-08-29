@@ -15,6 +15,11 @@ import styles from "./carta.module.css";
 //   /catalogo/imprimir → herramienta interna, con fotos y botones de descarga.
 //   /catalogo/carta    → lo que ve quien escanea el QR en la mesa: solo la carta.
 
+type SubGroup = {
+  title: string | null;
+  items: CatalogItem[];
+};
+
 type CategoryGroup = {
   id: string;
   title: string;
@@ -22,11 +27,12 @@ type CategoryGroup = {
   image?: CatalogItem["category"]["image"];
   order: number;
   items: CatalogItem[];
+  subGroups: SubGroup[];
 };
 
 // Los grupos se derivan de los items: una categoría sin productos no aparece.
 function groupByCategory(items: CatalogItem[]): CategoryGroup[] {
-  const groups = new Map<string, CategoryGroup>();
+  const groups = new Map<string, Omit<CategoryGroup, "subGroups">>();
   for (const item of items) {
     const existing = groups.get(item.category.id);
     if (existing) {
@@ -44,7 +50,26 @@ function groupByCategory(items: CatalogItem[]): CategoryGroup[] {
   }
   return [...groups.values()]
     .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"))
-    .map((group) => ({ ...group, items: [...group.items].sort((a, b) => a.order - b.order) }));
+    .map((group) => {
+      const items = [...group.items].sort((a, b) => a.order - b.order);
+      return { ...group, items, subGroups: buildSubGroups(items) };
+    });
+}
+
+// Segundo nivel de la carta: cada sección puede traer sus propios subtítulos
+// ("Clásicos", "Triples"…), tal como vienen en las cartas del cliente. Se
+// derivan del campo Subcategoría respetando el orden de los productos, así el
+// equipo controla la secuencia desde el Studio. Una sección sin subcategorías
+// devuelve un único grupo sin título y se ve igual que antes.
+function buildSubGroups(items: CatalogItem[]): SubGroup[] {
+  const groups: SubGroup[] = [];
+  for (const item of items) {
+    const title = item.subcategory?.trim() || null;
+    const current = groups.find((group) => group.title === title);
+    if (current) current.items.push(item);
+    else groups.push({ title, items: [item] });
+  }
+  return groups;
 }
 
 // La caja es cuadrada de 58 mm: a 300 dpi son ~685 px de lado. Se pide algo más
@@ -113,29 +138,36 @@ export async function CartaSheet({ withPhotos, showActions }: CartaSheetProps) {
                     <div className={styles.categoryBody}>
                       <h2 className={styles.categoryTitle}>{group.title}</h2>
                       {group.description && <p className={styles.categoryNote}>{group.description}</p>}
-                      <ul className={styles.items}>
-                        {group.items.map((item) => {
-                          const price = shouldDisplayCatalogPrice(item, settings.showCatalogPrices)
-                            ? formatCatalogPrice(item)
-                            : null;
-                          return (
-                            <li key={item.id} className={styles.item}>
-                              <div className={styles.itemRow}>
-                                <span className={styles.itemName}>{item.title}</span>
-                                <span className={styles.leader} aria-hidden="true" />
-                                {price ? (
-                                  <span className={styles.itemPrice}>{price}</span>
-                                ) : (
-                                  <span className={styles.itemInquiry}>Consultar</span>
-                                )}
-                              </div>
-                              {item.shortDescription && (
-                                <p className={styles.itemDescription}>{item.shortDescription}</p>
-                              )}
-                            </li>
-                          );
-                        })}
-                      </ul>
+                      {group.subGroups.map((subGroup) => (
+                        <div key={subGroup.title ?? "sin-subseccion"} className={styles.subGroup}>
+                          {subGroup.title && (
+                            <h3 className={styles.subCategoryTitle}>{subGroup.title}</h3>
+                          )}
+                          <ul className={styles.items}>
+                            {subGroup.items.map((item) => {
+                              const price = shouldDisplayCatalogPrice(item, settings.showCatalogPrices)
+                                ? formatCatalogPrice(item)
+                                : null;
+                              return (
+                                <li key={item.id} className={styles.item}>
+                                  <div className={styles.itemRow}>
+                                    <span className={styles.itemName}>{item.title}</span>
+                                    <span className={styles.leader} aria-hidden="true" />
+                                    {price ? (
+                                      <span className={styles.itemPrice}>{price}</span>
+                                    ) : (
+                                      <span className={styles.itemInquiry}>Consultar</span>
+                                    )}
+                                  </div>
+                                  {item.shortDescription && (
+                                    <p className={styles.itemDescription}>{item.shortDescription}</p>
+                                  )}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      ))}
                     </div>
                     {photos.length > 0 && (
                       <aside className={styles.categoryPhotos}>

@@ -115,6 +115,31 @@
   color: var(--ink-soft);
 }
 
+/* Segundo nivel: los subtítulos de cada carta (Clásicos, Triples…). Comparten
+   el verde de la sección pero con menos peso y sin el interletrado amplio, para
+   que la jerarquía se lea de un vistazo sin competir con el título. */
+.subGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.subGroup:first-of-type {
+  margin-top: 0;
+}
+
+.subCategoryTitle {
+  margin: 0 0 3px;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--clay);
+  break-after: avoid;
+}
+
 .items {
   margin: 0;
   padding: 0;

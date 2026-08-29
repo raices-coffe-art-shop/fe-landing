@@ -60,6 +60,13 @@
   color: #e4bb72;
 }
 
+/* La subsección acompaña al nombre de la carta con el mismo dorado, algo más
+   tenue, para que no compita con el título. */
+.subCategoryTitle {
+  color: rgba(228, 187, 114, 0.8);
+  font-weight: 500;
+}
+
 .categoryPage {
   color: rgba(228, 187, 114, 0.65);
 }

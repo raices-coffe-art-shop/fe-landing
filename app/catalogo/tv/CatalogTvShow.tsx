@@ -138,6 +138,9 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
                 <p className={styles.eyebrow}>La carta · Raíces</p>
                 <h2 className={styles.categoryTitle}>
                   {slide.categoryTitle}
+                  {slide.subCategoryTitle && (
+                    <span className={styles.subCategoryTitle}> · {slide.subCategoryTitle}</span>
+                  )}
                   {slide.pageCount > 1 && (
                     <span className={styles.categoryPage}> · {slide.page} de {slide.pageCount}</span>
                   )}
