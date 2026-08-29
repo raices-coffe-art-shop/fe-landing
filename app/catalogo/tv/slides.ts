@@ -1,5 +1,5 @@
 import type { CatalogCategory, CatalogItem } from "@/sanity/lib/catalogTypes";
-import { resolveCategoryImage } from "@/lib/categoryImage";
+import { assignSubGroupImages } from "@/lib/categoryImage";
 import { buildMenuSubGroups } from "@/lib/menuSubGroups";
 import { formatCatalogPrice, shouldDisplayCatalogPrice } from "@/sanity/lib/catalogShared";
 
@@ -58,11 +58,12 @@ export function buildTvSlides(
     const sortedItems = [...group.items].sort((a, b) => a.order - b.order);
     // La misma foto acompaña a todas las páginas de la categoría: así el layout
     // no cambia de forma entre una página y la siguiente.
-    const image = resolveCategoryImage(categoriesById.get(categoryId), sortedItems);
-
     // Se pagina por subsección, no solo por categoría: una pantalla nunca mezcla
     // "Triples" con "Especiales", igual que en la carta de papel.
     const subGroups = buildMenuSubGroups(sortedItems);
+    // Cada subsección recibe su propia foto para que las pantallas de una misma
+    // categoría no se vean todas iguales.
+    const subGroupImages = assignSubGroupImages(categoriesById.get(categoryId), subGroups);
 
     // El contador de páginas es por categoría para que la pantalla siga diciendo
     // "2 de 5" y no se reinicie en cada subsección.
@@ -72,7 +73,8 @@ export function buildTvSlides(
     );
     let page = 0;
 
-    for (const subGroup of subGroups) {
+    for (const [subGroupIndex, subGroup] of subGroups.entries()) {
+      const image = subGroupImages[subGroupIndex];
       const subPages = Math.ceil(subGroup.items.length / TV_MAX_ITEMS_PER_SLIDE);
       for (let subPage = 0; subPage < subPages; subPage += 1) {
       const pageItems = subGroup.items.slice(

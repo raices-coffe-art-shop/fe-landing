@@ -42,6 +42,43 @@ export function resolveCategoryImage(
   return resolveCategoryPhotos(category?.image, items, 1)[0] ?? null;
 }
 
+// En la pantalla del local cada subsección es una pantalla propia, así que
+// repetir la misma foto en las cuatro de Café resulta monótono. Se reparten las
+// fotos disponibles de la categoría: cada subsección se queda primero con una
+// suya y, si no tiene ninguna, toma la siguiente sin usar. Solo cuando se
+// agotan se vuelve a repetir.
+export function assignSubGroupImages<T extends { items: readonly PhotoSource[] }>(
+  category: Pick<CatalogCategory, "image"> | undefined,
+  subGroups: readonly T[],
+): Array<CatalogImage | null> {
+  const pool = resolveCategoryPhotos(
+    category?.image,
+    subGroups.flatMap((subGroup) => [...subGroup.items]),
+    subGroups.length + 2,
+  );
+  const used = new Set<string>();
+
+  const own = subGroups.map((subGroup) => {
+    const image = resolveCategoryPhotos(undefined, subGroup.items, 1)[0] ?? null;
+    if (image && image.src !== CATALOG_FALLBACK_IMAGE_SRC && !used.has(image.src)) {
+      used.add(image.src);
+      return image;
+    }
+    return null;
+  });
+
+  return own.map((image) => {
+    if (image) return image;
+    const spare = pool.find((candidate) => !used.has(candidate.src));
+    if (spare) {
+      used.add(spare.src);
+      return spare;
+    }
+    // Sin fotos libres: se reutiliza la de la categoría antes que dejar el hueco.
+    return pool[0] ?? category?.image ?? null;
+  });
+}
+
 // Las fotos de producto llegan a tamaño de ficha (1200x1400). En la carta se
 // imprimen a 58 mm y en la TV ocupan una franja lateral, así que se pide al CDN
 // una versión proporcionada: un PDF de carta liviano se comparte por WhatsApp
