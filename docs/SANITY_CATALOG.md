@@ -68,6 +68,37 @@ Solo 5 productos tienen fotografía propia (Espresso, Café Pasado, Cappuccino, 
 Chocolate). El resto queda sin foto hasta que el cliente la suba desde el Studio: la imagen principal
 ya no es obligatoria, así que el producto no aparece como incompleto.
 
+## Secciones y subsecciones de la carta
+
+La carta funciona en dos niveles, igual que las cartas en papel del cliente:
+
+- **Sección** = la categoría del producto (Café, Sándwiches, Bebidas Andinas…).
+- **Subsección** = el campo **Subcategoría** del producto (Clásicos, Con Leche, Triples…).
+
+Para añadir un producto en el lugar correcto basta con elegir su categoría y escribir la subcategoría
+tal como debe verse en la carta. El orden de las subsecciones lo define el campo **Orden** de los
+productos: la primera subsección que aparece es la del producto con menor número.
+
+Los subtítulos solo se muestran cuando la sección tiene una estructura real de subsecciones (al menos
+dos, con dos productos de media). Así, categorías como Alimentos o Para llevar —donde la subcategoría
+es solo una etiqueta suelta por producto— siguen viéndose como una lista simple.
+
+## Cartas de agosto 2026
+
+Se cargaron con dos scripts, en este orden:
+
+```bash
+npm run carta:migrate      # café y chocolatería (17 productos, 5 fotos)
+npm run cartas:migrate     # sándwiches, bebidas andinas y reorganización a dos niveles
+```
+
+El segundo script además reagrupa los 15 cafés bajo la sección **Café**, renombra la chocolatería y
+corrige el origen del cacao: la productora es la **Ing. Agroforestal Dina Torres Barboza**, de
+Agroindustrias Campos del Valle (el PDF anterior decía "Dina Campos", confundiendo su apellido con el
+nombre de la empresa). Las cuatro categorías antiguas de café quedaron ocultas, no borradas.
+
+Ambos scripts son repetibles y no pisan lo que el equipo edite en el Studio.
+
 ## Webhook
 
 Actualiza el webhook existente con el filtro y proyección documentados en `sanity/WEBHOOKS.md`. Debe responder a:
