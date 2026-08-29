@@ -1,5 +1,6 @@
 import type { CatalogCategory, CatalogItem } from "@/sanity/lib/catalogTypes";
 import { resolveCategoryImage } from "@/lib/categoryImage";
+import { buildMenuSubGroups } from "@/lib/menuSubGroups";
 import { formatCatalogPrice, shouldDisplayCatalogPrice } from "@/sanity/lib/catalogShared";
 
 // Con la foto lateral la lista dispone de menos ancho y alto útil: 5 productos
@@ -61,13 +62,7 @@ export function buildTvSlides(
 
     // Se pagina por subsección, no solo por categoría: una pantalla nunca mezcla
     // "Triples" con "Especiales", igual que en la carta de papel.
-    const subGroups: Array<{ title: string | null; items: CatalogItem[] }> = [];
-    for (const item of sortedItems) {
-      const title = item.subcategory?.trim() || null;
-      const current = subGroups.find((subGroup) => subGroup.title === title);
-      if (current) current.items.push(item);
-      else subGroups.push({ title, items: [item] });
-    }
+    const subGroups = buildMenuSubGroups(sortedItems);
 
     // El contador de páginas es por categoría para que la pantalla siga diciendo
     // "2 de 5" y no se reinicie en cada subsección.

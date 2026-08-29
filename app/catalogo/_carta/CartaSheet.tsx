@@ -8,6 +8,7 @@ import { getSiteSettings } from "@/sanity/lib/siteSettings";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { resizeCatalogImage, resolveCategoryPhotos } from "@/lib/categoryImage";
 import { filterPrintedMenuItems } from "@/lib/printedMenu";
+import { buildMenuSubGroups } from "@/lib/menuSubGroups";
 import { PrintActions } from "./PrintActions";
 import styles from "./carta.module.css";
 
@@ -52,24 +53,8 @@ function groupByCategory(items: CatalogItem[]): CategoryGroup[] {
     .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"))
     .map((group) => {
       const items = [...group.items].sort((a, b) => a.order - b.order);
-      return { ...group, items, subGroups: buildSubGroups(items) };
+      return { ...group, items, subGroups: buildMenuSubGroups(items) };
     });
-}
-
-// Segundo nivel de la carta: cada sección puede traer sus propios subtítulos
-// ("Clásicos", "Triples"…), tal como vienen en las cartas del cliente. Se
-// derivan del campo Subcategoría respetando el orden de los productos, así el
-// equipo controla la secuencia desde el Studio. Una sección sin subcategorías
-// devuelve un único grupo sin título y se ve igual que antes.
-function buildSubGroups(items: CatalogItem[]): SubGroup[] {
-  const groups: SubGroup[] = [];
-  for (const item of items) {
-    const title = item.subcategory?.trim() || null;
-    const current = groups.find((group) => group.title === title);
-    if (current) current.items.push(item);
-    else groups.push({ title, items: [item] });
-  }
-  return groups;
 }
 
 // La caja es cuadrada de 58 mm: a 300 dpi son ~685 px de lado. Se pide algo más
