@@ -1,0 +1,318 @@
+{
+  "origenes": {
+    "cafe": {
+      "historia": "En mi búsqueda por un grano que represente a Ayacucho, a su gente resiliente y a su profunda historia, encontré el auténtico café ayacuchano. Me contacté con Pedrito y, tras varias charlas compartiendo la misma visión y corazón, fue el primero en darme la mano: «¡Adelante hermano, siga con su proyecto!». Lo que más atesoro de aquellas primeras conversaciones es que nacieron en quechua, con Lized como puente y traductora.",
+      "ficha": "Finca La Fortuna de Pedro · Nueva Unión, Ayna - San Francisco (VRAEM, Ayacucho). Variedad: blend de Caturra y Bourbon, cultivado entre 1,600 y 2,000 m.s.n.m. Puntaje SCA: 84 – 86 puntos (café de especialidad).",
+      "cata": "Notas de cata: cacao puro, caramelo, frutos secos y delicadas notas a frutos amarillos. Perfil: acidez brillante, dulzor natural y cuerpo balanceado con posgusto prolongado."
+    },
+    "cacao": {
+      "historia": "Nuestro chocolate proviene directamente del VRAEM, cosechado en la finca de la Ing. Agroforestal Dina Torres Barboza, representante de Agroindustrias Campos del Valle en Pichari (Cusco). Decidimos trabajar juntos no solo por la altísima calidad y pureza de su cacao fino de aroma, sino por su profundo compromiso familiar, social y su labor junto a la comunidad Asháninka.",
+      "ficha": "Cacao puro fino de aroma · Pichari, VRAEM (Cusco, Perú). Productora: Ing. Agroforestal Dina Torres Barboza, de Agroindustrias Campos del Valle. Trabajo social: comunidad Asháninka.",
+      "cata": "«Con nuestro trabajo queremos proveer una educación y vivienda digna para nuestros hijos y comunidad.» Perfil sensorial: intenso sabor a chocolate puro, notas tostadas, untuosidad sedosa y dulzor natural."
+    },
+    "sandwiches": {
+      "historia": "Para nosotros, un buen sándwich empieza con respeto a la tierra, su historia y a quienes la trabajan. En nuestro recorrido por Ayacucho aprendimos que el pan chapla no es solo un acompañamiento: es identidad viva.",
+      "ficha": "Pan chapla horneado por la Sra. Karen Córdova, de la panadería Kullany Pan, con quesos artesanales de David Meneses y palta ayacuchana en temporada.",
+      "cata": ""
+    },
+    "andinas": {
+      "historia": "Nuestras bebidas tradicionales calientes, endulzadas con el sabor de los Andes, cocinadas a fuego lento con canela, clavo de olor e insumos autóctonos que reconfortan el cuerpo y el espíritu desde la primera hora del día.",
+      "ficha": "Nutrición andina ancestral · bebidas artesanales elaboradas en el local.",
+      "cata": ""
+    }
+  },
+  "categories": [
+    {
+      "slug": "bebidas-andinas",
+      "title": "Bebidas Andinas",
+      "order": 30,
+      "description": "Bebidas tradicionales calientes, cocinadas a fuego lento con canela, clavo de olor e insumos autóctonos.",
+      "showInPrintedMenu": true
+    },
+    {
+      "slug": "sandwiches",
+      "title": "Sándwiches",
+      "order": 40,
+      "description": "Pan chapla de la panadería Kullany Pan, quesos artesanales de David Meneses y palta ayacuchana en temporada.",
+      "showInPrintedMenu": true
+    }
+  ],
+  "categoryUpdates": [
+    {
+      "slug": "clasicos",
+      "title": "Café",
+      "newSlug": "cafe",
+      "order": 10,
+      "description": "Café de especialidad de la Finca La Fortuna de Pedro, en Ayna - San Francisco. Todos nuestros cafés vienen acompañados de un mini alfajor tipo gouraud francés.",
+      "showInPrintedMenu": true
+    },
+    {
+      "slug": "bebidas-de-chocolate",
+      "title": "Chocolatería",
+      "newSlug": "chocolateria",
+      "order": 20,
+      "description": "Cacao puro fino de aroma de Pichari, VRAEM, cosechado por la Ing. Agroforestal Dina Torres Barboza.",
+      "showInPrintedMenu": true
+    },
+    { "slug": "alimentos", "order": 50, "showInPrintedMenu": true },
+    { "slug": "cafe-y-cacao", "order": 60, "showInPrintedMenu": true },
+    { "slug": "arte", "order": 70, "showInPrintedMenu": false },
+    { "slug": "filtrados-y-metodos", "isVisible": false },
+    { "slug": "con-leche", "isVisible": false },
+    { "slug": "opciones-frias", "isVisible": false }
+  ],
+  "reassign": [
+    { "slug": "espresso", "categorySlug": "clasicos", "subcategory": "Clásicos", "order": 10 },
+    { "slug": "americano", "categorySlug": "clasicos", "subcategory": "Clásicos", "order": 20 },
+    { "slug": "cafe-pasado", "categorySlug": "clasicos", "subcategory": "Clásicos", "order": 30 },
+    { "slug": "cafe-moka", "categorySlug": "clasicos", "subcategory": "Clásicos", "order": 40 },
+    { "slug": "cafe-francesa", "categorySlug": "clasicos", "subcategory": "Filtrados & Métodos", "order": 50 },
+    { "slug": "cafe-v60", "categorySlug": "clasicos", "subcategory": "Filtrados & Métodos", "order": 60 },
+    { "slug": "cappuccino", "categorySlug": "clasicos", "subcategory": "Con Leche", "order": 70 },
+    { "slug": "latte", "categorySlug": "clasicos", "subcategory": "Con Leche", "order": 80 },
+    { "slug": "cafe-con-leche", "categorySlug": "clasicos", "subcategory": "Con Leche", "order": 90 },
+    { "slug": "cortado-macchiato", "categorySlug": "clasicos", "subcategory": "Con Leche", "order": 100 },
+    { "slug": "flat-white-llampu", "categorySlug": "clasicos", "subcategory": "Con Leche", "order": 110 },
+    { "slug": "chiri-muxsa", "categorySlug": "clasicos", "subcategory": "Opciones Frías", "order": 120 },
+    { "slug": "ice-latte", "categorySlug": "clasicos", "subcategory": "Opciones Frías", "order": 130 },
+    { "slug": "ice-americano", "categorySlug": "clasicos", "subcategory": "Opciones Frías", "order": 140 },
+    { "slug": "cold-brew", "categorySlug": "clasicos", "subcategory": "Opciones Frías", "order": 150 },
+    { "slug": "qoni-chocolate", "categorySlug": "bebidas-de-chocolate", "order": 10, "origen": "cacao" },
+    { "slug": "chiri-chocolate", "categorySlug": "bebidas-de-chocolate", "order": 20, "origen": "cacao" }
+  ],
+  "products": [
+    {
+      "slug": "quinua-frutada-especial",
+      "title": "Quinua Frutada Especial",
+      "categorySlug": "bebidas-andinas",
+      "subcategory": "Todos los días",
+      "order": 10,
+      "price": 5,
+      "shortDescription": "Nuestra quinua acompañada de piña, durazno, manzana y chancaca, aromatizada con canela y clavo de olor.",
+      "origen": "andinas",
+      "isFeatured": true
+    },
+    {
+      "slug": "avena-tradicional",
+      "title": "Avena Tradicional",
+      "categorySlug": "bebidas-andinas",
+      "subcategory": "Todos los días",
+      "order": 20,
+      "price": 4,
+      "shortDescription": "Reconfortante, cremosa y con el toque perfecto de especerías andinas.",
+      "origen": "andinas"
+    },
+    {
+      "slug": "maca",
+      "title": "Maca",
+      "categorySlug": "bebidas-andinas",
+      "subcategory": "Especiales interdiarios",
+      "order": 30,
+      "price": 5,
+      "shortDescription": "Pura energía natural y vigorizante para empezar bien el día.",
+      "origen": "andinas"
+    },
+    {
+      "slug": "ponche-de-mani",
+      "title": "Ponche de Maní",
+      "categorySlug": "bebidas-andinas",
+      "subcategory": "Especiales interdiarios",
+      "order": 40,
+      "price": 5,
+      "shortDescription": "Delicioso, cremoso y reconfortante, elaborado con maní tostado y un toque andino de especias.",
+      "origen": "andinas"
+    },
+    {
+      "slug": "siete-semillas",
+      "title": "Siete Semillas",
+      "categorySlug": "bebidas-andinas",
+      "subcategory": "Especiales interdiarios",
+      "order": 50,
+      "price": 4,
+      "shortDescription": "Nutritiva y tradicional mezcla andina de granos tostados y molidos, reconfortante y llena de vitalidad.",
+      "origen": "andinas"
+    },
+    {
+      "slug": "leche-de-soya-natural",
+      "title": "Leche de Soya Natural",
+      "categorySlug": "bebidas-andinas",
+      "subcategory": "Especiales interdiarios",
+      "order": 60,
+      "price": 4,
+      "shortDescription": "Ligera, nutritiva, 100% vegetal y suavemente especiada.",
+      "origen": "andinas"
+    },
+    {
+      "slug": "ponche-de-habas",
+      "title": "Ponche de Habas",
+      "categorySlug": "bebidas-andinas",
+      "subcategory": "Especiales interdiarios",
+      "order": 70,
+      "price": 4,
+      "shortDescription": "Espeso, altamente reconstituyente y con un sabor andino tradicional inigualable.",
+      "origen": "andinas"
+    },
+
+    {
+      "slug": "sandwich-quesos-aromatizados",
+      "title": "Quesos Aromatizados",
+      "categorySlug": "sandwiches",
+      "subcategory": "Clásicos",
+      "order": 10,
+      "price": 5,
+      "shortDescription": "Huacatay, aceitunas, orégano y queso fresco.",
+      "origen": "sandwiches",
+      "isFeatured": true
+    },
+    {
+      "slug": "sandwich-palta",
+      "title": "Palta",
+      "categorySlug": "sandwiches",
+      "subcategory": "Clásicos",
+      "order": 20,
+      "price": 4,
+      "shortDescription": "Cremosa palta fresca seleccionada con su toque de sal.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "sandwich-huevo-frito",
+      "title": "Huevo Frito",
+      "categorySlug": "sandwiches",
+      "subcategory": "Clásicos",
+      "order": 30,
+      "price": 5,
+      "shortDescription": "El clásico reconfortante preparado al momento.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "sandwich-anchoveta",
+      "title": "Anchoveta",
+      "categorySlug": "sandwiches",
+      "subcategory": "Clásicos",
+      "order": 40,
+      "price": 16,
+      "shortDescription": "Ligero desmenuzado, sazonado al momento con su salsa criolla.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "sandwich-mani-energetico-platano",
+      "title": "Maní Energético & Plátano",
+      "categorySlug": "sandwiches",
+      "subcategory": "Nuestras combinaciones",
+      "order": 50,
+      "price": 9,
+      "shortDescription": "Mantequilla de maní artesanal y rodajas de plátano fresco, coronado con tu elección de mermelada o miel de abeja pura.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "sandwich-jamon-y-queso",
+      "title": "Jamón y Queso",
+      "categorySlug": "sandwiches",
+      "subcategory": "Nuestras combinaciones",
+      "order": 60,
+      "price": 9,
+      "shortDescription": "Tostado y calentito al punto perfecto.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "sandwich-palta-con-pollo",
+      "title": "Palta con Pollo",
+      "categorySlug": "sandwiches",
+      "subcategory": "Nuestras combinaciones",
+      "order": 70,
+      "price": 14,
+      "shortDescription": "Delicioso pollo al horno deshilachado combinado con láminas de palta cremosa.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "sandwich-caprese-andino",
+      "title": "Caprese Andino",
+      "categorySlug": "sandwiches",
+      "subcategory": "Nuestras combinaciones",
+      "order": 80,
+      "price": 12,
+      "shortDescription": "Rodajas de queso mozzarella, tomate, aceite de oliva y albahaca.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "sandwich-cerdo-al-horno",
+      "title": "Cerdo al Horno",
+      "categorySlug": "sandwiches",
+      "subcategory": "Los especiales",
+      "order": 90,
+      "price": 18,
+      "shortDescription": "Jugoso cerdo horneado laminado, acompañado de lechuga, tomate y salsa criolla.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "sandwich-pollo-al-horno",
+      "title": "Pollo al Horno",
+      "categorySlug": "sandwiches",
+      "subcategory": "Los especiales",
+      "order": 100,
+      "price": 16,
+      "shortDescription": "Pollo deshilachado acompañado de lechuga, pepino, tomate, papas al hilo y cremas.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "hamburguesa-angus-premium",
+      "title": "Hamburguesa Angus Premium",
+      "categorySlug": "sandwiches",
+      "subcategory": "Los especiales",
+      "order": 110,
+      "price": 22,
+      "shortDescription": "Carne de res Angus jugosa en su punto, acompañada de lechuga, tomate, papas al hilo y cremas.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "sandwich-tilapia",
+      "title": "Tilapia",
+      "categorySlug": "sandwiches",
+      "subcategory": "Los especiales",
+      "order": 120,
+      "price": 17,
+      "shortDescription": "Filete ligero acompañado de lechuga, tomate y salsa criolla.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "triple-pollo-jamon-queso",
+      "title": "Pollo, Jamón y Queso",
+      "categorySlug": "sandwiches",
+      "subcategory": "Triples",
+      "order": 130,
+      "price": 13,
+      "shortDescription": "Combinación de jamón, pollo deshilachado con mayonesa y láminas de queso paria.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "triple-pollo-jamon-durazno",
+      "title": "Pollo, Jamón y Durazno",
+      "categorySlug": "sandwiches",
+      "subcategory": "Triples",
+      "order": 140,
+      "price": 14,
+      "shortDescription": "Pollo deshilachado mezclado con mayonesa, jamón y láminas de durazno en conserva.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "triple-palta-huevo-tomate",
+      "title": "Clásico de Palta, Huevo y Tomate",
+      "categorySlug": "sandwiches",
+      "subcategory": "Triples",
+      "order": 150,
+      "price": 10,
+      "shortDescription": "Capas de huevo picado con mayonesa, rodajas de tomate y láminas de palta.",
+      "origen": "sandwiches"
+    },
+    {
+      "slug": "triple-aceitunas-palta-huevo",
+      "title": "Aceitunas, Palta y Huevo",
+      "categorySlug": "sandwiches",
+      "subcategory": "Triples",
+      "order": 160,
+      "price": 11,
+      "shortDescription": "Incluye aceitunas negras picadas, láminas de queso paria, palta y huevo.",
+      "origen": "sandwiches"
+    }
+  ]
+}

@@ -13,6 +13,8 @@
     "catalog:migrate": "node --env-file=.env.local scripts/migrate-catalog.mjs",
     "carta:migrate:dry": "node --env-file=.env.local scripts/migrate-carta-2026.mjs --dry-run",
     "carta:migrate": "node --env-file=.env.local scripts/migrate-carta-2026.mjs",
+    "cartas:migrate:dry": "node --env-file=.env.local scripts/migrate-cartas-2026b.mjs --dry-run",
+    "cartas:migrate": "node --env-file=.env.local scripts/migrate-cartas-2026b.mjs",
     "sanity:verify-read": "node scripts/verify-sanity-read.mjs",
     "sanity:backfill-price-visibility": "node scripts/backfill-price-visibility.mjs",
     "sanity:backfill-social-links": "node scripts/backfill-official-social-links.mjs",
