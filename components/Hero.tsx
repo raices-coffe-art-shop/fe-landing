@@ -1,10 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { heroImages } from "@/data/heroImages";
 import styles from "./Hero.module.css";
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+
+function heroFocalPosition(position?: string) {
+  const parts = (position || "50% 50%").trim().split(/\s+/);
+  const normalize = (value: string | undefined, axis: "x" | "y") => {
+    if (!value || value === "center") return "50%";
+    if (axis === "x" && value === "left") return "0%";
+    if (axis === "x" && value === "right") return "100%";
+    if (axis === "y" && value === "top") return "0%";
+    if (axis === "y" && value === "bottom") return "100%";
+    return value;
+  };
+  return { x: normalize(parts[0], "x"), y: normalize(parts[1], "y") };
+}
 
 
 function shuffleImages() {
@@ -183,11 +196,16 @@ export function Hero() {
         <div className={styles.scene} aria-hidden="true">
           {visibleImageIndexes.map((index) => {
             const image = images[index];
+            const focal = heroFocalPosition(image.linksPosition);
             return (
               <div
                 key={image.src}
                 className={`${styles.sceneImage} ${activeImage === index ? styles.isActive : ""}`}
-                style={{ backgroundImage: `url("${image.src}")` }}
+                style={{
+                  backgroundImage: `url("${image.src}")`,
+                  "--ay-image-x": focal.x,
+                  "--ay-image-y": focal.y,
+                } as CSSProperties}
               />
             );
           })}
@@ -212,12 +230,17 @@ export function Hero() {
         <div ref={wordRef} className={styles.word} aria-hidden="true">
           {visibleImageIndexes.map((index) => {
             const image = images[index];
+            const focal = heroFocalPosition(image.linksPosition);
             return (
               <span
                 key={image.src}
                 className={`${styles.wordImage} ${activeImage === index ? styles.isActive : ""}`}
                 data-word="AYACUCHO"
-                style={{ backgroundImage: `url("${image.src}")` }}
+                style={{
+                  backgroundImage: `url("${image.src}")`,
+                  "--ay-image-x": focal.x,
+                  "--ay-image-y": focal.y,
+                } as CSSProperties}
               >
                 AYACUCHO
               </span>

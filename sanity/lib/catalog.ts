@@ -205,11 +205,19 @@ function normalizeItem(item: SanityCatalogItem): CatalogItem | null {
   };
 }
 
+function isRetiredLegacyArtItem(item: CatalogItem) {
+  return (
+    item.category.slug === "arte" &&
+    item.subcategory?.trim().toLocaleLowerCase("es") === "pinturas y cuadros" &&
+    item.region?.trim().toLocaleLowerCase("es") === "raíces · lima"
+  );
+}
+
 function normalizeItems(items: SanityCatalogItem[] | null | undefined) {
   return (items || [])
     .map(normalizeItem)
     .filter((item): item is CatalogItem => item !== null)
-    .filter((item) => item.isActive && item.category.isVisible)
+    .filter((item) => item.isActive && item.category.isVisible && !isRetiredLegacyArtItem(item))
     .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"));
 }
 
@@ -273,7 +281,7 @@ export const getCatalogItemBySlug = cache(async (slug: string): Promise<CatalogI
       fetchOptions([CATALOG_TAG, catalogItemTag(slug)]),
     );
     const normalized = item ? normalizeItem(item) : null;
-    return normalized?.isActive && normalized.category.isVisible
+    return normalized?.isActive && normalized.category.isVisible && !isRetiredLegacyArtItem(normalized)
       ? normalized
       : getFallbackCatalogItemBySlug(slug);
   } catch (error) {
