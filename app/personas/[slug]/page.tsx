@@ -5,6 +5,7 @@ import { people } from "@/data/site";
 import { baseOpenGraph } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
+import { NextPersonStory } from "@/components/NextPersonStory";
 
 export function generateStaticParams() {
   return people.map((person) => ({ slug: person.slug }));
@@ -98,16 +99,14 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
           ))}
         </section>
 
-        <section className="next-story">
-          <div className="page-shell">
-            <p>Siguiente historia</p>
-            <Link href={`/personas/${nextPerson.slug}`}>
-              <span>{nextPerson.category}</span>
-              <h2>{nextPerson.name}</h2>
-              <i>↗</i>
-            </Link>
-          </div>
-        </section>
+        <NextPersonStory
+          person={{
+            slug: nextPerson.slug,
+            name: nextPerson.name,
+            category: nextPerson.category,
+            image: nextPerson.portraitGallery?.[0],
+          }}
+        />
       </main>
       <Footer />
     </>

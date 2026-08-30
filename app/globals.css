@@ -7217,7 +7217,7 @@ img { max-width: 100%; }
 }
 
 .lexicon-sticky-stage.is-active [data-lexicon-appearance] {
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
 }
 
 .lexicon-texture,
@@ -12350,6 +12350,213 @@ img { max-width: 100%; }
   .links-hero-arrow,
   .links-hero-dots button {
     transition: none;
+  }
+}
+
+/* V26 — remove the two large paint bottlenecks reported on the home page. */
+.history-section::before {
+  background-image:
+    linear-gradient(112deg, transparent 0 34%, rgba(91,70,51,.14) 34.1% 34.22%, transparent 34.35%),
+    linear-gradient(68deg, transparent 0 72%, rgba(91,70,51,.1) 72.08% 72.2%, transparent 72.34%);
+}
+
+.people-stack-section {
+  transition: none;
+}
+
+.people-stack-section::after {
+  opacity: .075;
+  background-image: radial-gradient(rgba(245,237,225,.2) .55px, transparent .7px);
+  background-size: 19px 19px;
+}
+
+.stack-person-card {
+  transform: none;
+  will-change: auto;
+}
+
+.stack-card-shade {
+  display: none;
+}
+
+.stack-person-visual,
+.stack-photo-media {
+  will-change: opacity, transform;
+}
+
+/* V27 — legibilidad editorial en Personas. */
+@media (min-width: 761px) {
+  .stack-card-topline {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .stack-person-role {
+    font-size: 11px;
+    letter-spacing: .15em;
+  }
+
+  .stack-person-summary {
+    max-width: 39ch;
+    font-size: clamp(15px, 1.05vw, 17px);
+    line-height: 1.65;
+  }
+
+  .stack-card-footer {
+    font-size: 10.5px;
+  }
+}
+
+.person-story aside > .eyebrow {
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .2em;
+}
+
+.person-story dl {
+  margin-top: 28px;
+}
+
+.person-story dl div {
+  padding: 19px 0;
+}
+
+.person-story dt {
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .14em;
+}
+
+.person-story dd {
+  margin-top: 9px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* Siguiente historia: the portrait follows fine-pointer cursors like products. */
+.person-next-story {
+  position: relative;
+  overflow: visible;
+}
+
+.person-next-preview {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  width: clamp(230px, 20vw, 330px);
+  aspect-ratio: .82;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: 0 24px 65px rgba(0,0,0,.42);
+  transition: opacity .16s ease;
+  will-change: transform, opacity;
+}
+
+.person-next-preview.is-visible {
+  opacity: 1;
+}
+
+.person-next-preview img,
+.person-next-mobile-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.person-next-preview > span {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  padding: 10px 12px;
+  background: rgba(31,27,24,.84);
+  color: #fff8ed;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.person-next-mobile-image {
+  display: none;
+}
+
+/* V28 — prevent GPU tile exhaustion on long bidirectional scrolls.
+   The main root remains visible; only full-page filtered shadow surfaces go. */
+.continuous-root-shadow {
+  display: none;
+}
+
+.continuous-root-branch,
+.continuous-root-child-branch,
+.continuous-root-branch[data-root-branch-id*="-mini-"] {
+  filter: none;
+}
+
+.continuous-root-trail svg {
+  overflow: hidden;
+}
+
+.lexicon-root-layer {
+  transform: none;
+}
+
+.lexicon-root-layer .lexicon-roots {
+  filter: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.hero-sticky,
+.history-section,
+.lexicon-sticky-stage,
+.people-stack-section {
+  backface-visibility: visible;
+}
+
+/* The closing logo is no longer animated with blur; keeping the old base
+   filter made it remain soft after reaching its final position. */
+.lexicon-closing-logo {
+  filter: none;
+}
+
+.brand-logo,
+.lexicon-closing-logo img {
+  image-rendering: auto;
+  transform: translateZ(0);
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 760px) {
+  .person-next-preview { display: none; }
+  .person-next-mobile-image {
+    display: block;
+    grid-column: 1 / -1;
+    width: min(100%, 420px);
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+}
+
+/* V25 — cheaper compositor paths for the two heaviest scroll chapters. */
+.stack-person-card {
+  backface-visibility: hidden;
+}
+
+.stack-card-shade,
+.stack-photo-grain {
+  will-change: auto;
+}
+
+.people-stack-section::after {
+  background-attachment: scroll;
+}
+
+@media (max-width: 1180px) {
+  .lexicon-grid-item,
+  .lexicon-special,
+  .lexicon-closing-logo {
+    filter: none;
   }
 }
 

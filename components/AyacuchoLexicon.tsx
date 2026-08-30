@@ -41,6 +41,7 @@ type AnimatedLexiconElement = {
   animation: Animation;
   start: number;
   end: number;
+  lastPhase: number;
 };
 
 const cellSequence: Array<[LexiconWordAppearance["row"], LexiconWordAppearance["column"]]> = [
@@ -117,11 +118,13 @@ function blurForWidth(width: number) {
 }
 
 function createDepthAnimation(element: HTMLElement, depth: number, blur: number) {
+  // `filter: blur()` on every word forced large repaints while scrolling.
+  // Depth and opacity preserve the visual transition on compositor layers.
   const animation = element.animate(
     [
-      { transform: `translate3d(0, 0, ${-depth}px)`, opacity: 0, filter: `blur(${blur}px)` },
-      { transform: "translate3d(0, 0, 0)", opacity: 1, filter: "blur(0px)", offset: 0.5 },
-      { transform: `translate3d(0, 0, ${depth}px)`, opacity: 0, filter: `blur(${blur}px)` },
+      { transform: `translate3d(0, 0, ${-depth}px) scale(.985)`, opacity: 0 },
+      { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1, offset: 0.5 },
+      { transform: `translate3d(0, 0, ${depth}px) scale(1.015)`, opacity: 0 },
     ],
     { duration: 1000, fill: "both", easing: "linear" }
   );
@@ -136,9 +139,9 @@ function createClosingRaicesAnimation(element: HTMLElement) {
   // la perspectiva podía recortar letras y dejar visible solo el centro.
   const animation = element.animate(
     [
-      { transform: "translate3d(0, 18px, 0) scale(.84)", opacity: 0, filter: "blur(7px)" },
-      { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1, filter: "blur(0px)", offset: 0.5 },
-      { transform: "translate3d(0, -10px, 0) scale(1.12)", opacity: 0, filter: "blur(5px)" },
+      { transform: "translate3d(0, 18px, 0) scale(.84)", opacity: 0 },
+      { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1, offset: 0.5 },
+      { transform: "translate3d(0, -10px, 0) scale(1.12)", opacity: 0 },
     ],
     { duration: 1000, fill: "both", easing: "linear" }
   );
@@ -151,9 +154,9 @@ function createClosingRaicesAnimation(element: HTMLElement) {
 function createLogoAnimation(element: HTMLElement) {
   const animation = element.animate(
     [
-      { transform: "translate3d(0, 14px, 0) scale(.94)", opacity: 0, filter: "blur(4px)" },
-      { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1, filter: "blur(0px)", offset: 0.5 },
-      { transform: "translate3d(0, -10px, 0) scale(.96)", opacity: 0, filter: "blur(5px)" },
+      { transform: "translate3d(0, 14px, 0) scale(.94)", opacity: 0 },
+      { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1, offset: 0.5 },
+      { transform: "translate3d(0, -10px, 0) scale(.96)", opacity: 0 },
     ],
     { duration: 1000, fill: "both", easing: "linear" }
   );
@@ -200,6 +203,7 @@ export function AyacuchoLexicon() {
             : createDepthAnimation(element, depthRef.current, blurRef.current),
         start: Number(element.dataset.start ?? 0),
         end: Number(element.dataset.end ?? 1),
+        lastPhase: -1,
       }));
     };
 
@@ -269,8 +273,11 @@ export function AyacuchoLexicon() {
 
       stage.style.setProperty("--lexicon-progress", progress.toFixed(4));
 
-      animatedRef.current.forEach(({ animation, start, end }) => {
+      animatedRef.current.forEach((item) => {
+        const { animation, start, end } = item;
         const phase = clamp((progress - start) / Math.max(0.001, end - start));
+        if (Math.abs(phase - item.lastPhase) < 0.0015) return;
+        item.lastPhase = phase;
         animation.currentTime = phase * 1000;
       });
     };
