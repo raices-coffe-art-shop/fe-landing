@@ -132,3 +132,5 @@ temp/
 *.tsbuildinfo
 /.codex-backup/
 /_revision_zips/
+
+tsconfig.tsbuildinfo
