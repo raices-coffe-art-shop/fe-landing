@@ -13,36 +13,36 @@ export const heroImages: HeroImage[] = [
   {
     src: "/ayacucho-sacsamarca.webp",
     alt: "Paisaje de Sacsamarca en Ayacucho",
-    linksPosition: "center 50%",
+    linksPosition: "50% 50%",
   },
   {
     src: "/ayacucho-hero-1.jpg",
     alt: "Vista aérea de la plaza principal de Ayacucho",
-    linksPosition: "center 52%",
+    linksPosition: "50% 52%",
   },
   {
     src: "/ayacucho-hero-2.jpeg",
     alt: "Piscinas naturales turquesas entre formaciones rocosas",
-    linksPosition: "center 54%",
+    linksPosition: "50% 54%",
   },
   {
     src: "/ayacucho-hero-3.webp",
     alt: "Valle ayacuchano rodeado de montañas",
-    linksPosition: "center 48%",
+    linksPosition: "50% 48%",
   },
   {
     src: "/ayacucho-hero-4.webp",
     alt: "Cañón rocoso con pozas de agua turquesa",
-    linksPosition: "center 52%",
+    linksPosition: "50% 52%",
   },
   {
     src: "/ayacucho-hero-5.webp",
     alt: "Campos andinos bajo un cielo nublado",
-    linksPosition: "center 50%",
+    linksPosition: "50% 50%",
   },
   {
     src: "/ayacucho-hero-6.webp",
     alt: "Persona observando terrazas agrícolas en los Andes",
-    linksPosition: "center 46%",
+    linksPosition: "50% 46%",
   },
 ];

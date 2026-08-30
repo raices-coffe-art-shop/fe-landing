@@ -42,8 +42,8 @@
   background-repeat: no-repeat;
   background-size: var(--ay-bg-size);
   background-position:
-    calc(50% + var(--ay-scene-shift-x))
-    calc(50% + var(--ay-scene-shift-y));
+    calc(var(--ay-image-x, 50%) + var(--ay-scene-shift-x))
+    calc(var(--ay-image-y, 50%) + var(--ay-scene-shift-y));
   transition: opacity 1.25s cubic-bezier(.22,.61,.36,1), filter 1.25s ease;
   filter: saturate(.88) contrast(1.03);
   will-change: auto;
@@ -146,8 +146,8 @@
   background-repeat: no-repeat;
   background-size: var(--ay-bg-size);
   background-position:
-    calc(50% + var(--ay-scene-shift-x) + var(--ay-word-drift-x))
-    calc(50% + var(--ay-scene-shift-y) + var(--ay-word-drift-y));
+    calc(var(--ay-image-x, 50%) + var(--ay-scene-shift-x) + var(--ay-word-drift-x))
+    calc(var(--ay-image-y, 50%) + var(--ay-scene-shift-y) + var(--ay-word-drift-y));
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-stroke: 1px rgba(255,248,237,var(--ay-word-stroke));

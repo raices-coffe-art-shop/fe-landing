@@ -135,6 +135,7 @@ const productSeed: FallbackProduct[] = [
     shortDescription: "Hecho en horno de leña.",
     image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=82",
     price: 6,
+    producerOrCreator: "Karen Córdova",
   },
   {
     slug: "postres",
