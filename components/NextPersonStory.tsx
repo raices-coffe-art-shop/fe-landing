@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-type NextPersonStoryProps = {
-  person: {
+type SuggestedPerson = {
     slug: string;
     name: string;
     category: string;
     image?: { src: string; alt: string };
-  };
 };
 
-export function NextPersonStory({ person }: NextPersonStoryProps) {
-  const [visible, setVisible] = useState(false);
+type NextPersonStoryProps = { people: SuggestedPerson[] };
+
+export function NextPersonStory({ people }: NextPersonStoryProps) {
+  const [activePerson, setActivePerson] = useState<SuggestedPerson | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<number | null>(null);
 
@@ -39,29 +39,34 @@ export function NextPersonStory({ person }: NextPersonStoryProps) {
   return (
     <section className="next-story person-next-story">
       <div className="page-shell">
-        <p>Siguiente historia</p>
-        <Link
-          href={`/personas/${person.slug}`}
-          onPointerEnter={(event) => { setVisible(true); movePreview(event.clientX, event.clientY); }}
-          onPointerMove={(event) => movePreview(event.clientX, event.clientY)}
-          onPointerLeave={() => setVisible(false)}
-          onFocus={(event) => {
-            setVisible(true);
-            const rect = event.currentTarget.getBoundingClientRect();
-            movePreview(rect.right * .72, rect.top + rect.height * .6);
-          }}
-          onBlur={() => setVisible(false)}
-        >
-          {person.image && <span className="person-next-mobile-image" aria-hidden="true"><img src={person.image.src} alt="" loading="lazy" /></span>}
-          <span>{person.category}</span>
-          <h2>{person.name}</h2>
-          <i aria-hidden="true">↗</i>
-        </Link>
+        <p>Otras historias</p>
+        <div className="person-related-list">
+          {people.map((person) => (
+            <Link
+              key={person.slug}
+              href={`/personas/${person.slug}`}
+              onPointerEnter={(event) => { setActivePerson(person); movePreview(event.clientX, event.clientY); }}
+              onPointerMove={(event) => movePreview(event.clientX, event.clientY)}
+              onPointerLeave={() => setActivePerson(null)}
+              onFocus={(event) => {
+                setActivePerson(person);
+                const rect = event.currentTarget.getBoundingClientRect();
+                movePreview(rect.right * .72, rect.top + rect.height * .6);
+              }}
+              onBlur={() => setActivePerson(null)}
+            >
+              {person.image && <span className="person-next-mobile-image" aria-hidden="true"><img src={person.image.src} alt="" loading="lazy" /></span>}
+              <span>{person.category}</span>
+              <h2>{person.name}</h2>
+              <i aria-hidden="true">↗</i>
+            </Link>
+          ))}
+        </div>
       </div>
-      {person.image && (
-        <div ref={previewRef} className={`person-next-preview${visible ? " is-visible" : ""}`} aria-hidden="true">
-          <img src={person.image.src} alt="" />
-          <span>{person.name}</span>
+      {activePerson?.image && (
+        <div ref={previewRef} className="person-next-preview is-visible" aria-hidden="true">
+          <img src={activePerson.image.src} alt="" />
+          <span>{activePerson.name}</span>
         </div>
       )}
     </section>

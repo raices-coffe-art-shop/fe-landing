@@ -20,8 +20,8 @@ export const humanOrigin = {
     "Desde el comienzo, Francisco y Lized decidieron que ningún producto debía presentarse como algo anónimo. Siempre que fuera posible, Raíces debía poder explicar de dónde viene, quién lo produce y qué relación existe con la persona o comunidad que lo hizo posible."
   ],
   founders: "Francisco Arica y Lized",
-  foundersPhoto: "/media/people/dina-02.webp",
-  foundersPhotoAlt: "Francisco Arica y Lized durante una visita de Raíces",
+  foundersPhoto: "/media/lized-variants/hero-con-lized.webp",
+  foundersPhotoAlt: "Francisco Arica y Lized juntos durante una visita de Raíces al campo",
   notes: [
     { label: "Fundadores", text: "Francisco Arica y Lized, fundadores de Raíces." },
     { label: "Lengua", text: "El quechua ha permitido construir conversaciones directas con productores y proveedores de Ayacucho." },

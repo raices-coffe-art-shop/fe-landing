@@ -12439,6 +12439,20 @@ img { max-width: 100%; }
   overflow: visible;
 }
 
+.person-related-list a {
+  min-height: 150px;
+  align-items: center;
+  padding: 28px 0;
+}
+
+.person-related-list a + a {
+  margin-top: 4px;
+}
+
+.person-related-list h2 {
+  font-size: clamp(3rem, 6vw, 6.2rem);
+}
+
 .person-next-preview {
   position: fixed;
   left: 0;
@@ -12515,6 +12529,48 @@ img { max-width: 100%; }
   backface-visibility: visible;
 }
 
+/* Final handoff: keep the root and editorial copy, release only the invisible
+   word/logo compositor layers before the Personas section enters. */
+.lexicon-sticky-stage.is-handoff {
+  perspective: none;
+  transform-style: flat;
+}
+
+.lexicon-sticky-stage.is-handoff .lexicon-stuck-grid {
+  display: grid;
+}
+
+/* At the settled ending, keep only the final logo from the animated grid.
+   The root canvas remains frozen at its last rendered frame below. */
+.lexicon-sticky-stage.is-handoff .lexicon-grid-item,
+.lexicon-sticky-stage.is-handoff .lexicon-special {
+  display: none;
+}
+
+.lexicon-sticky-stage.is-handoff .lexicon-closing-logo {
+  display: grid;
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Once the closing copy is reached, these full-viewport surfaces no longer
+   change the message on screen. Removing them from composition before the
+   first People card enters prevents two sticky GPU scenes from overlapping. */
+.lexicon-sticky-stage.is-handoff .lexicon-texture {
+  display: none;
+}
+
+.lexicon-sticky-stage.is-handoff [data-lexicon-appearance] {
+  will-change: auto;
+}
+
+.lexicon-section {
+  /* Paint containment on a four-viewport section creates an oversized paint
+     layer in Chromium and makes its sticky release considerably more costly. */
+  contain: none;
+}
+
 /* The closing logo is no longer animated with blur; keeping the old base
    filter made it remain soft after reaching its final position. */
 .lexicon-closing-logo {
@@ -12550,6 +12606,52 @@ img { max-width: 100%; }
 
 .people-stack-section::after {
   background-attachment: scroll;
+}
+
+/* V29 — eliminate the last paint spike at the Lexicon → Personas handoff.
+   This section is several viewports tall, so painting a radial gradient and a
+   dotted pseudo-element across its full height allocated a large set of tiles
+   exactly when the sticky Lexicon was being released. The texture already
+   lives inside each editorial card, where its paint area is bounded. */
+.people-stack-section {
+  background-image: none;
+  /* Paint containment on this multi-viewport parent can force an oversized
+     layer and interferes with sticky descendants in Chromium/Edge. */
+  contain: none;
+}
+
+.people-stack-section::after {
+  display: none;
+  content: none;
+}
+
+/* Keep the entrance fade visually identical while bounding its raster area. */
+.people-stack-section::before {
+  contain: strict;
+}
+
+/* A 100px blurred shadow on the first sticky card was the other large surface
+   entering at the same moment. A tighter shadow preserves separation without
+   forcing the browser to repaint such a wide halo during the handoff. */
+.stack-person-card {
+  box-shadow: 0 24px 52px rgba(0, 0, 0, .26);
+}
+
+/* V30 — keep the long scroll distance in a dedicated track without adding a
+   duplicated closing panel. */
+.lexicon-section {
+  min-height: 0;
+  overflow: clip;
+}
+
+.lexicon-scroll-track {
+  position: relative;
+  min-height: 400svh;
+  background: #17110c;
+}
+
+@media (max-width: 767px) {
+  .lexicon-scroll-track { min-height: 330svh; }
 }
 
 @media (max-width: 1180px) {

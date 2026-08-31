@@ -14,6 +14,7 @@ export function useStageScrollProgress(stage: RootStage) {
     const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     let active = false;
+    let frozenAtLexiconExit = false;
 
     const update = () => {
       frame = 0;
@@ -30,9 +31,23 @@ export function useStageScrollProgress(stage: RootStage) {
             : stage === "lexicon" ? 0.12
               : 0.5
       );
-      const next = reducedQuery.matches
+      const rawNext = reducedQuery.matches
         ? 1
         : clamp((viewportReference - rect.top) / scrollableDistance);
+
+      // Do not send a final `1` to the hidden Lexicon canvas. That value caused
+      // RootsCanvas to rebuild every completed segment into a full-viewport
+      // bitmap exactly when the sticky stage was released. Freeze before the
+      // exit and resume only after reverse scrolling well inside the chapter.
+      if (stage === "lexicon") {
+        if (!frozenAtLexiconExit && rawNext >= 0.86) frozenAtLexiconExit = true;
+        if (frozenAtLexiconExit) {
+          if (rawNext > 0.78) return;
+          frozenAtLexiconExit = false;
+        }
+      }
+
+      const next = rawNext;
 
       if (Math.abs(progressRef.current - next) < 0.0015) return;
       progressRef.current = next;

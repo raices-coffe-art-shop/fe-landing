@@ -38,7 +38,7 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
   const person = people.find((item) => item.slug === slug);
   if (!person) notFound();
 
-  const nextPerson = people[(people.findIndex((item) => item.slug === slug) + 1) % people.length];
+  const relatedPeople = people.filter((item) => item.slug !== slug);
 
   return (
     <>
@@ -100,12 +100,12 @@ export default async function PersonPage({ params }: { params: Promise<{ slug: s
         </section>
 
         <NextPersonStory
-          person={{
-            slug: nextPerson.slug,
-            name: nextPerson.name,
-            category: nextPerson.category,
-            image: nextPerson.portraitGallery?.[0],
-          }}
+          people={relatedPeople.map((item) => ({
+            slug: item.slug,
+            name: item.name,
+            category: item.category,
+            image: item.portraitGallery?.[0],
+          }))}
         />
       </main>
       <Footer />

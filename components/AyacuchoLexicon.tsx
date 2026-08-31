@@ -167,7 +167,7 @@ function createLogoAnimation(element: HTMLElement) {
 }
 
 export function AyacuchoLexicon() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const animatedRef = useRef<AnimatedLexiconElement[]>([]);
   const rafRef = useRef(0);
@@ -188,6 +188,7 @@ export function AyacuchoLexicon() {
     let measureRafA = 0;
     let measureRafB = 0;
     let lastProgress = -1;
+    let releasedForPeople = false;
     let mutationObserver: MutationObserver | null = null;
 
     const buildAnimations = () => {
@@ -272,6 +273,25 @@ export function AyacuchoLexicon() {
       lastProgress = progress;
 
       stage.style.setProperty("--lexicon-progress", progress.toFixed(4));
+      // En el empalme con Personas todas las palabras ya son invisibles. Quitar
+      // sus capas 3D evita que el navegador componga ambos capítulos a la vez.
+      if (!releasedForPeople && progress >= 0.86) {
+        releasedForPeople = true;
+        stage.classList.add("is-handoff");
+        animatedRef.current.forEach(({ animation }) => animation.cancel());
+        animatedRef.current = [];
+        return;
+      }
+
+      // Hysteresis prevents tiny wheel movements at the boundary from
+      // allocating and releasing all compositor layers repeatedly.
+      if (releasedForPeople) {
+        if (progress > 0.78) return;
+        releasedForPeople = false;
+        stage.classList.remove("is-handoff");
+        buildAnimations();
+        lastProgress = -1;
+      }
 
       animatedRef.current.forEach((item) => {
         const { animation, start, end } = item;
@@ -359,8 +379,9 @@ export function AyacuchoLexicon() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="lexicon-section" id="lengua" data-roots-stage="lexicon" aria-label="Palabras que representan Ayacucho">
-      <div ref={stageRef} className="lexicon-sticky-stage">
+    <section className="lexicon-section" id="lengua" aria-label="Palabras que representan Ayacucho">
+      <div ref={sectionRef} className="lexicon-scroll-track" data-roots-stage="lexicon">
+        <div ref={stageRef} className="lexicon-sticky-stage">
         <div className="lexicon-texture" aria-hidden="true" />
         <div className="lexicon-root-layer" aria-hidden="true">
           <RootsStageCanvas stage="lexicon" className="lexicon-roots" />
@@ -405,12 +426,14 @@ export function AyacuchoLexicon() {
           ))}
         </div>
 
-        <div className="lexicon-editorial-copy">
-          <p>Lengua, memoria e identidad</p>
-          <span>Raíces es el nombre del proyecto. Huamanga y Ayacucho son nombres que guardan distintas etapas de una misma tierra.</span>
-          <small className="lexicon-validation-note">En Raíces, el quechua ha sido una herramienta real para conversar, generar confianza y construir relaciones con productores y proveedores originarios de Ayacucho.</small>
+          <div className="lexicon-editorial-copy">
+            <p>Lengua, memoria e identidad</p>
+            <span>Raíces es el nombre del proyecto. Huamanga y Ayacucho son nombres que guardan distintas etapas de una misma tierra.</span>
+            <small className="lexicon-validation-note">En Raíces, el quechua ha sido una herramienta real para conversar, generar confianza y construir relaciones con productores y proveedores originarios de Ayacucho.</small>
+          </div>
         </div>
       </div>
+
     </section>
   );
 }

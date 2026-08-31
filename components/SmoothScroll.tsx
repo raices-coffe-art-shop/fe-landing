@@ -73,7 +73,7 @@ export function SmoothScroll() {
         window.__raicesLenis = undefined;
       }
     };
-  }, [isChromeless]);
+  }, [isChromeless, pathname]);
 
   return null;
 }
