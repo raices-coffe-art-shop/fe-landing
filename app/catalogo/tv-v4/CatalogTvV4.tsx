@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { BrandLogo } from "@/sanity/lib/siteSettings";
 import type { TvV4Slide } from "./extraSlides";
@@ -122,6 +123,34 @@ export function CatalogTvV4({ slides, intervalMs, logo, qrDataUrl, catalogDispla
                     <p className={styles.qrLead}>Escanea la carta desde tu mesa</p>
                     <p className={styles.qrUrl}>{catalogDisplayUrl}</p>
                   </div>
+                </div>
+              </section>
+            );
+          }
+
+          if (slide.kind === "collage") {
+            return (
+              <section key={slide.key} className={slideClass} aria-hidden={!isActive}>
+                <header className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>{slide.title}</h2>
+                  <p className={styles.sectionTagline}>{slide.tagline}</p>
+                  <div className={styles.sectionRule} />
+                </header>
+                <div className={styles.collage}>
+                  {slide.photos.map((photo) => (
+                    <figure
+                      key={photo.id}
+                      className={styles.collageItem}
+                      style={
+                        {
+                          "--angle": `${photo.angle}deg`,
+                          "--delay": `${photo.delayMs}ms`,
+                        } as React.CSSProperties
+                      }
+                    >
+                      <img src={photo.src} alt={photo.alt} loading="eager" decoding="async" />
+                    </figure>
+                  ))}
                 </div>
               </section>
             );

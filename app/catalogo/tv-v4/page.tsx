@@ -5,7 +5,7 @@ import { getSiteSettings } from "@/sanity/lib/siteSettings";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { filterPrintedMenuItems } from "@/lib/printedMenu";
 import { buildMenuScreenSlides } from "@/lib/menuScreenSlides";
-import { buildOriginSlide, buildPeopleSlides } from "./extraSlides";
+import { buildCollageSlide, buildOriginSlide, buildPeopleSlides } from "./extraSlides";
 import { CatalogTvV4 } from "./CatalogTvV4";
 
 // Cuarta versión de la pantalla del local: el cromado de la primera con la
@@ -39,9 +39,13 @@ export default async function CartaTvV4Page({ searchParams }: TvPageProps) {
     getCatalogCategories(),
     getSiteSettings(),
   ]);
-  // El QR cierra la carta; después vienen las pantallas narrativas.
+  // El QR cierra la carta; después vienen las pantallas narrativas: el muro de
+  // fotos de producto, cómo nació Raíces y quiénes están detrás.
+  const menuItems = filterPrintedMenuItems(items);
+  const collage = buildCollageSlide(menuItems);
   const slides = [
-    ...buildMenuScreenSlides(filterPrintedMenuItems(items), settings.showCatalogPrices, categories),
+    ...buildMenuScreenSlides(menuItems, settings.showCatalogPrices, categories),
+    ...(collage ? [collage] : []),
     buildOriginSlide(),
     ...buildPeopleSlides(),
   ];

@@ -310,6 +310,59 @@
   white-space: nowrap;
 }
 
+/* ---------- Muro de fotografías ---------- */
+
+/* Cuatro columnas de fotos ligeramente giradas y superpuestas, al modo de una
+   pila de instantáneas sobre la mesa. El giro en reposo lo lleva cada figura en
+   su --angle, calculado en el servidor para que no cambie entre renders. */
+.collage {
+  flex: 1;
+  min-height: 0;
+  margin-top: calc(var(--w) * 0.03);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: center;
+  gap: calc(var(--w) * 0.012);
+}
+
+.collageItem {
+  margin: 0;
+  padding: calc(var(--w) * 0.006);
+  background: #fff8ed;
+  border-radius: calc(var(--w) * 0.004);
+  box-shadow: 0 calc(var(--w) * 0.006) calc(var(--w) * 0.014) rgba(43, 33, 28, 0.28);
+  transform: rotate(var(--angle));
+}
+
+.collageItem img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: calc(var(--w) * 0.002);
+  background: var(--sand-deep);
+}
+
+/* Las fotos caen una a una: la animación arranca al entrar la pantalla, porque
+   se declara solo sobre el slide activo, y se rebobina al salir. `backwards`
+   mantiene cada foto fuera de cuadro hasta que le toca su turno. */
+.slide.active .collageItem {
+  animation: collageFall 0.85s cubic-bezier(0.22, 0.9, 0.28, 1) backwards;
+  animation-delay: var(--delay);
+}
+
+@keyframes collageFall {
+  from {
+    opacity: 0;
+    transform: translateY(-70%) rotate(calc(var(--angle) * 2.5));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--angle));
+  }
+}
+
 /* ---------- Pantalla de historia ---------- */
 
 .originBody {
@@ -578,5 +631,9 @@
   .progressFill {
     animation: none;
     transform: scaleX(1);
+  }
+
+  .slide.active .collageItem {
+    animation: none;
   }
 }
