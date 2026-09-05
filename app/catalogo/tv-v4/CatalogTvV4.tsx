@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { BrandLogo } from "@/sanity/lib/siteSettings";
-import type { MenuScreenSlide } from "@/lib/menuScreenSlides";
+import type { TvV4Slide } from "./extraSlides";
 import styles from "./tv-v4.module.css";
 
 const CURSOR_HIDE_DELAY_MS = 3000;
 const RELOAD_AFTER_MS = 4 * 60 * 60 * 1000;
 
 type CatalogTvV4Props = {
-  slides: MenuScreenSlide[];
+  slides: TvV4Slide[];
   intervalMs: number;
   logo: BrandLogo;
   qrDataUrl: string;
@@ -122,6 +122,70 @@ export function CatalogTvV4({ slides, intervalMs, logo, qrDataUrl, catalogDispla
                     <p className={styles.qrLead}>Escanea la carta desde tu mesa</p>
                     <p className={styles.qrUrl}>{catalogDisplayUrl}</p>
                   </div>
+                </div>
+              </section>
+            );
+          }
+
+          if (slide.kind === "origin") {
+            return (
+              <section key={slide.key} className={slideClass} aria-hidden={!isActive}>
+                <header className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>{slide.title}</h2>
+                  <p className={styles.sectionTagline}>{slide.tagline}</p>
+                  <div className={styles.sectionRule} />
+                </header>
+                <div className={styles.originBody}>
+                  <p className={styles.originHeadline}>{slide.headline}</p>
+                  <figure className={styles.originFigure}>
+                    <img src={slide.photo.src} alt={slide.photo.alt} />
+                  </figure>
+                  <div className={styles.originCopy}>
+                    {slide.paragraphs.map((paragraph) => (
+                      <p key={paragraph} className={styles.originParagraph}>
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                  <p className={styles.originNote}>
+                    <span className={styles.originNoteLabel}>{slide.note.label}</span>
+                    {slide.note.text}
+                  </p>
+                </div>
+              </section>
+            );
+          }
+
+          if (slide.kind === "people") {
+            return (
+              <section key={slide.key} className={slideClass} aria-hidden={!isActive}>
+                <header className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>{slide.title}</h2>
+                  <p className={styles.sectionTagline}>{slide.tagline}</p>
+                  <div className={styles.sectionRule} />
+                </header>
+                <div className={styles.peopleBody}>
+                  {slide.cards.map((card) => (
+                    <article key={card.slug} className={styles.personCard}>
+                      {card.photo ? (
+                        <img
+                          className={styles.personPhoto}
+                          src={card.photo.src}
+                          alt={card.photo.alt}
+                          style={{ objectPosition: card.photo.position }}
+                        />
+                      ) : (
+                        <div className={styles.personPhotoEmpty} aria-hidden="true" />
+                      )}
+                      <div className={styles.personCopy}>
+                        <p className={styles.personName}>{card.name}</p>
+                        <p className={styles.personRole}>
+                          {card.role} · {card.region}
+                        </p>
+                        <p className={styles.personSummary}>{card.summary}</p>
+                      </div>
+                    </article>
+                  ))}
                 </div>
               </section>
             );

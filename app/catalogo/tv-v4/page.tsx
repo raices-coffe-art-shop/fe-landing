@@ -5,6 +5,7 @@ import { getSiteSettings } from "@/sanity/lib/siteSettings";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { filterPrintedMenuItems } from "@/lib/printedMenu";
 import { buildMenuScreenSlides } from "@/lib/menuScreenSlides";
+import { buildOriginSlide, buildPeopleSlides } from "./extraSlides";
 import { CatalogTvV4 } from "./CatalogTvV4";
 
 // Cuarta versión de la pantalla del local: el cromado de la primera con la
@@ -38,7 +39,12 @@ export default async function CartaTvV4Page({ searchParams }: TvPageProps) {
     getCatalogCategories(),
     getSiteSettings(),
   ]);
-  const slides = buildMenuScreenSlides(filterPrintedMenuItems(items), settings.showCatalogPrices, categories);
+  // El QR cierra la carta; después vienen las pantallas narrativas.
+  const slides = [
+    ...buildMenuScreenSlides(filterPrintedMenuItems(items), settings.showCatalogPrices, categories),
+    buildOriginSlide(),
+    ...buildPeopleSlides(),
+  ];
 
   const catalogUrl = `${getSiteUrl()}/catalogo`;
   const qrDataUrl = await QRCode.toDataURL(catalogUrl, {

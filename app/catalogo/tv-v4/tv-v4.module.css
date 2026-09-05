@@ -204,6 +204,14 @@
   line-height: 1.4;
 }
 
+/* Con un número impar de datos el último queda solo en la columna izquierda,
+   envolviéndose en un renglón estrecho con medio recuadro vacío al lado. Cuando
+   es el último y cae en posición impar, ocupa el ancho completo y el texto corre
+   de lado a lado como el resto. */
+.fact:nth-child(odd):last-child {
+  grid-column: 1 / -1;
+}
+
 .factLabel {
   margin: 0;
   font-weight: 700;
@@ -300,6 +308,153 @@
   text-transform: uppercase;
   color: var(--ink-soft);
   white-space: nowrap;
+}
+
+/* ---------- Pantalla de historia ---------- */
+
+.originBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--w) * 0.024);
+  padding-top: calc(var(--w) * 0.03);
+}
+
+.originHeadline {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.042);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/* La foto absorbe el espacio que sobra: así la pantalla se llena sea cual sea
+   el largo del texto, sin dejar un hueco abajo ni recortar los párrafos. */
+.originFigure {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: calc(var(--w) * 0.016);
+  background: var(--sand-deep);
+}
+
+.originFigure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.originCopy {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--w) * 0.012);
+}
+
+.originParagraph {
+  margin: 0;
+  font-size: calc(var(--w) * 0.022);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.originNote {
+  flex: none;
+  margin: 0;
+  padding: calc(var(--w) * 0.016) calc(var(--w) * 0.02);
+  border-left: calc(var(--w) * 0.005) solid var(--accent);
+  background: var(--sand-lift);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: calc(var(--w) * 0.022);
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.originNoteLabel {
+  display: block;
+  margin-bottom: calc(var(--w) * 0.006);
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: calc(var(--w) * 0.017);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ---------- Pantallas de personas ---------- */
+
+.peopleBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--w) * 0.028);
+  padding-top: calc(var(--w) * 0.03);
+}
+
+/* Dos personas por pantalla, cada una repartiéndose el alto disponible: la foto
+   a un lado y su ficha al otro, que en vertical se lee mejor que apilarlas. */
+.personCard {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: calc(var(--w) * 0.026);
+  overflow: hidden;
+  border-radius: calc(var(--w) * 0.016);
+  background: var(--sand-lift);
+}
+
+.personPhoto,
+.personPhotoEmpty {
+  flex: none;
+  width: 38%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.personPhotoEmpty {
+  background: var(--sand-deep);
+}
+
+.personCopy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(var(--w) * 0.008);
+  padding: calc(var(--w) * 0.024) calc(var(--w) * 0.026) calc(var(--w) * 0.024) 0;
+}
+
+.personName {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.042);
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.personRole {
+  margin: 0;
+  font-size: calc(var(--w) * 0.019);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.personSummary {
+  margin: calc(var(--w) * 0.008) 0 0;
+  font-size: calc(var(--w) * 0.021);
+  line-height: 1.45;
+  color: var(--ink-soft);
 }
 
 /* ---------- Pantalla de marca, cierre del ciclo ---------- */
