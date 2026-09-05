@@ -3,48 +3,45 @@ import { formatCatalogPrice, shouldDisplayCatalogPrice } from "@/sanity/lib/cata
 import { buildMenuSubGroups } from "@/lib/menuSubGroups";
 import { splitStoryQuote } from "@/lib/storyQuote";
 
-// Tercera versión de la pantalla del local. Frente a la v2: vuelven las
-// subsecciones con su título y su regla, se van la ilustración del encabezado y
-// el contador de páginas, y el producto sigue reducido a nombre y precio.
-//
-// Sin descripciones y con dos columnas cuando hay productos de sobra, cada
-// sección entra completa en una sola pantalla: la carta pasa a ser una pantalla
-// por sección, como en los conceptos.
+// Modelo de pantallas de la carta del local, compartido por las maquetas que lo
+// usan (tv-v3 y tv-v4). El producto se reduce a nombre y precio, las
+// subsecciones conservan su título y, cuando hay productos de sobra, la lista
+// pasa a dos columnas. Con eso cada sección entra completa en una pantalla.
 
 // Un tope alto a propósito: con dos columnas caben de sobra los 15 productos de
 // Café o de Sándwiches. Sigue existiendo por si una sección crece mucho, para
 // que se parta en vez de desbordar.
-export const TV3_MAX_ITEMS_PER_SLIDE = 18;
+export const MAX_ITEMS_PER_SCREEN = 18;
 
 // A partir de aquí la lista pasa a dos columnas. Debajo de este número una sola
 // columna se lee mejor y no deja media pantalla vacía: es lo que hacen los
 // conceptos con Chocolatería y con Bebidas Andinas.
-export const TV3_TWO_COLUMN_THRESHOLD = 8;
+export const TWO_COLUMN_THRESHOLD = 8;
 
 // La primera página de cada sección estrena su relato: se queda más tiempo para
 // que alcance a leerse. Con una pantalla por sección esto aplica a casi todas.
 export const SECTION_OPENING_DWELL = 1.4;
 
-export type TvV3MenuItem = {
+export type MenuScreenItem = {
   id: string;
   title: string;
   priceLabel: string | null;
 };
 
-export type TvV3Group = {
+export type MenuScreenGroup = {
   title: string | null;
-  items: TvV3MenuItem[];
+  items: MenuScreenItem[];
 };
 
 // La pantalla no tiene scroll: el relato y la ficha se ajustan a cuánto texto
 // trae la sección para no empujar los productos fuera de cuadro.
-export type TvV3Density = "holgada" | "media" | "compacta";
+export type MenuScreenDensity = "holgada" | "media" | "compacta";
 
-export function resolveV3Density(
+export function resolveScreenDensity(
   story: string,
   quote: string | null,
   facts: SourcingFact[],
-): TvV3Density {
+): MenuScreenDensity {
   const total =
     story.length +
     (quote?.length ?? 0) +
@@ -54,31 +51,31 @@ export function resolveV3Density(
   return "compacta";
 }
 
-export type TvV3Section = {
+export type MenuScreenSection = {
   title: string;
   tagline: string | null;
   story: string | null;
   quote: string | null;
   facts: SourcingFact[];
-  density: TvV3Density;
+  density: MenuScreenDensity;
 };
 
-export type TvV3Slide =
+export type MenuScreenSlide =
   | {
       kind: "category";
       key: string;
-      section: TvV3Section;
-      groups: TvV3Group[];
+      section: MenuScreenSection;
+      groups: MenuScreenGroup[];
       twoColumns: boolean;
       dwell: number;
     }
   | { kind: "brand" };
 
-export function buildTvV3Slides(
+export function buildMenuScreenSlides(
   items: CatalogItem[],
   showCatalogPrices: boolean,
   categories: CatalogCategory[] = [],
-): TvV3Slide[] {
+): MenuScreenSlide[] {
   const categoriesById = new Map(categories.map((category) => [category.id, category]));
   const groups = new Map<string, { title: string; order: number; items: CatalogItem[] }>();
   for (const item of items) {
@@ -94,12 +91,12 @@ export function buildTvV3Slides(
     }
   }
 
-  const slides: TvV3Slide[] = [];
+  const slides: MenuScreenSlide[] = [];
   const sortedGroups = [...groups.entries()].sort(
     (a, b) => a[1].order - b[1].order || a[1].title.localeCompare(b[1].title, "es"),
   );
 
-  const toMenuItem = (item: CatalogItem): TvV3MenuItem => ({
+  const toMenuItem = (item: CatalogItem): MenuScreenItem => ({
     id: item.id,
     title: item.title,
     priceLabel: shouldDisplayCatalogPrice(item, showCatalogPrices) ? formatCatalogPrice(item) : null,
@@ -112,13 +109,13 @@ export function buildTvV3Slides(
     const category = categoriesById.get(categoryId);
     const { story, quote } = splitStoryQuote(category?.story);
     const facts = category?.sourcingFacts ?? [];
-    const section: TvV3Section = {
+    const section: MenuScreenSection = {
       title: group.title,
       tagline: category?.tagline?.trim() || null,
       story: story || null,
       quote,
       facts,
-      density: resolveV3Density(story, quote, facts),
+      density: resolveScreenDensity(story, quote, facts),
     };
 
     // Se aplana con la subsección pegada a cada producto y se reagrupa después
@@ -127,14 +124,14 @@ export function buildTvV3Slides(
     const flat = subGroups.flatMap((subGroup) =>
       subGroup.items.map((item) => ({ groupTitle: subGroup.title, item })),
     );
-    const pageCount = Math.max(1, Math.ceil(flat.length / TV3_MAX_ITEMS_PER_SLIDE));
+    const pageCount = Math.max(1, Math.ceil(flat.length / MAX_ITEMS_PER_SCREEN));
 
     for (let page = 0; page < pageCount; page += 1) {
       const slice = flat.slice(
-        page * TV3_MAX_ITEMS_PER_SLIDE,
-        (page + 1) * TV3_MAX_ITEMS_PER_SLIDE,
+        page * MAX_ITEMS_PER_SCREEN,
+        (page + 1) * MAX_ITEMS_PER_SCREEN,
       );
-      const pageGroups: TvV3Group[] = [];
+      const pageGroups: MenuScreenGroup[] = [];
       for (const entry of slice) {
         const current = pageGroups[pageGroups.length - 1];
         if (current && current.title === entry.groupTitle) {
@@ -149,7 +146,7 @@ export function buildTvV3Slides(
         key: `${categoryId}-${page + 1}`,
         section,
         groups: pageGroups,
-        twoColumns: slice.length > TV3_TWO_COLUMN_THRESHOLD,
+        twoColumns: slice.length > TWO_COLUMN_THRESHOLD,
         dwell: page === 0 ? SECTION_OPENING_DWELL : 1,
       });
     }

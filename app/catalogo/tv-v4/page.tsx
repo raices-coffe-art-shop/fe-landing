@@ -5,12 +5,12 @@ import { getSiteSettings } from "@/sanity/lib/siteSettings";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { filterPrintedMenuItems } from "@/lib/printedMenu";
 import { buildMenuScreenSlides } from "@/lib/menuScreenSlides";
-import { CatalogTvV3 } from "./CatalogTvV3";
+import { CatalogTvV4 } from "./CatalogTvV4";
 
-// Tercera versión de la pantalla del local, para comparar contra /catalogo/tv y
-// /catalogo/tv-v2 antes de quedarnos con una. Comparte datos y utilidades.
+// Cuarta versión de la pantalla del local: el cromado de la primera con la
+// compacidad de la tercera. Comparte el modelo de pantallas con /catalogo/tv-v3.
 export const metadata: Metadata = {
-  title: "Carta para pantalla (v3)",
+  title: "Carta para pantalla (v4)",
   robots: { index: false, follow: false },
 };
 
@@ -29,7 +29,7 @@ function resolveIntervalMs(raw: string | string[] | undefined): number {
   return Math.min(MAX_INTERVAL_SECONDS, Math.max(MIN_INTERVAL_SECONDS, parsed)) * 1000;
 }
 
-export default async function CartaTvV3Page({ searchParams }: TvPageProps) {
+export default async function CartaTvV4Page({ searchParams }: TvPageProps) {
   const resolvedSearchParams = await searchParams;
   const intervalMs = resolveIntervalMs(resolvedSearchParams.s);
 
@@ -45,11 +45,11 @@ export default async function CartaTvV3Page({ searchParams }: TvPageProps) {
     width: 480,
     margin: 1,
     errorCorrectionLevel: "M",
-    color: { dark: "#2b211c", light: "#f5ead6" },
+    color: { dark: "#2b211c", light: "#fff8ed" },
   });
 
   return (
-    <CatalogTvV3
+    <CatalogTvV4
       slides={slides}
       intervalMs={intervalMs}
       logo={settings.brandLogo}

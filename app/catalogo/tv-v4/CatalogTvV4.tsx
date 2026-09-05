@@ -3,13 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { BrandLogo } from "@/sanity/lib/siteSettings";
 import type { MenuScreenSlide } from "@/lib/menuScreenSlides";
-import styles from "./tv-v3.module.css";
+import styles from "./tv-v4.module.css";
 
 const CURSOR_HIDE_DELAY_MS = 3000;
 const RELOAD_AFTER_MS = 4 * 60 * 60 * 1000;
-const FOOTER_LINE = "Raíces · Café y Cultura — Ayacucho en Lima";
 
-type CatalogTvV3Props = {
+type CatalogTvV4Props = {
   slides: MenuScreenSlide[];
   intervalMs: number;
   logo: BrandLogo;
@@ -17,7 +16,7 @@ type CatalogTvV3Props = {
   catalogDisplayUrl: string;
 };
 
-export function CatalogTvV3({ slides, intervalMs, logo, qrDataUrl, catalogDisplayUrl }: CatalogTvV3Props) {
+export function CatalogTvV4({ slides, intervalMs, logo, qrDataUrl, catalogDisplayUrl }: CatalogTvV4Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   // Cada navegación manual cambia el epoch para reiniciar el temporizador.
   const [rotationEpoch, setRotationEpoch] = useState(0);
@@ -100,16 +99,6 @@ export function CatalogTvV3({ slides, intervalMs, logo, qrDataUrl, catalogDispla
     return () => window.clearTimeout(timer);
   }, []);
 
-  const brandBar = (
-    <div className={styles.brand}>
-      <img className={styles.brandLogo} src={logo.src} alt={logo.alt} />
-      <div className={styles.brandCopy}>
-        <p className={styles.brandName}>Raíces</p>
-        <p className={styles.brandKicker}>Café &amp; Cultura</p>
-      </div>
-    </div>
-  );
-
   return (
     <main className={`${styles.stage} ${cursorHidden ? styles.cursorHidden : ""}`}>
       <div className={styles.column}>
@@ -120,8 +109,8 @@ export function CatalogTvV3({ slides, intervalMs, logo, qrDataUrl, catalogDispla
           if (slide.kind === "brand") {
             return (
               <section key="brand" className={slideClass} aria-hidden={!isActive}>
-                <header className={styles.header}>{brandBar}</header>
-                <div className={styles.brandBody}>
+                <div className={styles.brandSlide}>
+                  <img className={styles.brandLogo} src={logo.src} alt={logo.alt} />
                   <p className={styles.brandWordmark}>Raíces</p>
                   <p className={styles.brandTagline}>Café y Cultura — Ayacucho · Lima</p>
                   <div className={styles.qrCard}>
@@ -145,12 +134,12 @@ export function CatalogTvV3({ slides, intervalMs, logo, qrDataUrl, catalogDispla
               className={`${slideClass} ${styles[section.density]}`}
               aria-hidden={!isActive}
             >
-              {/* Banda oscura a sangre: el logo a la izquierda y, debajo, el
-                  subtítulo y el nombre de la sección. Sin ilustración. */}
-              <header className={styles.header}>
-                {brandBar}
-                {section.tagline && <p className={styles.headerTagline}>{section.tagline}</p>}
-                <h2 className={styles.headerTitle}>{section.title}</h2>
+              {/* Encabezado de la primera versión: título centrado, subtítulo y
+                  regla dorada. Sin barra de logo ni ilustración. */}
+              <header className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>{section.title}</h2>
+                {section.tagline && <p className={styles.sectionTagline}>{section.tagline}</p>}
+                <div className={styles.sectionRule} />
               </header>
 
               <div className={styles.body}>
@@ -187,7 +176,6 @@ export function CatalogTvV3({ slides, intervalMs, logo, qrDataUrl, catalogDispla
                         {group.items.map((item) => (
                           <li key={item.id} className={styles.item}>
                             <span className={styles.itemName}>{item.title}</span>
-                            <span className={styles.leader} aria-hidden="true" />
                             {item.priceLabel ? (
                               <span className={styles.itemPrice}>{item.priceLabel}</span>
                             ) : (
@@ -200,10 +188,6 @@ export function CatalogTvV3({ slides, intervalMs, logo, qrDataUrl, catalogDispla
                   ))}
                 </div>
               </div>
-
-              <footer className={styles.footer}>
-                <p className={styles.footerLine}>{FOOTER_LINE}</p>
-              </footer>
             </section>
           );
         })}
@@ -225,7 +209,7 @@ export function CatalogTvV3({ slides, intervalMs, logo, qrDataUrl, catalogDispla
                   />
                 </span>
               ) : (
-                <span key={key} className={`${styles.progressBar} ${styles[`swatch${index % 4}`]}`} />
+                <span key={key} className={styles.progressDot} />
               );
             })}
           </div>
