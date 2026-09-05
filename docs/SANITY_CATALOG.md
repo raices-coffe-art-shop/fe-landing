@@ -3,7 +3,7 @@
 ## Qué se administra desde `/studio`
 
 - Configuración del sitio: logo, texto alternativo y redes sociales.
-- Catálogo > Categorías: nombre, slug, descripción, fotografía, orden, visibilidad y si la categoría entra en la carta del café.
+- Catálogo > Categorías: nombre, slug, descripción, historia de origen, insumos y productores, fotografía, orden, visibilidad y si la categoría entra en la carta del café.
 - Catálogo > Productos: contenido, imágenes, procedencia, estado, destacado y orden.
 - Publicaciones: el blog editable por el cliente (ver ).
 
@@ -98,6 +98,38 @@ Agroindustrias Campos del Valle (el PDF anterior decía "Dina Campos", confundie
 nombre de la empresa). Las cuatro categorías antiguas de café quedaron ocultas, no borradas.
 
 Ambos scripts son repetibles y no pisan lo que el equipo edite en el Studio.
+
+## Historias de origen (septiembre 2026)
+
+Cada categoría tiene tres campos de relato, todos opcionales:
+
+| Campo en el Studio | Dónde se ve | Límite |
+|---|---|---|
+| **Título de la historia** | Encabezado del relato, en la carta impresa y en la pantalla | 120 caracteres |
+| **Historia de origen** | Bajo el título de la sección en `/catalogo/imprimir`; pantalla propia en `/catalogo/tv` | 700 caracteres |
+| **Insumos y productores** | Pie del relato, en las dos vistas | 400 caracteres |
+
+Son distintos de la **descripción**, que es el resumen corto del catálogo web (`/catalogo`) y sigue
+funcionando igual. Una sección sin historia se muestra como siempre, con su descripción corta.
+
+Dónde aparece cada cosa:
+
+- `/catalogo/imprimir` (carta con fotos): sí muestra la historia.
+- `/catalogo/carta` y `/catalogo/imprimir?fotos=no`: **no** la muestran. Es la carta de servicio,
+  pensada para imprimir barato, donde solo importan los productos y sus precios.
+- `/catalogo/tv`: la historia ocupa una pantalla propia, antes de los productos de su sección, y
+  permanece 1,6 veces más tiempo que una pantalla de productos porque hay más que leer.
+
+Las cuatro historias que entregó el cliente (Café, Chocolatería, Sándwiches y Bebidas Andinas) se
+cargaron con:
+
+```bash
+npm run historias:migrate:dry   # revisar
+npm run historias:migrate       # aplicar
+```
+
+Ese mismo script aplica la carta final de sándwiches: oculta **Maní Energético & Plátano**, que el
+cliente retiró, y actualiza la descripción de **Palta con Pollo**. La sección quedó con 15 productos.
 
 ## Webhook
 

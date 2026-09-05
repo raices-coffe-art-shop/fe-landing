@@ -1,0 +1,44 @@
+{
+  "historias": [
+    {
+      "categorySlug": "clasicos",
+      "categoryName": "Café",
+      "storyTitle": "Finca La Fortuna de Pedro",
+      "story": "En mi búsqueda por un grano que represente a Ayacucho, a su gente resiliente y a su profunda historia, encontré el auténtico café ayacuchano. Me contacté con Pedrito y, tras varias charlas compartiendo la misma visión y corazón, fue el primero en darme la mano: «¡Adelante hermano, siga con su proyecto!». Lo que más atesoro de aquellas primeras conversaciones es que nacieron en quechua, con Lized como puente y traductora.",
+      "sourcing": "Nueva Unión, Ayna - San Francisco (VRAEM, Ayacucho). Blend de Caturra y Bourbon entre 1,600 y 2,000 m.s.n.m., 84–86 puntos SCA. Todos nuestros cafés vienen con un mini alfajor tipo gouraud francés."
+    },
+    {
+      "categorySlug": "bebidas-de-chocolate",
+      "categoryName": "Chocolatería",
+      "storyTitle": "Dina Torres Barboza",
+      "story": "Nuestro chocolate proviene directamente del VRAEM, cosechado en la finca de la Ing. Agroforestal Dina Torres Barboza, representante de Agroindustrias Campos del Valle en Pichari (Cusco). Decidimos trabajar juntos no solo por la altísima calidad y pureza de su cacao fino de aroma, sino por su profundo compromiso familiar, social y su labor junto a la comunidad Asháninka. «Con nuestro trabajo queremos proveer una educación y vivienda digna para nuestros hijos y comunidad.»",
+      "sourcing": "Cacao puro fino de aroma de Pichari, VRAEM (Cusco). Trabajo directo con la comunidad Asháninka."
+    },
+    {
+      "categorySlug": "sandwiches",
+      "categoryName": "Sándwiches",
+      "storyTitle": "Tradición ayacuchana",
+      "story": "Para nosotros, un buen sándwich empieza con respeto a la tierra, su historia y a quienes la trabajan. En nuestro recorrido por Ayacucho aprendimos que el pan chapla no es solo un acompañamiento, es identidad viva. Cada bocado es compartir la mesa de los productores que nos abrieron sus puertas directamente desde el corazón de Ayacucho.",
+      "sourcing": "Pan chapla artesanal de la panadería Kullany Pan (Sra. Karen Córdova), quesos regionales de elaboración tradicional de David Meneses y palta ayacuchana de cosecha local en temporada."
+    },
+    {
+      "categorySlug": "bebidas-andinas",
+      "categoryName": "Bebidas Andinas",
+      "storyTitle": "El sabor de los Andes en cada taza",
+      "story": "Nuestras bebidas tradicionales calientes, endulzadas con el sabor de los Andes, cocinadas a fuego lento con su canela, clavo de olor e insumos autóctonos que reconfortan el cuerpo y el espíritu desde la primera hora del día.",
+      "sourcing": "Nutrición andina ancestral, elaborada de forma artesanal en el local."
+    }
+  ],
+  "deactivate": [
+    {
+      "slug": "sandwich-mani-energetico-platano",
+      "motivo": "La carta final de sándwiches que entregó el cliente ya no lo incluye."
+    }
+  ],
+  "productUpdates": [
+    {
+      "slug": "sandwich-palta-con-pollo",
+      "shortDescription": "Nuestro delicioso pollo al horno deshilachado combinado con láminas de palta cremosa."
+    }
+  ]
+}
