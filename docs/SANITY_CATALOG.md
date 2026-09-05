@@ -106,7 +106,7 @@ Cada categoría tiene tres campos de relato, todos opcionales:
 | Campo en el Studio | Dónde se ve | Límite |
 |---|---|---|
 | **Título de la historia** | Encabezado del relato, en la carta impresa y en la pantalla | 120 caracteres |
-| **Historia de origen** | Bajo el título de la sección en `/catalogo/imprimir`; pantalla propia en `/catalogo/tv` | 700 caracteres |
+| **Historia de origen** | Bajo el título de la sección en las tres cartas; pantalla propia en `/catalogo/tv` | 700 caracteres |
 | **Insumos y productores** | Pie del relato, en las dos vistas | 400 caracteres |
 
 Son distintos de la **descripción**, que es el resumen corto del catálogo web (`/catalogo`) y sigue
@@ -114,11 +114,13 @@ funcionando igual. Una sección sin historia se muestra como siempre, con su des
 
 Dónde aparece cada cosa:
 
-- `/catalogo/imprimir` (carta con fotos): sí muestra la historia.
-- `/catalogo/carta` y `/catalogo/imprimir?fotos=no`: **no** la muestran. Es la carta de servicio,
-  pensada para imprimir barato, donde solo importan los productos y sus precios.
+- `/catalogo/imprimir`, `/catalogo/imprimir?fotos=no` y `/catalogo/carta`: la historia va bajo el
+  título de su sección. No depende de que la carta lleve fotos: el relato es contenido de la sección.
 - `/catalogo/tv`: la historia ocupa una pantalla propia, antes de los productos de su sección, y
   permanece 1,6 veces más tiempo que una pantalla de productos porque hay más que leer.
+
+Cuando una sección tiene historia, esta reemplaza a la descripción corta en la carta; las secciones
+sin historia siguen mostrando su descripción.
 
 Las cuatro historias que entregó el cliente (Café, Chocolatería, Sándwiches y Bebidas Andinas) se
 cargaron con:

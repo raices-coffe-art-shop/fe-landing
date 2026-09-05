@@ -128,7 +128,7 @@ export async function CartaSheet({ withPhotos, showActions }: CartaSheetProps) {
                   >
                     <div className={styles.categoryBody}>
                       <h2 className={styles.categoryTitle}>{group.title}</h2>
-                      {withPhotos && group.story ? (
+                      {group.story ? (
                         <div className={styles.categoryStory}>
                           {group.storyTitle && (
                             <p className={styles.categoryStoryTitle}>
