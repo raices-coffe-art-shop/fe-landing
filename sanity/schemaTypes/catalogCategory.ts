@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 import { YesNoBooleanInput } from "../components/YesNoBooleanInput";
 import { AutoSlugInput } from "../components/AutoSlugInput";
 import { isUniqueSlugWithinType } from "../lib/slugUniqueness";
@@ -48,6 +48,13 @@ export const catalogCategory = defineType({
       validation: (Rule) => Rule.max(300),
     }),
     defineField({
+      name: "tagline",
+      title: "Subtítulo de la sección",
+      description: "La línea corta que va bajo el título en la pantalla del local. Ejemplos: “Café de especialidad · Origen directo”, “Tradición ayacuchana · Insumos de origen”. Es distinta de la descripción, que es la frase larga del catálogo web.",
+      type: "string",
+      validation: (Rule) => Rule.max(80),
+    }),
+    defineField({
       name: "storyTitle",
       title: "Título de la historia",
       description: "El encabezado del relato de origen. Ejemplos: “Finca La Fortuna de Pedro”, “Dina Torres Barboza”. Se muestra sobre la historia en la carta impresa y en la pantalla del local.",
@@ -65,10 +72,41 @@ export const catalogCategory = defineType({
     defineField({
       name: "sourcing",
       title: "Insumos y productores",
-      description: "Opcional. Los proveedores e insumos de esta sección, en una o dos frases. Ejemplo: “Pan chapla de la panadería Kullany Pan (Sra. Karen Córdova)”. Se muestra debajo de la historia.",
+      description: "Opcional. Los proveedores e insumos de esta sección, en una o dos frases. Ejemplo: “Pan chapla de la panadería Kullany Pan (Sra. Karen Córdova)”. Se muestra debajo de la historia en la carta impresa.",
       type: "text",
       rows: 3,
       validation: (Rule) => Rule.max(400),
+    }),
+    defineField({
+      name: "sourcingFacts",
+      title: "Ficha de origen y productores",
+      description: "Opcional. Los datos que acompañan al relato en la pantalla del local, uno por fila: origen, productor, altitud, perfil… Si la sección no tiene ficha, déjalo vacío y la pantalla no muestra ese recuadro.",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "sourcingFact",
+          title: "Dato",
+          fields: [
+            defineField({
+              name: "label",
+              title: "Dato",
+              description: "El nombre del dato, corto. Ejemplos: “Origen”, “Altitud”, “Productora”.",
+              type: "string",
+              validation: (Rule) => Rule.required().max(40),
+            }),
+            defineField({
+              name: "value",
+              title: "Valor",
+              description: "El contenido del dato. Ejemplo: “Nueva Unión, Ayna – San Francisco (VRAEM, Ayacucho)”.",
+              type: "string",
+              validation: (Rule) => Rule.required().max(160),
+            }),
+          ],
+          preview: { select: { title: "label", subtitle: "value" } },
+        }),
+      ],
+      validation: (Rule) => Rule.max(8),
     }),
     defineField({
       name: "image",

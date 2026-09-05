@@ -22,14 +22,23 @@ export type CatalogImage = {
   height: number;
 };
 
+// Una fila de la ficha de origen: el par etiqueta–valor que usan las cartas del
+// cliente ("Origen: Nueva Unión, Ayna", "Altitud: 1,600 – 2,000 m.s.n.m.").
+export type SourcingFact = {
+  label: string;
+  value: string;
+};
+
 export type CatalogCategory = {
   id: string;
   title: string;
   slug: string;
   description?: string;
+  tagline?: string;
   storyTitle?: string;
   story?: string;
   sourcing?: string;
+  sourcingFacts?: SourcingFact[];
   image?: CatalogImage;
   order: number;
   isVisible: boolean;

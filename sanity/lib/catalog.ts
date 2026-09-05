@@ -13,6 +13,7 @@ import type {
   CatalogImage,
   CatalogItem,
   PortableTextBlock,
+  SourcingFact,
 } from "./catalogTypes";
 import { sanityClient } from "./client";
 import { urlForImage } from "./image";
@@ -30,6 +31,7 @@ export type {
   CatalogItem,
   PortableTextBlock,
   PortableTextSpan,
+  SourcingFact,
 } from "./catalogTypes";
 
 export const CATALOG_TAG = "catalog";
@@ -41,9 +43,11 @@ type SanityCategory = {
   title?: string;
   slug?: string;
   description?: string;
+  tagline?: string;
   storyTitle?: string;
   story?: string;
   sourcing?: string;
+  sourcingFacts?: Array<{ label?: string; value?: string } | null>;
   image?: SanityImageSource;
   imageAlt?: string;
   order?: number;
@@ -139,15 +143,27 @@ function normalizeCategoryImage(category: SanityCategory | undefined): CatalogIm
   };
 }
 
+// La ficha de origen se descarta fila por fila: una entrada a medio llenar en el
+// Studio pintaría un renglón vacío en la pantalla del local.
+function normalizeSourcingFacts(facts: SanityCategory["sourcingFacts"]): SourcingFact[] | undefined {
+  if (!Array.isArray(facts)) return undefined;
+  const clean = facts
+    .map((fact) => ({ label: fact?.label?.trim() || "", value: fact?.value?.trim() || "" }))
+    .filter((fact) => fact.label !== "" && fact.value !== "");
+  return clean.length > 0 ? clean : undefined;
+}
+
 function normalizeCategory(category: SanityCategory | undefined): CatalogCategory {
   return {
     id: category?._id || "uncategorized",
     title: category?.title?.trim() || "Sin categoría",
     slug: category?.slug?.trim() || "sin-categoria",
     description: category?.description?.trim() || undefined,
+    tagline: category?.tagline?.trim() || undefined,
     storyTitle: category?.storyTitle?.trim() || undefined,
     story: category?.story?.trim() || undefined,
     sourcing: category?.sourcing?.trim() || undefined,
+    sourcingFacts: normalizeSourcingFacts(category?.sourcingFacts),
     image: normalizeCategoryImage(category),
     order: typeof category?.order === "number" ? category.order : 999,
     isVisible: category?.isVisible !== false,
