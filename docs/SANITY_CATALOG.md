@@ -123,10 +123,9 @@ Dónde aparece cada cosa:
 
 - `/catalogo/imprimir`, `/catalogo/imprimir?fotos=no` y `/catalogo/carta`: la historia va bajo el
   título de su sección. No depende de que la carta lleve fotos: el relato es contenido de la sección.
-- `/catalogo/tv`: el título, el subtítulo, la historia y la ficha forman un **encabezado fijo** que
-  se repite en todas las pantallas de la sección, y abajo rotan los productos. Así el relato está
-  visible mire cuando mire el comensal, no solo si llega justo a tiempo. La primera pantalla de cada
-  sección dura 1,4 veces más, para que el relato recién aparecido alcance a leerse.
+- `/catalogo/tv`: cada sección ocupa **una pantalla completa** con su título, subtítulo, historia,
+  cita y ficha arriba, y los productos debajo. La ficha usa dos columnas; si el número de datos es
+  impar, el último ocupa el ancho entero para no dejar medio recuadro vacío.
 
 Cuando una sección tiene historia, esta reemplaza a la descripción corta en la carta; las secciones
 sin historia siguen mostrando su descripción.
@@ -155,21 +154,40 @@ Valle — "Campos" era el nombre de la empresa, no su apellido.
 
 ## La pantalla del local (septiembre 2026)
 
-`/catalogo/tv` está pensada para un **televisor girado en vertical (1080×1920)** y sigue la
-estructura de las cartas en PDF del cliente: título, subtítulo, relato con barra de acento, ficha de
-origen y productos con precio. **No usa fotografías.**
+`/catalogo/tv` está pensada para un **televisor girado en vertical (1080×1920)**, con el fondo
+arena de la marca. El ciclo completo son diez pantallas:
+
+| Pantallas | Contenido |
+|---|---|
+| 1–5 | Una por sección de la carta: título, subtítulo, historia, cita, ficha y productos |
+| 6 | Marca y código QR hacia `/catalogo` |
+| 7 | Muro con las fotografías de producto, que caen una a una |
+| 8 | Cómo nació Raíces, con la fotografía de los fundadores |
+| 9–10 | Los productores, de dos en dos |
+
+Las secciones **sin historia ni ficha** se fusionan en una sola pantalla —hoy Alimentos y Para
+llevar— y el nombre de cada una pasa a ser el título de su subsección. Si alguna recibe una historia
+desde el Studio, vuelve a separarse sola.
+
+El producto se muestra solo con **nombre y precio**: la descripción corta queda para el catálogo web,
+al que lleva el QR. Cuando una sección pasa de ocho productos, la lista se reparte en dos columnas.
 
 Toda la escala tipográfica cuelga de una columna 9:16 (`--w: min(100vw, 100vh * 9 / 16)` en
 `app/catalogo/tv/tv.module.css`). En el televisor girado la columna llena la pantalla; en un monitor
 apaisado queda centrada con la misma proporción, así que abrir la URL en una laptop **ya es la vista
 previa** — no hace falta girar nada ni tocar el CSS.
 
-Como la pantalla no tiene scroll, `resolveStoryDensity()` en `app/catalogo/tv/slides.ts` elige el
+Como la pantalla no tiene scroll, `resolveScreenDensity()` en `lib/menuScreenSlides.ts` elige el
 cuerpo del relato y de la ficha según cuánto texto trae la sección, para que el encabezado nunca
-empuje los productos fuera de cuadro. Cada pantalla muestra hasta 4 productos
-(`TV_MAX_ITEMS_PER_SLIDE`).
+empuje los productos fuera de cuadro.
+
+Las pantallas narrativas (7 a 10) no salen de Sanity: el muro usa las fotografías de producto que ya
+están en el Studio, y las dos últimas leen `humanOrigin` de `data/social.ts` y `people` de
+`data/people.ts` — el mismo contenido que la landing muestra en `#historia` y en "Las personas
+detrás de Raíces". Se arman en `app/catalogo/tv/extraSlides.ts`.
 
 El intervalo de rotación se ajusta por URL: `/catalogo/tv?s=15` para 15 segundos (entre 5 y 120).
+Las pantallas de lectura duran 1,5 veces ese intervalo.
 
 ## Webhook
 

@@ -4,9 +4,13 @@ import { getCatalogCategories, getCatalogItems } from "@/sanity/lib/catalog";
 import { getSiteSettings } from "@/sanity/lib/siteSettings";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { filterPrintedMenuItems } from "@/lib/printedMenu";
-import { buildTvSlides } from "./slides";
-import { CatalogTvShow } from "./CatalogTvShow";
+import { buildMenuScreenSlides } from "@/lib/menuScreenSlides";
+import { buildCollageSlide, buildOriginSlide, buildPeopleSlides } from "./extraSlides";
+import { CatalogTv } from "./CatalogTv";
 
+// La pantalla del local: televisor girado en vertical. Primero la carta, una
+// pantalla por sección; después el QR, el muro de fotos de producto, cómo nació
+// Raíces y quiénes están detrás.
 export const metadata: Metadata = {
   title: "Carta para pantalla",
   robots: { index: false, follow: false },
@@ -36,7 +40,16 @@ export default async function CartaTvPage({ searchParams }: TvPageProps) {
     getCatalogCategories(),
     getSiteSettings(),
   ]);
-  const slides = buildTvSlides(filterPrintedMenuItems(items), settings.showCatalogPrices, categories);
+  // El QR cierra la carta; después vienen las pantallas narrativas: el muro de
+  // fotos de producto, cómo nació Raíces y quiénes están detrás.
+  const menuItems = filterPrintedMenuItems(items);
+  const collage = buildCollageSlide(menuItems);
+  const slides = [
+    ...buildMenuScreenSlides(menuItems, settings.showCatalogPrices, categories),
+    ...(collage ? [collage] : []),
+    buildOriginSlide(),
+    ...buildPeopleSlides(),
+  ];
 
   const catalogUrl = `${getSiteUrl()}/catalogo`;
   const qrDataUrl = await QRCode.toDataURL(catalogUrl, {
@@ -47,7 +60,7 @@ export default async function CartaTvPage({ searchParams }: TvPageProps) {
   });
 
   return (
-    <CatalogTvShow
+    <CatalogTv
       slides={slides}
       intervalMs={intervalMs}
       logo={settings.brandLogo}

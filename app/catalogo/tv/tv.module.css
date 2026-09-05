@@ -1,6 +1,11 @@
-/* Carta para la pantalla del local: televisor girado en vertical (1080×1920).
-   Sigue la estructura de las cartas en PDF del cliente —título, subtítulo,
-   relato de origen, ficha de productores y productos— y no usa fotografías. */
+/* La pantalla del local: televisor girado en vertical (1080×1920). Título
+   centrado bajo su regla, productos sin descripción, subsecciones con su título
+   y dos columnas cuando hay productos de sobra.
+
+   El fondo es el arena #d1b996 de la marca. Al ser un tono claro, los acentos
+   van en arcilla profunda (#7c3b31, 4,8:1 sobre el fondo) y el texto en el
+   marrón tinta (8,2:1). El fondo va plano: la profundidad la ponen las cajas,
+   una más clara y otra más honda. */
 
 .stage {
   position: fixed;
@@ -9,19 +14,21 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--ink);
-  color: #fff8ed;
+  /* Fuera de la columna 9:16 el fondo enmarca la carta en un monitor apaisado
+     y desaparece en el televisor girado. */
+  background: #241a14;
+  color: var(--ink);
   font-family: var(--sans);
 
-  /* Toda la escala cuelga del ancho de una columna 9:16. En el televisor girado
-     vale 1080 y llena la pantalla; en un monitor apaisado queda una columna
-     centrada con la misma proporción, que sirve de vista previa sin girar nada
-     ni tocar el CSS. */
+  /* Toda la escala cuelga del ancho de una columna 9:16: en el televisor girado
+     vale 1080 y llena la pantalla; en un monitor apaisado queda centrada, que es
+     la vista previa real. */
   --w: min(100vw, calc(100vh * 9 / 16));
   --pad: calc(var(--w) * 0.052);
-  --gold: #e4bb72;
-  --paper: #fff8ed;
-  --paper-soft: rgba(244, 239, 229, 0.72);
+  --sand: #d1b996;
+  --sand-lift: #ddc8aa;
+  --sand-deep: #c3a781;
+  --accent: #7c3b31;
 }
 
 .cursorHidden {
@@ -33,9 +40,7 @@
   width: var(--w);
   height: min(100vh, calc(var(--w) * 16 / 9));
   overflow: hidden;
-  background:
-    radial-gradient(120% 55% at 50% 0%, rgba(228, 187, 114, 0.09), transparent 62%),
-    linear-gradient(168deg, var(--green-deep) 0%, var(--ink) 100%);
+  background: var(--sand);
 }
 
 .slide {
@@ -54,7 +59,28 @@
   opacity: 1;
 }
 
-/* ---------- Encabezado fijo de la sección ---------- */
+/* Tres niveles de densidad, elegidos en el servidor por resolveScreenDensity():
+   la pantalla no tiene scroll, así que el relato y la ficha se ajustan al
+   contenido en vez de empujar los productos fuera de cuadro. */
+.holgada {
+  --story-size: calc(var(--w) * 0.024);
+  --quote-size: calc(var(--w) * 0.023);
+  --fact-size: calc(var(--w) * 0.020);
+}
+
+.media {
+  --story-size: calc(var(--w) * 0.021);
+  --quote-size: calc(var(--w) * 0.020);
+  --fact-size: calc(var(--w) * 0.018);
+}
+
+.compacta {
+  --story-size: calc(var(--w) * 0.019);
+  --quote-size: calc(var(--w) * 0.018);
+  --fact-size: calc(var(--w) * 0.017);
+}
+
+/* ---------- Encabezado de la sección ---------- */
 
 .sectionHeader {
   flex: none;
@@ -70,7 +96,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-align: center;
-  color: var(--paper);
+  color: var(--ink);
 }
 
 .sectionTagline {
@@ -80,53 +106,41 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   text-align: center;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .sectionRule {
   margin-top: calc(var(--w) * 0.028);
   height: calc(var(--w) * 0.0035);
-  background: var(--gold);
-  opacity: 0.85;
+  background: var(--accent);
+  opacity: 0.9;
 }
 
-/* Los tres niveles de densidad, elegidos en el servidor por resolveStoryDensity()
-   según cuánto texto trae la sección. La pantalla no tiene scroll: en vez de
-   dejar que el encabezado empuje los productos fuera, el cuerpo del relato y de
-   la ficha se ajustan al contenido, siempre dentro de lo legible a 2-3 metros. */
-.holgada {
-  --story-size: calc(var(--w) * 0.027);
-  --story-label: calc(var(--w) * 0.021);
-  --fact-size: calc(var(--w) * 0.021);
+/* ---------- Cuerpo ---------- */
+
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.media {
-  --story-size: calc(var(--w) * 0.023);
-  --story-label: calc(var(--w) * 0.019);
-  --fact-size: calc(var(--w) * 0.019);
-}
-
-.compacta {
-  --story-size: calc(var(--w) * 0.020);
-  --story-label: calc(var(--w) * 0.017);
-  --fact-size: calc(var(--w) * 0.017);
-}
-
-/* La barra dorada a la izquierda del relato es la marca de la carta en papel. */
 .storyBox {
-  margin-top: calc(var(--w) * 0.03);
-  padding: calc(var(--w) * 0.024) calc(var(--w) * 0.028);
-  border-left: calc(var(--w) * 0.007) solid var(--gold);
-  background: rgba(255, 248, 237, 0.05);
+  flex: none;
+  margin-top: calc(var(--w) * 0.028);
+  padding: calc(var(--w) * 0.022) calc(var(--w) * 0.026);
+  border-left: calc(var(--w) * 0.006) solid var(--accent);
+  background: var(--sand-lift);
 }
 
 .storyTitle {
-  margin: 0 0 calc(var(--w) * 0.013);
-  font-size: var(--story-label);
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  margin: 0 0 calc(var(--w) * 0.01);
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.026);
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .storyText {
@@ -135,115 +149,360 @@
   font-style: italic;
   font-size: var(--story-size);
   line-height: 1.55;
-  color: var(--paper);
+  color: var(--ink);
+}
+
+/* La voz del productor, cuando el relato cierra con ella. */
+.storyQuote {
+  margin: calc(var(--w) * 0.016) 0 0;
+  padding: calc(var(--w) * 0.014) calc(var(--w) * 0.018);
+  border-radius: calc(var(--w) * 0.008);
+  background: var(--sand-deep);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--quote-size);
+  line-height: 1.45;
+  color: var(--ink);
 }
 
 .factsBox {
+  flex: none;
   margin-top: calc(var(--w) * 0.022);
-  padding: calc(var(--w) * 0.022) calc(var(--w) * 0.028);
-  border: 1px solid rgba(228, 187, 114, 0.24);
+  padding: calc(var(--w) * 0.02) calc(var(--w) * 0.026);
+  border: 1px solid rgba(43, 33, 28, 0.16);
   border-radius: calc(var(--w) * 0.012);
-  background: rgba(228, 187, 114, 0.07);
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--w) * 0.008);
+  background: var(--sand-deep);
+}
+
+.factsTitle {
+  margin: 0 0 calc(var(--w) * 0.01);
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.024);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.factsGrid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--w) * 0.005) calc(var(--w) * 0.028);
 }
 
 .fact {
-  margin: 0;
+  display: flex;
+  gap: calc(var(--w) * 0.005);
   font-size: var(--fact-size);
   line-height: 1.4;
-  color: var(--paper-soft);
+}
+
+/* Con un número impar de datos el último queda solo en la columna izquierda,
+   envolviéndose en un renglón estrecho con medio recuadro vacío al lado. Cuando
+   es el último y cae en posición impar, ocupa el ancho completo y el texto corre
+   de lado a lado como el resto. */
+.fact:nth-child(odd):last-child {
+  grid-column: 1 / -1;
 }
 
 .factLabel {
+  margin: 0;
   font-weight: 700;
-  color: var(--paper);
+  color: var(--ink);
+  white-space: nowrap;
 }
 
-/* ---------- Cuerpo que rota: los productos ---------- */
+.factLabel::after {
+  content: ":";
+}
 
-.slideBody {
+.factValue {
+  margin: 0;
+  min-width: 0;
+  color: var(--green-deep);
+}
+
+/* ---------- Productos por subsección ---------- */
+
+.groups {
   flex: 1;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-  padding-top: calc(var(--w) * 0.032);
+  margin-top: calc(var(--w) * 0.03);
 }
 
-.subCategoryTitle {
-  margin: 0 0 calc(var(--w) * 0.012);
-  font-size: calc(var(--w) * 0.027);
+/* Dos columnas al estilo periódico: las subsecciones se reparten solas y
+   `break-inside: avoid` impide que un título quede huérfano de su lista. */
+.twoColumns {
+  columns: 2;
+  column-gap: calc(var(--w) * 0.045);
+}
+
+.group {
+  break-inside: avoid;
+  display: block;
+}
+
+.group + .group {
+  margin-top: calc(var(--w) * 0.024);
+}
+
+.groupTitle {
+  margin: 0 0 calc(var(--w) * 0.008);
+  padding-bottom: calc(var(--w) * 0.006);
+  border-bottom: 1px solid rgba(124, 59, 49, 0.35);
+  font-size: calc(var(--w) * 0.024);
   font-weight: 700;
-  letter-spacing: 0.18em;
+  line-height: 1.2;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold);
-}
-
-.pageCounter {
-  color: rgba(228, 187, 114, 0.6);
+  color: var(--accent);
 }
 
 .items {
   margin: 0;
   padding: 0;
   list-style: none;
-  display: flex;
-  flex-direction: column;
 }
 
 .item {
-  padding: calc(var(--w) * 0.017) 0;
-  border-bottom: 1px solid rgba(244, 239, 229, 0.12);
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--w) * 0.016);
+  padding: calc(var(--w) * 0.011) 0;
+  border-bottom: 1px solid var(--line);
 }
 
-.item:last-child {
+.items > .item:last-child {
   border-bottom: none;
 }
 
-.itemRow {
-  display: flex;
-  align-items: baseline;
-  gap: calc(var(--w) * 0.02);
-}
-
 .itemName {
-  margin: 0;
   font-family: var(--serif);
-  font-size: calc(var(--w) * 0.046);
+  font-size: calc(var(--w) * 0.038);
   font-weight: 500;
-  line-height: 1.1;
-  color: var(--paper);
+  line-height: 1.15;
+  color: var(--ink);
 }
 
 .itemPrice {
-  margin: 0 0 0 auto;
-  font-size: calc(var(--w) * 0.044);
+  margin-left: auto;
+  font-size: calc(var(--w) * 0.036);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--gold);
+  color: var(--accent);
   white-space: nowrap;
 }
 
 .itemInquiry {
-  margin: 0 0 0 auto;
-  font-size: calc(var(--w) * 0.026);
+  margin-left: auto;
+  font-size: calc(var(--w) * 0.022);
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(228, 187, 114, 0.65);
+  color: var(--ink-soft);
   white-space: nowrap;
 }
 
-.itemDescription {
-  margin: calc(var(--w) * 0.008) 0 0;
-  font-size: calc(var(--w) * 0.024);
-  line-height: 1.4;
-  color: var(--paper-soft);
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+/* ---------- Muro de fotografías ---------- */
+
+/* Cuatro columnas de fotos ligeramente giradas y superpuestas, al modo de una
+   pila de instantáneas sobre la mesa. El giro en reposo lo lleva cada figura en
+   su --angle, calculado en el servidor para que no cambie entre renders. */
+.collage {
+  flex: 1;
+  min-height: 0;
+  margin-top: calc(var(--w) * 0.03);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: center;
+  gap: calc(var(--w) * 0.012);
+}
+
+.collageItem {
+  margin: 0;
+  padding: calc(var(--w) * 0.006);
+  background: #fff8ed;
+  border-radius: calc(var(--w) * 0.004);
+  box-shadow: 0 calc(var(--w) * 0.006) calc(var(--w) * 0.014) rgba(43, 33, 28, 0.28);
+  transform: rotate(var(--angle));
+}
+
+.collageItem img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: calc(var(--w) * 0.002);
+  background: var(--sand-deep);
+}
+
+/* Las fotos caen una a una: la animación arranca al entrar la pantalla, porque
+   se declara solo sobre el slide activo, y se rebobina al salir. `backwards`
+   mantiene cada foto fuera de cuadro hasta que le toca su turno. */
+.slide.active .collageItem {
+  animation: collageFall 0.85s cubic-bezier(0.22, 0.9, 0.28, 1) backwards;
+  animation-delay: var(--delay);
+}
+
+@keyframes collageFall {
+  from {
+    opacity: 0;
+    transform: translateY(-70%) rotate(calc(var(--angle) * 2.5));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--angle));
+  }
+}
+
+/* ---------- Pantalla de historia ---------- */
+
+.originBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--w) * 0.024);
+  padding-top: calc(var(--w) * 0.03);
+}
+
+.originHeadline {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.042);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/* La foto absorbe el espacio que sobra: así la pantalla se llena sea cual sea
+   el largo del texto, sin dejar un hueco abajo ni recortar los párrafos. */
+.originFigure {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
   overflow: hidden;
+  border-radius: calc(var(--w) * 0.016);
+  background: var(--sand-deep);
+}
+
+.originFigure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.originCopy {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--w) * 0.012);
+}
+
+.originParagraph {
+  margin: 0;
+  font-size: calc(var(--w) * 0.022);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.originNote {
+  flex: none;
+  margin: 0;
+  padding: calc(var(--w) * 0.016) calc(var(--w) * 0.02);
+  border-left: calc(var(--w) * 0.005) solid var(--accent);
+  background: var(--sand-lift);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: calc(var(--w) * 0.022);
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.originNoteLabel {
+  display: block;
+  margin-bottom: calc(var(--w) * 0.006);
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: calc(var(--w) * 0.017);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ---------- Pantallas de personas ---------- */
+
+.peopleBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--w) * 0.028);
+  padding-top: calc(var(--w) * 0.03);
+}
+
+/* Dos personas por pantalla, cada una repartiéndose el alto disponible: la foto
+   a un lado y su ficha al otro, que en vertical se lee mejor que apilarlas. */
+.personCard {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: calc(var(--w) * 0.026);
+  overflow: hidden;
+  border-radius: calc(var(--w) * 0.016);
+  background: var(--sand-lift);
+}
+
+.personPhoto,
+.personPhotoEmpty {
+  flex: none;
+  width: 38%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.personPhotoEmpty {
+  background: var(--sand-deep);
+}
+
+.personCopy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(var(--w) * 0.008);
+  padding: calc(var(--w) * 0.024) calc(var(--w) * 0.026) calc(var(--w) * 0.024) 0;
+}
+
+.personName {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.042);
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.personRole {
+  margin: 0;
+  font-size: calc(var(--w) * 0.019);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.personSummary {
+  margin: calc(var(--w) * 0.008) 0 0;
+  font-size: calc(var(--w) * 0.021);
+  line-height: 1.45;
+  color: var(--ink-soft);
 }
 
 /* ---------- Pantalla de marca, cierre del ciclo ---------- */
@@ -278,7 +537,7 @@
   font-weight: 600;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .qrCard {
@@ -287,7 +546,7 @@
   flex-direction: column;
   align-items: center;
   gap: calc(var(--w) * 0.018);
-  background: var(--paper);
+  background: #fff8ed;
   color: var(--ink);
   border-radius: calc(var(--w) * 0.028);
   padding: calc(var(--w) * 0.045);
@@ -327,7 +586,7 @@
   width: calc(var(--w) * 0.008);
   height: calc(var(--w) * 0.008);
   border-radius: 50%;
-  background: rgba(228, 187, 114, 0.35);
+  background: rgba(124, 59, 49, 0.28);
 }
 
 .progressActive {
@@ -335,14 +594,14 @@
   width: calc(var(--w) * 0.03);
   height: calc(var(--w) * 0.008);
   border-radius: calc(var(--w) * 0.004);
-  background: rgba(228, 187, 114, 0.35);
+  background: rgba(124, 59, 49, 0.28);
   overflow: hidden;
 }
 
 .progressFill {
   position: absolute;
   inset: 0;
-  background: var(--gold);
+  background: var(--accent);
   transform-origin: left center;
   transform: scaleX(0);
   animation-name: tvProgress;
@@ -367,5 +626,9 @@
   .progressFill {
     animation: none;
     transform: scaleX(1);
+  }
+
+  .slide.active .collageItem {
+    animation: none;
   }
 }

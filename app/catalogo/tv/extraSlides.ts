@@ -31,7 +31,7 @@ const COLLAGE_MIN_PHOTOS = 4;
 // a una en vez de aparecer todas juntas.
 const COLLAGE_STAGGER_MS = 180;
 
-export type TvV4CollagePhoto = {
+export type TvCollagePhoto = {
   id: string;
   src: string;
   alt: string;
@@ -39,7 +39,7 @@ export type TvV4CollagePhoto = {
   delayMs: number;
 };
 
-export type TvV4PersonCard = {
+export type TvPersonCard = {
   slug: string;
   name: string;
   role: string;
@@ -48,14 +48,14 @@ export type TvV4PersonCard = {
   photo: { src: string; alt: string; position: string } | null;
 };
 
-export type TvV4Slide =
+export type TvScreenSlide =
   | MenuScreenSlide
   | {
       kind: "collage";
       key: string;
       tagline: string;
       title: string;
-      photos: TvV4CollagePhoto[];
+      photos: TvCollagePhoto[];
       dwell: number;
     }
   | {
@@ -74,11 +74,11 @@ export type TvV4Slide =
       key: string;
       tagline: string;
       title: string;
-      cards: TvV4PersonCard[];
+      cards: TvPersonCard[];
       dwell: number;
     };
 
-export function buildCollageSlide(items: CatalogItem[]): TvV4Slide | null {
+export function buildCollageSlide(items: CatalogItem[]): TvScreenSlide | null {
   // Solo las fotos reales: normalizeImage rellena con el paisaje de Ayacucho a
   // los productos sin fotografía propia, y ese no representa a ninguno.
   const seen = new Set<string>();
@@ -115,7 +115,7 @@ export function buildCollageSlide(items: CatalogItem[]): TvV4Slide | null {
   };
 }
 
-export function buildOriginSlide(): TvV4Slide {
+export function buildOriginSlide(): TvScreenSlide {
   const languageNote = humanOrigin.notes[1] ?? humanOrigin.notes[0];
   return {
     kind: "origin",
@@ -130,10 +130,10 @@ export function buildOriginSlide(): TvV4Slide {
   };
 }
 
-export function buildPeopleSlides(): TvV4Slide[] {
+export function buildPeopleSlides(): TvScreenSlide[] {
   // Cada persona entra con su primera fotografía de ficha; las que aún no
   // tienen retrato se muestran igual, con su nombre y su oficio.
-  const cards: TvV4PersonCard[] = people.map((person) => {
+  const cards: TvPersonCard[] = people.map((person) => {
     const photo = person.portraitGallery?.[0];
     return {
       slug: person.slug,
@@ -146,7 +146,7 @@ export function buildPeopleSlides(): TvV4Slide[] {
     };
   });
 
-  const slides: TvV4Slide[] = [];
+  const slides: TvScreenSlide[] = [];
   for (let page = 0; page < Math.ceil(cards.length / PEOPLE_PER_SLIDE); page += 1) {
     slides.push({
       kind: "people",
