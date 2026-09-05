@@ -1,0 +1,46 @@
+{
+  "secciones": [
+    {
+      "categorySlug": "clasicos",
+      "categoryName": "Café",
+      "tagline": "Café de especialidad · Origen directo",
+      "facts": [
+        { "label": "Origen", "value": "Nueva Unión, Ayna – San Francisco (VRAEM, Ayacucho)" },
+        { "label": "Variedad", "value": "Blend Caturra y Bourbon" },
+        { "label": "Altitud", "value": "1,600 – 2,000 m.s.n.m." },
+        { "label": "Puntaje SCA", "value": "84 – 86 pts (café de especialidad)" },
+        { "label": "Notas de cata", "value": "Cacao puro, caramelo, frutos secos y delicadas notas a frutos amarillos" },
+        { "label": "Perfil", "value": "Acidez brillante, dulzor natural y cuerpo balanceado con posgusto prolongado" },
+        { "label": "Acompañamiento", "value": "Un mini alfajor tipo gouraud francés con cada café" }
+      ]
+    },
+    {
+      "categorySlug": "bebidas-de-chocolate",
+      "categoryName": "Chocolatería",
+      "tagline": "Cacao puro de origen · Pichari, VRAEM (Cusco)",
+      "facts": [
+        { "label": "Origen", "value": "Pichari, VRAEM (Cusco, Perú)" },
+        { "label": "Productora", "value": "Ing. Agroforestal Dina Torres Barboza" },
+        { "label": "Tipo de grano", "value": "Cacao puro fino de aroma" },
+        { "label": "Impacto social", "value": "Trabajo directo con la comunidad Asháninka" },
+        { "label": "Perfil sensorial", "value": "Intenso sabor a chocolate puro, notas tostadas, untuosidad sedosa y dulzor natural" }
+      ]
+    },
+    {
+      "categorySlug": "sandwiches",
+      "categoryName": "Sándwiches",
+      "tagline": "Tradición ayacuchana · Insumos de origen",
+      "facts": [
+        { "label": "Pan chapla artesanal", "value": "Panadería Kullany Pan — Sra. Karen Córdova" },
+        { "label": "Quesos regionales", "value": "Elaboración artesanal tradicional — David Meneses" },
+        { "label": "Palta ayacuchana", "value": "Cosecha local fresca de huertos ayacuchanos (en temporada)" }
+      ]
+    },
+    {
+      "categorySlug": "bebidas-andinas",
+      "categoryName": "Bebidas Andinas",
+      "tagline": "Nutrición andina · Tradición y energía natural",
+      "facts": []
+    }
+  ]
+}

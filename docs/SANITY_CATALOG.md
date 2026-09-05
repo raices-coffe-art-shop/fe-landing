@@ -3,7 +3,7 @@
 ## Qué se administra desde `/studio`
 
 - Configuración del sitio: logo, texto alternativo y redes sociales.
-- Catálogo > Categorías: nombre, slug, descripción, historia de origen, insumos y productores, fotografía, orden, visibilidad y si la categoría entra en la carta del café.
+- Catálogo > Categorías: nombre, slug, descripción, subtítulo, historia de origen, insumos y productores, ficha de origen, fotografía, orden, visibilidad y si la categoría entra en la carta del café.
 - Catálogo > Productos: contenido, imágenes, procedencia, estado, destacado y orden.
 - Publicaciones: el blog editable por el cliente (ver ).
 
@@ -101,13 +101,20 @@ Ambos scripts son repetibles y no pisan lo que el equipo edite en el Studio.
 
 ## Historias de origen (septiembre 2026)
 
-Cada categoría tiene tres campos de relato, todos opcionales:
+Cada categoría tiene cinco campos de relato, todos opcionales:
 
 | Campo en el Studio | Dónde se ve | Límite |
 |---|---|---|
+| **Subtítulo de la sección** | Bajo el título, en la pantalla del local | 80 caracteres |
 | **Título de la historia** | Encabezado del relato, en la carta impresa y en la pantalla | 120 caracteres |
-| **Historia de origen** | Bajo el título de la sección en las tres cartas; pantalla propia en `/catalogo/tv` | 700 caracteres |
-| **Insumos y productores** | Pie del relato, en las dos vistas | 400 caracteres |
+| **Historia de origen** | Bajo el título de la sección en las tres cartas y en la pantalla | 700 caracteres |
+| **Insumos y productores** | Pie del relato, en la carta impresa | 400 caracteres |
+| **Ficha de origen y productores** | Recuadro de datos en la pantalla del local | 8 filas de dato + valor |
+
+La **ficha de origen** es la retícula de las cartas en PDF del cliente: una fila por dato
+(`Origen`, `Altitud`, `Puntaje SCA`, `Productora`…). Cada fila necesita etiqueta y valor; una
+fila a medio llenar se descarta sola y no pinta un renglón vacío en la pantalla. Bebidas Andinas
+no tiene ficha, igual que su carta impresa, y esa sección simplemente no muestra el recuadro.
 
 Son distintos de la **descripción**, que es el resumen corto del catálogo web (`/catalogo`) y sigue
 funcionando igual. Una sección sin historia se muestra como siempre, con su descripción corta.
@@ -116,8 +123,10 @@ Dónde aparece cada cosa:
 
 - `/catalogo/imprimir`, `/catalogo/imprimir?fotos=no` y `/catalogo/carta`: la historia va bajo el
   título de su sección. No depende de que la carta lleve fotos: el relato es contenido de la sección.
-- `/catalogo/tv`: la historia ocupa una pantalla propia, antes de los productos de su sección, y
-  permanece 1,6 veces más tiempo que una pantalla de productos porque hay más que leer.
+- `/catalogo/tv`: el título, el subtítulo, la historia y la ficha forman un **encabezado fijo** que
+  se repite en todas las pantallas de la sección, y abajo rotan los productos. Así el relato está
+  visible mire cuando mire el comensal, no solo si llega justo a tiempo. La primera pantalla de cada
+  sección dura 1,4 veces más, para que el relato recién aparecido alcance a leerse.
 
 Cuando una sección tiene historia, esta reemplaza a la descripción corta en la carta; las secciones
 sin historia siguen mostrando su descripción.
@@ -132,6 +141,35 @@ npm run historias:migrate       # aplicar
 
 Ese mismo script aplica la carta final de sándwiches: oculta **Maní Energético & Plátano**, que el
 cliente retiró, y actualiza la descripción de **Palta con Pollo**. La sección quedó con 15 productos.
+
+Los subtítulos y las fichas de origen se cargaron después, transcritos de los mismos PDFs:
+
+```bash
+npm run fichas:migrate:dry   # revisar
+npm run fichas:migrate       # aplicar
+```
+
+Un detalle de contenido: el PDF de chocolatería dice *"Ing. Agrónoma Dina Campos"*. El dato correcto,
+confirmado con el cliente, es **Ing. Agroforestal Dina Torres Barboza**, de Agroindustrias Campos del
+Valle — "Campos" era el nombre de la empresa, no su apellido.
+
+## La pantalla del local (septiembre 2026)
+
+`/catalogo/tv` está pensada para un **televisor girado en vertical (1080×1920)** y sigue la
+estructura de las cartas en PDF del cliente: título, subtítulo, relato con barra de acento, ficha de
+origen y productos con precio. **No usa fotografías.**
+
+Toda la escala tipográfica cuelga de una columna 9:16 (`--w: min(100vw, 100vh * 9 / 16)` en
+`app/catalogo/tv/tv.module.css`). En el televisor girado la columna llena la pantalla; en un monitor
+apaisado queda centrada con la misma proporción, así que abrir la URL en una laptop **ya es la vista
+previa** — no hace falta girar nada ni tocar el CSS.
+
+Como la pantalla no tiene scroll, `resolveStoryDensity()` en `app/catalogo/tv/slides.ts` elige el
+cuerpo del relato y de la ficha según cuánto texto trae la sección, para que el encabezado nunca
+empuje los productos fuera de cuadro. Cada pantalla muestra hasta 4 productos
+(`TV_MAX_ITEMS_PER_SLIDE`).
+
+El intervalo de rotación se ajusta por URL: `/catalogo/tv?s=15` para 15 segundos (entre 5 y 120).
 
 ## Webhook
 

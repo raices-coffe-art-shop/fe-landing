@@ -17,6 +17,8 @@
     "cartas:migrate": "node --env-file=.env.local scripts/migrate-cartas-2026b.mjs",
     "historias:migrate:dry": "node --env-file=.env.local scripts/migrate-historias.mjs --dry-run",
     "historias:migrate": "node --env-file=.env.local scripts/migrate-historias.mjs",
+    "fichas:migrate:dry": "node --env-file=.env.local scripts/migrate-fichas.mjs --dry-run",
+    "fichas:migrate": "node --env-file=.env.local scripts/migrate-fichas.mjs",
     "sanity:verify-read": "node scripts/verify-sanity-read.mjs",
     "sanity:backfill-price-visibility": "node scripts/backfill-price-visibility.mjs",
     "sanity:backfill-social-links": "node scripts/backfill-official-social-links.mjs",
