@@ -228,12 +228,15 @@ export const relatedCatalogItemsQuery = defineQuery(`
   }
 `);
 
-// Publicaciones: solo las marcadas como publicadas y con fecha ya alcanzada,
-// de la más reciente a la más antigua.
+// Publicaciones, de la más reciente a la más antigua.
+//
+// No hace falta filtrar por un campo propio de "publicado": el cliente de Sanity
+// consulta con perspective "published", así que los borradores ya quedan fuera.
+// Un segundo interruptor solo lograba que un artículo publicado desde el Studio
+// no apareciera en el sitio, sin ninguna pista de por qué.
 export const postsQuery = defineQuery(`
   *[
     _type == "post" &&
-    coalesce(isPublished, false) == true &&
     defined(slug.current)
   ] | order(publishedAt desc){
     _id,
@@ -251,8 +254,7 @@ export const postsQuery = defineQuery(`
 export const postBySlugQuery = defineQuery(`
   *[
     _type == "post" &&
-    slug.current == $slug &&
-    coalesce(isPublished, false) == true
+    slug.current == $slug
   ][0]{
     _id,
     title,

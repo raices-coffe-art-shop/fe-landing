@@ -24,9 +24,8 @@ Cada publicación tiene su propia dirección web, así que se puede compartir po
 | **Descripción de la portada** | Describe la foto en pocas palabras (ayuda a personas ciegas y a Google). |
 | **Fecha** | Ya viene puesta con la de hoy. Puedes cambiarla. |
 | **Autor** | Por defecto "Raíces". Puedes poner un nombre propio. |
-| **¿Publicar en el sitio?** | Déjalo en **No** mientras escribes. Ponlo en **Sí** cuando esté lista. |
 
-5. Pulsa **Publicar** (el botón del Studio, abajo).
+5. Pulsa **Publicar** (el botón verde abajo a la derecha).
 
 La publicación aparece en la web en segundos. No hace falta avisar a nadie ni esperar a que alguien la suba.
 
@@ -44,9 +43,13 @@ Consejo: párrafos cortos y algún subtítulo cada 3 o 4 párrafos. Se lee mucho
 
 ## Guardar sin publicar
 
-Pon **¿Publicar en el sitio?** en **No**. La publicación queda guardada como borrador: solo se ve en el Studio, nadie más la encuentra. Puedes escribirla en varios ratos y publicarla cuando esté lista.
+Simplemente **no pulses Publicar**. Mientras no lo hagas, la publicación queda como borrador: solo se ve en el Studio, nadie más la encuentra. Puedes escribirla en varios ratos y publicarla cuando esté lista.
 
-Lo mismo sirve para retirar algo ya publicado: cámbialo a **No** y desaparece de la web sin borrarse.
+Lo que ves en la web es siempre **lo último que publicaste**. Si sigues editando después de publicar, esos cambios quedan como borrador hasta que vuelvas a pulsar Publicar (el botón se activa cuando hay algo pendiente).
+
+## Retirar algo ya publicado
+
+Abre la publicación, pulsa los **tres puntos** junto al botón Publicar y elige **Unpublish** (Despublicar). Desaparece de la web pero se conserva en el Studio, así que puedes volver a publicarla cuando quieras. Borrar solo hace falta si de verdad no la quieres nunca más.
 
 ## Recomendaciones
 
@@ -66,4 +69,6 @@ Lo mismo sirve para retirar algo ya publicado: cámbialo a **No** y desaparece d
 
 ## Si algo no aparece
 
-La web guarda una copia temporal para cargar rápido. Si publicaste algo y no lo ves de inmediato, espera un minuto y recarga. Si sigue sin verse, revisa que **¿Publicar en el sitio?** esté en **Sí** y que la publicación esté publicada (no en borrador) en el Studio.
+La web guarda una copia temporal para cargar rápido. Si publicaste algo y no lo ves de inmediato, espera un minuto y recarga.
+
+Si sigue sin verse, abre la publicación en el Studio y mira el botón de abajo a la derecha: si dice **Publicar** en verde, es que aún hay cambios sin publicar. Púlsalo.

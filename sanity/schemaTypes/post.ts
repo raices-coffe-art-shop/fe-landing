@@ -1,5 +1,4 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { YesNoBooleanInput } from "../components/YesNoBooleanInput";
 import { AutoSlugInput } from "../components/AutoSlugInput";
 import { isUniqueSlugWithinType } from "../lib/slugUniqueness";
 
@@ -16,7 +15,6 @@ export const post = defineType({
   initialValue: () => ({
     author: "Raíces",
     publishedAt: new Date().toISOString(),
-    isPublished: false,
   }),
   fields: [
     defineField({
@@ -155,16 +153,6 @@ export const post = defineType({
       validation: (Rule) => Rule.max(80),
     }),
     defineField({
-      name: "isPublished",
-      title: "¿Publicar en el sitio?",
-      description: "Sí = cualquiera puede verla en la web. No = queda guardada como borrador, solo visible aquí. Puedes escribirla con calma y publicarla cuando esté lista.",
-      type: "boolean",
-      group: "publishing",
-      initialValue: false,
-      components: { input: YesNoBooleanInput },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: "seo",
       title: "SEO (Google)",
       type: "seo",
@@ -176,14 +164,14 @@ export const post = defineType({
     { title: "Más antiguas", name: "publishedAtAsc", by: [{ field: "publishedAt", direction: "asc" }] },
   ],
   preview: {
-    select: { title: "title", publishedAt: "publishedAt", published: "isPublished", media: "coverImage" },
-    prepare({ title, publishedAt, published, media }) {
+    select: { title: "title", publishedAt: "publishedAt", author: "author", media: "coverImage" },
+    prepare({ title, publishedAt, author, media }) {
       const date = publishedAt
         ? new Date(publishedAt).toLocaleDateString("es-PE", { day: "2-digit", month: "long", year: "numeric" })
         : "sin fecha";
       return {
         title: title || "Publicación sin título",
-        subtitle: `${date} · ${published ? "publicada" : "borrador"}`,
+        subtitle: author ? `${date} · ${author}` : date,
         media,
       };
     },
