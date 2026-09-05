@@ -9,6 +9,7 @@ export const CHROMELESS_ROUTE_PREFIXES = [
   // El prefijo de arriba no cubre esta ruta: la comprobacion exige igualdad o
   // "/catalogo/tv/", y "/catalogo/tv-v2" no cumple ninguna de las dos.
   "/catalogo/tv-v2",
+  "/catalogo/tv-v3",
 ] as const;
 
 export function isChromelessRoute(pathname: string | null): boolean {

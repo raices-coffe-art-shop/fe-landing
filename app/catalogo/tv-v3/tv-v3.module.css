@@ -1,0 +1,480 @@
+/* Tercera versión de la pantalla del local, siguiendo las últimas capturas:
+   banda oscura a sangre arriba con el logo y el nombre de la sección (sin
+   ilustración ni contador), cuerpo crema con la historia, la ficha y los
+   productos agrupados por subsección, y una banda de cierre abajo.
+
+   Sin descripciones y con dos columnas cuando hay productos de sobra, cada
+   sección entra completa en una sola pantalla. */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* Fuera de la columna 9:16 el fondo enmarca la carta en un monitor apaisado
+     y desaparece en el televisor girado. */
+  background: #150f0c;
+  font-family: var(--sans);
+
+  /* Toda la escala cuelga del ancho de una columna 9:16: en el televisor girado
+     vale 1080 y llena la pantalla; en un monitor apaisado queda centrada, que es
+     la vista previa real. */
+  --w: min(100vw, calc(100vh * 9 / 16));
+  --pad: calc(var(--w) * 0.045);
+  --sheet: #fdf6ea;
+  --sheet-warm: #f5ead6;
+  --sheet-deep: #efe2ca;
+  --maroon: #7d3b42;
+  --band: linear-gradient(152deg, #4b2d1d 0%, #2c1b13 56%, #1d120c 100%);
+}
+
+.cursorHidden {
+  cursor: none;
+}
+
+.column {
+  position: relative;
+  width: var(--w);
+  height: min(100vh, calc(var(--w) * 16 / 9));
+  overflow: hidden;
+  border-radius: calc(var(--w) * 0.03);
+  background: var(--sheet);
+  color: var(--ink);
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  pointer-events: none;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+/* Tres niveles de densidad, elegidos en el servidor por resolveV3Density(): la
+   pantalla no tiene scroll, así que el relato y la ficha se ajustan al contenido
+   en lugar de empujar los productos fuera de cuadro. */
+.holgada {
+  --story-size: calc(var(--w) * 0.023);
+  --quote-size: calc(var(--w) * 0.022);
+  --fact-size: calc(var(--w) * 0.020);
+}
+
+.media {
+  --story-size: calc(var(--w) * 0.020);
+  --quote-size: calc(var(--w) * 0.019);
+  --fact-size: calc(var(--w) * 0.018);
+}
+
+.compacta {
+  --story-size: calc(var(--w) * 0.018);
+  --quote-size: calc(var(--w) * 0.017);
+  --fact-size: calc(var(--w) * 0.016);
+}
+
+/* ---------- Banda superior ---------- */
+
+.header {
+  flex: none;
+  padding: var(--pad) var(--pad) calc(var(--w) * 0.038);
+  background: var(--band);
+  color: #fff8ed;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--w) * 0.014);
+}
+
+.brandLogo {
+  width: calc(var(--w) * 0.042);
+  height: calc(var(--w) * 0.042);
+  object-fit: contain;
+}
+
+.brandCopy {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--w) * 0.002);
+}
+
+.brandName {
+  margin: 0;
+  font-size: calc(var(--w) * 0.023);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff8ed;
+}
+
+.brandKicker {
+  margin: 0;
+  font-size: calc(var(--w) * 0.014);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--honey);
+}
+
+.headerTagline {
+  margin: calc(var(--w) * 0.042) 0 calc(var(--w) * 0.012);
+  font-size: calc(var(--w) * 0.019);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 248, 237, 0.8);
+}
+
+.headerTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.07);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #fff8ed;
+}
+
+/* ---------- Cuerpo ---------- */
+
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--w) * 0.03) var(--pad) calc(var(--w) * 0.02);
+}
+
+.storyBox {
+  flex: none;
+  padding: 0 0 0 calc(var(--w) * 0.022);
+  border-left: calc(var(--w) * 0.005) solid var(--maroon);
+}
+
+.storyTitle {
+  margin: 0 0 calc(var(--w) * 0.008);
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.026);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--maroon);
+}
+
+.storyText {
+  margin: 0;
+  font-size: var(--story-size);
+  line-height: 1.5;
+  color: var(--green);
+}
+
+/* La voz del productor, cuando el relato cierra con ella. */
+.storyQuote {
+  margin: calc(var(--w) * 0.014) 0 0;
+  padding: calc(var(--w) * 0.014) calc(var(--w) * 0.018);
+  background: var(--sheet-deep);
+  border-radius: calc(var(--w) * 0.008);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--quote-size);
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.factsBox {
+  flex: none;
+  margin-top: calc(var(--w) * 0.022);
+  padding: calc(var(--w) * 0.02) calc(var(--w) * 0.024);
+  border-radius: calc(var(--w) * 0.012);
+  background: var(--sheet-warm);
+}
+
+.factsTitle {
+  margin: 0 0 calc(var(--w) * 0.01);
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.024);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--maroon);
+}
+
+.factsGrid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--w) * 0.005) calc(var(--w) * 0.028);
+}
+
+.fact {
+  display: flex;
+  gap: calc(var(--w) * 0.005);
+  font-size: var(--fact-size);
+  line-height: 1.4;
+}
+
+.factLabel {
+  margin: 0;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.factLabel::after {
+  content: ":";
+}
+
+.factValue {
+  margin: 0;
+  min-width: 0;
+  color: var(--green);
+}
+
+/* ---------- Productos por subsección ---------- */
+
+.groups {
+  flex: 1;
+  min-height: 0;
+  margin-top: calc(var(--w) * 0.026);
+}
+
+/* Dos columnas al estilo periódico: las subsecciones se reparten solas y
+   `break-inside: avoid` impide que un título quede huérfano de su lista. */
+.twoColumns {
+  columns: 2;
+  column-gap: calc(var(--w) * 0.04);
+}
+
+.group {
+  break-inside: avoid;
+  display: block;
+}
+
+.group + .group {
+  margin-top: calc(var(--w) * 0.022);
+}
+
+.groupTitle {
+  margin: 0 0 calc(var(--w) * 0.008);
+  padding-bottom: calc(var(--w) * 0.006);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.028);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--maroon);
+}
+
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--w) * 0.012);
+  padding: calc(var(--w) * 0.009) 0;
+}
+
+.itemName {
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.036);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+/* La línea de puntos que lleva del nombre al precio, como en la carta de papel. */
+.leader {
+  flex: 1;
+  min-width: calc(var(--w) * 0.014);
+  border-bottom: 1px dotted var(--line);
+  transform: translateY(calc(var(--w) * -0.005));
+}
+
+.itemPrice {
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.034);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--maroon);
+  white-space: nowrap;
+}
+
+.itemInquiry {
+  font-size: calc(var(--w) * 0.021);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  white-space: nowrap;
+}
+
+/* ---------- Banda de cierre ---------- */
+
+.footer {
+  flex: none;
+  padding: calc(var(--w) * 0.022) var(--pad);
+  background: var(--band);
+}
+
+.footerLine {
+  margin: 0;
+  font-size: calc(var(--w) * 0.016);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 248, 237, 0.72);
+}
+
+/* ---------- Pantalla de marca, cierre del ciclo ---------- */
+
+.brandBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--w) * 0.024);
+  padding: var(--pad);
+  text-align: center;
+}
+
+.brandWordmark {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: calc(var(--w) * 0.115);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.brandTagline {
+  margin: 0;
+  font-size: calc(var(--w) * 0.021);
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--maroon);
+}
+
+.qrCard {
+  margin-top: calc(var(--w) * 0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--w) * 0.014);
+  padding: calc(var(--w) * 0.038);
+  border-radius: calc(var(--w) * 0.024);
+  background: var(--sheet-warm);
+}
+
+.qrImage {
+  width: calc(var(--w) * 0.28);
+  height: auto;
+}
+
+.qrLead {
+  margin: 0;
+  font-size: calc(var(--w) * 0.025);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.qrUrl {
+  margin: 0;
+  font-size: calc(var(--w) * 0.019);
+  color: var(--ink-soft);
+}
+
+/* ---------- Progreso, como la tira de color de los conceptos ---------- */
+
+.progress {
+  position: absolute;
+  right: var(--pad);
+  bottom: calc(var(--w) * 0.028);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--w) * 0.006);
+  z-index: 2;
+}
+
+.progressBar,
+.progressActive {
+  width: calc(var(--w) * 0.022);
+  height: calc(var(--w) * 0.014);
+  border-radius: calc(var(--w) * 0.003);
+}
+
+.progressBar {
+  opacity: 0.45;
+}
+
+.swatch0 {
+  background: var(--clay);
+}
+
+.swatch1 {
+  background: var(--green);
+}
+
+.swatch2 {
+  background: var(--maroon);
+}
+
+.swatch3 {
+  background: var(--honey);
+}
+
+.progressActive {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 248, 237, 0.28);
+}
+
+.progressFill {
+  position: absolute;
+  inset: 0;
+  background: var(--honey);
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation-name: tvV3Progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes tvV3Progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    transition: opacity 0.2s ease;
+  }
+
+  .progressFill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
