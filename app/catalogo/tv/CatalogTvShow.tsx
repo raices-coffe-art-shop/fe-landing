@@ -36,14 +36,19 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
     if (slideCount <= 1) return;
 
     let timer = 0;
+    // Cada slide define cuánto dura: una historia necesita más tiempo en
+    // pantalla que una lista de precios.
+    const current = slides[activeIndex];
+    const dwell = current && "dwell" in current ? current.dwell : 1;
     const start = () => {
       if (timer) return;
-      timer = window.setInterval(() => {
-        setActiveIndex((current) => (current + 1) % slideCount);
-      }, intervalMs);
+      timer = window.setTimeout(() => {
+        timer = 0;
+        setActiveIndex((index) => (index + 1) % slideCount);
+      }, intervalMs * dwell);
     };
     const stop = () => {
-      window.clearInterval(timer);
+      window.clearTimeout(timer);
       timer = 0;
     };
     const onVisibilityChange = () => {
@@ -57,7 +62,7 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
       document.removeEventListener("visibilitychange", onVisibilityChange);
       stop();
     };
-  }, [slideCount, intervalMs, rotationEpoch]);
+  }, [slideCount, intervalMs, rotationEpoch, slides, activeIndex]);
 
   useEffect(() => {
     if (slideCount <= 1) return;
@@ -92,7 +97,7 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
   // que la primera vuelta del carrusel muestre huecos durante el crossfade.
   useEffect(() => {
     for (const slide of slides) {
-      if (slide.kind === "category" && slide.image) {
+      if (slide.kind !== "brand" && slide.image) {
         const preload = new window.Image();
         preload.src = slide.image.src;
       }
@@ -125,6 +130,36 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
                   <img className={styles.qrImage} src={qrDataUrl} alt={`Código QR de la carta: ${catalogDisplayUrl}`} />
                   <p className={styles.qrLead}>Escanea la carta desde tu mesa</p>
                   <p className={styles.qrUrl}>{catalogDisplayUrl}</p>
+                </div>
+              </div>
+            </section>
+          );
+        }
+
+        if (slide.kind === "story") {
+          return (
+            <section key={slide.key} className={slideClass} aria-hidden={!isActive}>
+              <header className={styles.slideHeader}>
+                <div>
+                  <p className={styles.eyebrow}>Nuestra historia</p>
+                  <h2 className={styles.categoryTitle}>
+                    {slide.categoryTitle}
+                    {slide.storyTitle && (
+                      <span className={styles.subCategoryTitle}> · {slide.storyTitle}</span>
+                    )}
+                  </h2>
+                </div>
+                <p className={styles.origin}>Ayacucho · Lima</p>
+              </header>
+              <div className={`${styles.slideBody} ${slide.image ? "" : styles.slideBodyNoPhoto}`}>
+                {slide.image && (
+                  <figure className={styles.slidePhoto}>
+                    <img src={slide.image.src} alt={slide.image.alt} />
+                  </figure>
+                )}
+                <div className={styles.storyCopy}>
+                  <p className={styles.storyText}>{slide.story}</p>
+                  {slide.sourcing && <p className={styles.storySourcing}>{slide.sourcing}</p>}
                 </div>
               </div>
             </section>
@@ -189,7 +224,11 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
                 <span
                   key={`${key}-${rotationEpoch}-${activeIndex}`}
                   className={styles.progressFill}
-                  style={{ animationDuration: `${intervalMs}ms` }}
+                  style={{
+                    animationDuration: `${
+                      intervalMs * (slide && "dwell" in slide ? slide.dwell : 1)
+                    }ms`,
+                  }}
                 />
               </span>
             ) : (

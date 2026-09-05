@@ -204,6 +204,36 @@
   padding: clamp(10px, 1.4vh, 22px) 0;
 }
 
+/* Pantalla de historia: aquí el texto ES el contenido, así que crece bastante
+   por encima de la descripción de un producto. Se lee desde la mesa. */
+.storyCopy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(20px, 2.4vh, 36px);
+  min-width: 0;
+}
+
+.storyText {
+  margin: 0;
+  max-width: 32ch;
+  font-family: var(--serif);
+  font-size: clamp(24px, 1.85vw, 40px);
+  font-weight: 400;
+  line-height: 1.5;
+  color: #fff8ed;
+}
+
+.storySourcing {
+  margin: 0;
+  max-width: 40ch;
+  padding-top: clamp(14px, 1.8vh, 24px);
+  border-top: 1px solid rgba(228, 187, 114, 0.28);
+  font-size: clamp(15px, 1.05vw, 22px);
+  line-height: 1.5;
+  color: rgba(244, 239, 229, 0.66);
+}
+
 .brandSlide {
   flex: 1;
   display: flex;

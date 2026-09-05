@@ -14,7 +14,21 @@ export type TvMenuItem = {
   priceLabel: string | null;
 };
 
+// Una pantalla de texto necesita más tiempo en pantalla que una lista de
+// precios: dwell multiplica el intervalo base para ese slide.
+export const STORY_DWELL_FACTOR = 1.6;
+
 export type TvSlide =
+  | {
+      kind: "story";
+      key: string;
+      categoryTitle: string;
+      storyTitle: string | null;
+      story: string;
+      sourcing: string | null;
+      image: { src: string; alt: string } | null;
+      dwell: number;
+    }
   | {
       kind: "category";
       key: string;
@@ -64,6 +78,24 @@ export function buildTvSlides(
     // Cada subsección recibe su propia foto para que las pantallas de una misma
     // categoría no se vean todas iguales.
     const subGroupImages = assignSubGroupImages(categoriesById.get(categoryId), subGroups);
+
+    // La historia abre la sección, con la misma foto que su primera subsección
+    // para que relato y productos se lean como un mismo bloque.
+    const category = categoriesById.get(categoryId);
+    const story = category?.story?.trim();
+    if (story) {
+      const storyImage = subGroupImages[0];
+      slides.push({
+        kind: "story",
+        key: `${categoryId}-historia`,
+        categoryTitle: group.title,
+        storyTitle: category?.storyTitle?.trim() || null,
+        story,
+        sourcing: category?.sourcing?.trim() || null,
+        image: storyImage ? { src: storyImage.src, alt: storyImage.alt } : null,
+        dwell: STORY_DWELL_FACTOR,
+      });
+    }
 
     // El contador de páginas es por categoría para que la pantalla siga diciendo
     // "2 de 5" y no se reinicie en cada subsección.
