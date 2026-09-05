@@ -71,6 +71,21 @@ export type MenuScreenSlide =
     }
   | { kind: "brand" };
 
+// Una pantalla de la carta antes de paginarse: puede venir de una sección con
+// relato o de la fusión de las secciones de servicio.
+type ScreenEntry = { groupTitle: string | null; item: CatalogItem };
+
+type ScreenSource = {
+  key: string;
+  order: number;
+  title: string;
+  tagline: string | null;
+  story: string | null;
+  quote: string | null;
+  facts: SourcingFact[];
+  entries: ScreenEntry[];
+};
+
 export function buildMenuScreenSlides(
   items: CatalogItem[],
   showCatalogPrices: boolean,
@@ -91,10 +106,76 @@ export function buildMenuScreenSlides(
     }
   }
 
-  const slides: MenuScreenSlide[] = [];
   const sortedGroups = [...groups.entries()].sort(
     (a, b) => a[1].order - b[1].order || a[1].title.localeCompare(b[1].title, "es"),
   );
+
+  const toEntries = (categoryItems: CatalogItem[]): ScreenEntry[] =>
+    buildMenuSubGroups(categoryItems).flatMap((subGroup) =>
+      subGroup.items.map((item) => ({ groupTitle: subGroup.title, item })),
+    );
+
+  const sources: ScreenSource[] = [];
+  // Secciones de servicio: las que no tienen relato ni ficha de origen
+  // (Alimentos, Para llevar). Cada una ocupando su propia pantalla gasta una
+  // vuelta del carrusel para mostrar cuatro productos, así que se juntan.
+  const plain: Array<{ id: string; title: string; order: number; items: CatalogItem[] }> = [];
+
+  for (const [categoryId, group] of sortedGroups) {
+    const sortedItems = [...group.items].sort((a, b) => a.order - b.order);
+    const category = categoriesById.get(categoryId);
+    const { story, quote } = splitStoryQuote(category?.story);
+    const facts = category?.sourcingFacts ?? [];
+
+    if (!story && facts.length === 0) {
+      plain.push({ id: categoryId, title: group.title, order: group.order, items: sortedItems });
+      continue;
+    }
+
+    sources.push({
+      key: categoryId,
+      order: group.order,
+      title: group.title,
+      tagline: category?.tagline?.trim() || null,
+      story: story || null,
+      quote,
+      facts,
+      entries: toEntries(sortedItems),
+    });
+  }
+
+  if (plain.length === 1) {
+    // Una sola sección de servicio no se fusiona con nada: se muestra como
+    // cualquier otra, con su nombre en el encabezado.
+    const only = plain[0];
+    sources.push({
+      key: only.id,
+      order: only.order,
+      title: only.title,
+      tagline: categoriesById.get(only.id)?.tagline?.trim() || null,
+      story: null,
+      quote: null,
+      facts: [],
+      entries: toEntries(only.items),
+    });
+  } else if (plain.length > 1) {
+    // Fusionadas: el nombre de cada sección pasa a ser el título de su
+    // subsección dentro de la pantalla compartida.
+    sources.push({
+      key: plain.map((section) => section.id).join("+"),
+      order: Math.min(...plain.map((section) => section.order)),
+      title: plain.map((section) => section.title).join(" · "),
+      tagline: null,
+      story: null,
+      quote: null,
+      facts: [],
+      entries: plain.flatMap((section) =>
+        section.items.map((item) => ({ groupTitle: section.title, item })),
+      ),
+    });
+  }
+
+  sources.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"));
 
   const toMenuItem = (item: CatalogItem): MenuScreenItem => ({
     id: item.id,
@@ -102,35 +183,26 @@ export function buildMenuScreenSlides(
     priceLabel: shouldDisplayCatalogPrice(item, showCatalogPrices) ? formatCatalogPrice(item) : null,
   });
 
-  for (const [categoryId, group] of sortedGroups) {
-    const sortedItems = [...group.items].sort((a, b) => a.order - b.order);
-    const subGroups = buildMenuSubGroups(sortedItems);
+  const slides: MenuScreenSlide[] = [];
 
-    const category = categoriesById.get(categoryId);
-    const { story, quote } = splitStoryQuote(category?.story);
-    const facts = category?.sourcingFacts ?? [];
+  for (const source of sources) {
     const section: MenuScreenSection = {
-      title: group.title,
-      tagline: category?.tagline?.trim() || null,
-      story: story || null,
-      quote,
-      facts,
-      density: resolveScreenDensity(story, quote, facts),
+      title: source.title,
+      tagline: source.tagline,
+      story: source.story,
+      quote: source.quote,
+      facts: source.facts,
+      density: resolveScreenDensity(source.story ?? "", source.quote, source.facts),
     };
 
-    // Se aplana con la subsección pegada a cada producto y se reagrupa después
-    // del corte: así una sección que no entre en una pantalla se parte por
-    // producto sin perder los títulos de subsección en la página siguiente.
-    const flat = subGroups.flatMap((subGroup) =>
-      subGroup.items.map((item) => ({ groupTitle: subGroup.title, item })),
-    );
-    const pageCount = Math.max(1, Math.ceil(flat.length / MAX_ITEMS_PER_SCREEN));
-
+    const pageCount = Math.max(1, Math.ceil(source.entries.length / MAX_ITEMS_PER_SCREEN));
     for (let page = 0; page < pageCount; page += 1) {
-      const slice = flat.slice(
+      const slice = source.entries.slice(
         page * MAX_ITEMS_PER_SCREEN,
         (page + 1) * MAX_ITEMS_PER_SCREEN,
       );
+      // Se reagrupa después del corte: una sección que no entre en una pantalla
+      // se parte por producto sin perder los títulos en la página siguiente.
       const pageGroups: MenuScreenGroup[] = [];
       for (const entry of slice) {
         const current = pageGroups[pageGroups.length - 1];
@@ -143,7 +215,7 @@ export function buildMenuScreenSlides(
 
       slides.push({
         kind: "category",
-        key: `${categoryId}-${page + 1}`,
+        key: `${source.key}-${page + 1}`,
         section,
         groups: pageGroups,
         twoColumns: slice.length > TWO_COLUMN_THRESHOLD,
