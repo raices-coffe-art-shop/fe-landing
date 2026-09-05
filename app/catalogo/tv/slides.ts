@@ -1,11 +1,15 @@
-import type { CatalogCategory, CatalogItem } from "@/sanity/lib/catalogTypes";
-import { assignSubGroupImages } from "@/lib/categoryImage";
+import type { CatalogCategory, CatalogItem, SourcingFact } from "@/sanity/lib/catalogTypes";
 import { buildMenuSubGroups } from "@/lib/menuSubGroups";
 import { formatCatalogPrice, shouldDisplayCatalogPrice } from "@/sanity/lib/catalogShared";
 
-// Con la foto lateral la lista dispone de menos ancho y alto útil: 5 productos
-// por slide entran completos en 1080p sin recortar el último ni encoger los nombres.
-export const TV_MAX_ITEMS_PER_SLIDE = 5;
+// El encabezado de sección —título, relato y ficha de origen— se queda fijo en
+// la mitad superior de la pantalla vertical, así que abajo entran cuatro
+// productos a cuerpo grande sin apretar nada.
+export const TV_MAX_ITEMS_PER_SLIDE = 4;
+
+// La primera página de cada sección estrena su relato: se queda más tiempo en
+// pantalla para que alcance a leerse antes de que roten los productos.
+export const SECTION_OPENING_DWELL = 1.4;
 
 export type TvMenuItem = {
   id: string;
@@ -14,45 +18,43 @@ export type TvMenuItem = {
   priceLabel: string | null;
 };
 
-// Una pantalla de texto necesita más tiempo en pantalla que una lista de
-// precios: dwell multiplica el intervalo base para ese slide.
-export const STORY_DWELL_FACTOR = 1.6;
-
-// La pantalla del local no tiene scroll: lo que no entra, se recorta. Como los
-// relatos varían mucho de largo (224 a 475 caracteres hoy), el tamaño del texto
-// se elige según lo que hay que mostrar, contando también los insumos porque
-// comparten la misma columna. Los cortes están calculados para que el caso más
-// largo que admite el schema entre completo en 1080p.
+// La pantalla del local no tiene scroll: lo que no entra, se recorta. El
+// encabezado ocupa lo que le pida su contenido, así que el cuerpo del relato y
+// de la ficha se elige según cuánto texto hay que mostrar. Los cortes están
+// calculados para que el máximo que admite el schema —700 caracteres de relato
+// más ocho datos de ficha— siga entrando completo en 1080×1920.
 export type TvStoryDensity = "holgada" | "media" | "compacta";
 
-export function resolveStoryDensity(story: string, sourcing: string | null): TvStoryDensity {
-  const total = story.length + (sourcing?.length ?? 0);
-  if (total <= 380) return "holgada";
-  if (total <= 700) return "media";
+export function resolveStoryDensity(story: string, facts: SourcingFact[]): TvStoryDensity {
+  const total =
+    story.length + facts.reduce((sum, fact) => sum + fact.label.length + fact.value.length, 0);
+  if (total <= 800) return "holgada";
+  if (total <= 1400) return "media";
   return "compacta";
 }
 
+// El encabezado que comparten todas las páginas de una sección. Va repetido en
+// cada slide en vez de vivir en una pantalla aparte: así quien mire en cualquier
+// momento ve el relato, no solo quien llegue justo cuando le toca el turno.
+export type TvSection = {
+  title: string;
+  tagline: string | null;
+  storyTitle: string | null;
+  story: string | null;
+  facts: SourcingFact[];
+  density: TvStoryDensity;
+};
+
 export type TvSlide =
-  | {
-      kind: "story";
-      key: string;
-      categoryTitle: string;
-      storyTitle: string | null;
-      story: string;
-      sourcing: string | null;
-      image: { src: string; alt: string } | null;
-      density: TvStoryDensity;
-      dwell: number;
-    }
   | {
       kind: "category";
       key: string;
-      categoryTitle: string;
+      section: TvSection;
       subCategoryTitle: string | null;
       page: number;
       pageCount: number;
-      image: { src: string; alt: string } | null;
       items: TvMenuItem[];
+      dwell: number;
     }
   | { kind: "brand" };
 
@@ -85,34 +87,21 @@ export function buildTvSlides(
 
   for (const [categoryId, group] of sortedGroups) {
     const sortedItems = [...group.items].sort((a, b) => a.order - b.order);
-    // La misma foto acompaña a todas las páginas de la categoría: así el layout
-    // no cambia de forma entre una página y la siguiente.
     // Se pagina por subsección, no solo por categoría: una pantalla nunca mezcla
     // "Triples" con "Especiales", igual que en la carta de papel.
     const subGroups = buildMenuSubGroups(sortedItems);
-    // Cada subsección recibe su propia foto para que las pantallas de una misma
-    // categoría no se vean todas iguales.
-    const subGroupImages = assignSubGroupImages(categoriesById.get(categoryId), subGroups);
 
-    // La historia abre la sección, con la misma foto que su primera subsección
-    // para que relato y productos se lean como un mismo bloque.
     const category = categoriesById.get(categoryId);
-    const story = category?.story?.trim();
-    if (story) {
-      const storyImage = subGroupImages[0];
-      const sourcing = category?.sourcing?.trim() || null;
-      slides.push({
-        kind: "story",
-        key: `${categoryId}-historia`,
-        categoryTitle: group.title,
-        storyTitle: category?.storyTitle?.trim() || null,
-        story,
-        sourcing,
-        image: storyImage ? { src: storyImage.src, alt: storyImage.alt } : null,
-        density: resolveStoryDensity(story, sourcing),
-        dwell: STORY_DWELL_FACTOR,
-      });
-    }
+    const story = category?.story?.trim() || null;
+    const facts = category?.sourcingFacts ?? [];
+    const section: TvSection = {
+      title: group.title,
+      tagline: category?.tagline?.trim() || null,
+      storyTitle: category?.storyTitle?.trim() || null,
+      story,
+      facts,
+      density: resolveStoryDensity(story ?? "", facts),
+    };
 
     // El contador de páginas es por categoría para que la pantalla siga diciendo
     // "2 de 5" y no se reinicie en cada subsección.
@@ -122,32 +111,31 @@ export function buildTvSlides(
     );
     let page = 0;
 
-    for (const [subGroupIndex, subGroup] of subGroups.entries()) {
-      const image = subGroupImages[subGroupIndex];
+    for (const subGroup of subGroups) {
       const subPages = Math.ceil(subGroup.items.length / TV_MAX_ITEMS_PER_SLIDE);
       for (let subPage = 0; subPage < subPages; subPage += 1) {
-      const pageItems = subGroup.items.slice(
-        subPage * TV_MAX_ITEMS_PER_SLIDE,
-        (subPage + 1) * TV_MAX_ITEMS_PER_SLIDE,
-      );
-      page += 1;
-      slides.push({
-        kind: "category",
-        key: `${categoryId}-${page}`,
-        categoryTitle: group.title,
-        subCategoryTitle: subGroup.title,
-        page,
-        pageCount,
-        image: image ? { src: image.src, alt: image.alt } : null,
-        items: pageItems.map((item) => ({
-          id: item.id,
-          title: item.title,
-          shortDescription: item.shortDescription,
-          priceLabel: shouldDisplayCatalogPrice(item, showCatalogPrices)
-            ? formatCatalogPrice(item)
-            : null,
-        })),
-      });
+        const pageItems = subGroup.items.slice(
+          subPage * TV_MAX_ITEMS_PER_SLIDE,
+          (subPage + 1) * TV_MAX_ITEMS_PER_SLIDE,
+        );
+        page += 1;
+        slides.push({
+          kind: "category",
+          key: `${categoryId}-${page}`,
+          section,
+          subCategoryTitle: subGroup.title,
+          page,
+          pageCount,
+          items: pageItems.map((item) => ({
+            id: item.id,
+            title: item.title,
+            shortDescription: item.shortDescription,
+            priceLabel: shouldDisplayCatalogPrice(item, showCatalogPrices)
+              ? formatCatalogPrice(item)
+              : null,
+          })),
+          dwell: page === 1 ? SECTION_OPENING_DWELL : 1,
+        });
       }
     }
   }

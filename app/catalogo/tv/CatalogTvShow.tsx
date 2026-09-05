@@ -36,8 +36,8 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
     if (slideCount <= 1) return;
 
     let timer = 0;
-    // Cada slide define cuánto dura: una historia necesita más tiempo en
-    // pantalla que una lista de precios.
+    // Cada slide define cuánto dura: la página que estrena el relato de una
+    // sección necesita más tiempo que las siguientes, que solo cambian productos.
     const current = slides[activeIndex];
     const dwell = current && "dwell" in current ? current.dwell : 1;
     const start = () => {
@@ -93,17 +93,6 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
     };
   }, []);
 
-  // Las fotos de categoría son pocas (una por categoría): precargarlas evita
-  // que la primera vuelta del carrusel muestre huecos durante el crossfade.
-  useEffect(() => {
-    for (const slide of slides) {
-      if (slide.kind !== "brand" && slide.image) {
-        const preload = new window.Image();
-        preload.src = slide.image.src;
-      }
-    }
-  }, [slides]);
-
   // Una TV encendida durante días: recargar recoge contenido nuevo de Sanity
   // y evita la deriva de memoria del navegador del televisor.
   useEffect(() => {
@@ -113,130 +102,115 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
 
   return (
     <main className={`${styles.stage} ${cursorHidden ? styles.cursorHidden : ""}`}>
-      {slides.map((slide, index) => {
-        const isActive = index === activeIndex;
-        const slideClass = `${styles.slide} ${isActive ? styles.active : ""}`;
+      <div className={styles.column}>
+        {slides.map((slide, index) => {
+          const isActive = index === activeIndex;
+          const slideClass = `${styles.slide} ${isActive ? styles.active : ""}`;
 
-        if (slide.kind === "brand") {
-          return (
-            <section key="brand" className={slideClass} aria-hidden={!isActive}>
-              <div className={styles.brandSlide}>
-                <div className={styles.brandIdentity}>
+          if (slide.kind === "brand") {
+            return (
+              <section key="brand" className={slideClass} aria-hidden={!isActive}>
+                <div className={styles.brandSlide}>
                   <img className={styles.brandLogo} src={logo.src} alt={logo.alt} />
                   <p className={styles.brandWordmark}>Raíces</p>
-                  <p className={styles.brandTagline}>Café y Cultura — Ayacucho en Lima</p>
+                  <p className={styles.brandTagline}>Café y Cultura — Ayacucho · Lima</p>
+                  <div className={styles.qrCard}>
+                    <img
+                      className={styles.qrImage}
+                      src={qrDataUrl}
+                      alt={`Código QR de la carta: ${catalogDisplayUrl}`}
+                    />
+                    <p className={styles.qrLead}>Escanea la carta desde tu mesa</p>
+                    <p className={styles.qrUrl}>{catalogDisplayUrl}</p>
+                  </div>
                 </div>
-                <div className={styles.qrCard}>
-                  <img className={styles.qrImage} src={qrDataUrl} alt={`Código QR de la carta: ${catalogDisplayUrl}`} />
-                  <p className={styles.qrLead}>Escanea la carta desde tu mesa</p>
-                  <p className={styles.qrUrl}>{catalogDisplayUrl}</p>
-                </div>
-              </div>
-            </section>
-          );
-        }
+              </section>
+            );
+          }
 
-        if (slide.kind === "story") {
+          const { section } = slide;
           return (
             <section key={slide.key} className={slideClass} aria-hidden={!isActive}>
-              <header className={styles.slideHeader}>
-                <div>
-                  <p className={styles.eyebrow}>Nuestra historia</p>
-                  <h2 className={styles.categoryTitle}>
-                    {slide.categoryTitle}
-                    {slide.storyTitle && (
-                      <span className={styles.subCategoryTitle}> · {slide.storyTitle}</span>
-                    )}
-                  </h2>
-                </div>
-                <p className={styles.origin}>Ayacucho · Lima</p>
-              </header>
-              <div className={`${styles.slideBody} ${slide.image ? "" : styles.slideBodyNoPhoto}`}>
-                {slide.image && (
-                  <figure className={styles.slidePhoto}>
-                    <img src={slide.image.src} alt={slide.image.alt} />
-                  </figure>
+              {/* El encabezado se repite en todas las páginas de la sección: el
+                  relato tiene que estar visible mire cuando mire el comensal. */}
+              <header className={`${styles.sectionHeader} ${styles[section.density]}`}>
+                <h2 className={styles.sectionTitle}>{section.title}</h2>
+                {section.tagline && <p className={styles.sectionTagline}>{section.tagline}</p>}
+                <div className={styles.sectionRule} />
+                {section.story && (
+                  <div className={styles.storyBox}>
+                    <p className={styles.storyTitle}>
+                      Nuestra historia{section.storyTitle ? ` · ${section.storyTitle}` : ""}
+                    </p>
+                    <p className={styles.storyText}>{section.story}</p>
+                  </div>
                 )}
-                <div className={`${styles.storyCopy} ${styles[slide.density]}`}>
-                  <p className={styles.storyText}>{slide.story}</p>
-                  {slide.sourcing && <p className={styles.storySourcing}>{slide.sourcing}</p>}
-                </div>
-              </div>
-            </section>
-          );
-        }
+                {section.facts.length > 0 && (
+                  <div className={styles.factsBox}>
+                    {section.facts.map((fact, factIndex) => (
+                      <p key={`${fact.label}-${factIndex}`} className={styles.fact}>
+                        <span className={styles.factLabel}>{fact.label}:</span> {fact.value}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </header>
 
-        return (
-          <section key={slide.key} className={slideClass} aria-hidden={!isActive}>
-            <header className={styles.slideHeader}>
-              <div>
-                <p className={styles.eyebrow}>La carta · Raíces</p>
-                <h2 className={styles.categoryTitle}>
-                  {slide.categoryTitle}
-                  {slide.subCategoryTitle && (
-                    <span className={styles.subCategoryTitle}> · {slide.subCategoryTitle}</span>
-                  )}
+              <div className={styles.slideBody}>
+                <p className={styles.subCategoryTitle}>
+                  {slide.subCategoryTitle ?? "La carta"}
                   {slide.pageCount > 1 && (
-                    <span className={styles.categoryPage}> · {slide.page} de {slide.pageCount}</span>
+                    <span className={styles.pageCounter}>
+                      {" "}
+                      · {slide.page} de {slide.pageCount}
+                    </span>
                   )}
-                </h2>
-              </div>
-              <p className={styles.origin}>Ayacucho · Lima</p>
-            </header>
-            <div className={`${styles.slideBody} ${slide.image ? "" : styles.slideBodyNoPhoto}`}>
-              {slide.image && (
-                <figure className={styles.slidePhoto}>
-                  <img src={slide.image.src} alt={slide.image.alt} />
-                </figure>
-              )}
-              <ul
-                className={`${styles.items} ${
-                  !slide.image && slide.items.length > 4 ? styles.itemsTwoColumns : ""
-                }`}
-              >
-                {slide.items.map((item) => (
-                  <li key={item.id} className={styles.item}>
-                    <div className={styles.itemCopy}>
-                      <p className={styles.itemName}>{item.title}</p>
+                </p>
+                <ul className={styles.items}>
+                  {slide.items.map((item) => (
+                    <li key={item.id} className={styles.item}>
+                      <div className={styles.itemRow}>
+                        <p className={styles.itemName}>{item.title}</p>
+                        {item.priceLabel ? (
+                          <p className={styles.itemPrice}>{item.priceLabel}</p>
+                        ) : (
+                          <p className={styles.itemInquiry}>Consultar</p>
+                        )}
+                      </div>
                       {item.shortDescription && (
                         <p className={styles.itemDescription}>{item.shortDescription}</p>
                       )}
-                    </div>
-                    {item.priceLabel ? (
-                      <p className={styles.itemPrice}>{item.priceLabel}</p>
-                    ) : (
-                      <p className={styles.itemInquiry}>Consultar</p>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        );
-      })}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          );
+        })}
 
-      {slideCount > 1 && (
-        <div className={styles.progress} aria-hidden="true">
-          {slides.map((slide, index) => {
-            const key = slide.kind === "brand" ? "brand" : slide.key;
-            return index === activeIndex ? (
-              <span key={key} className={styles.progressActive}>
-                <span
-                  key={`${key}-${rotationEpoch}-${activeIndex}`}
-                  className={styles.progressFill}
-                  style={{
-                    animationDuration: `${
-                      intervalMs * (slide && "dwell" in slide ? slide.dwell : 1)
-                    }ms`,
-                  }}
-                />
-              </span>
-            ) : (
-              <span key={key} className={styles.progressDot} />
-            );
-          })}
-        </div>
-      )}
+        {slideCount > 1 && (
+          <div className={styles.progress} aria-hidden="true">
+            {slides.map((slide, index) => {
+              const key = slide.kind === "brand" ? "brand" : slide.key;
+              return index === activeIndex ? (
+                <span key={key} className={styles.progressActive}>
+                  <span
+                    key={`${key}-${rotationEpoch}-${activeIndex}`}
+                    className={styles.progressFill}
+                    style={{
+                      animationDuration: `${
+                        intervalMs * (slide && "dwell" in slide ? slide.dwell : 1)
+                      }ms`,
+                    }}
+                  />
+                </span>
+              ) : (
+                <span key={key} className={styles.progressDot} />
+              );
+            })}
+          </div>
+        )}
+      </div>
     </main>
   );
 }

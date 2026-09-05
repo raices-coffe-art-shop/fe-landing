@@ -1,19 +1,41 @@
-/* Carta para TV: kiosco fullscreen oscuro, tipografía dimensionada para
-   leerse a 2-3 metros en una pantalla 1080p o 4K. */
+/* Carta para la pantalla del local: televisor girado en vertical (1080×1920).
+   Sigue la estructura de las cartas en PDF del cliente —título, subtítulo,
+   relato de origen, ficha de productores y productos— y no usa fotografías. */
 
 .stage {
   position: fixed;
   inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  background:
-    radial-gradient(120% 90% at 50% 10%, rgba(228, 187, 114, 0.06), transparent 60%),
-    linear-gradient(135deg, var(--green-deep) 0%, var(--ink) 100%);
+  background: var(--ink);
   color: #fff8ed;
   font-family: var(--sans);
+
+  /* Toda la escala cuelga del ancho de una columna 9:16. En el televisor girado
+     vale 1080 y llena la pantalla; en un monitor apaisado queda una columna
+     centrada con la misma proporción, que sirve de vista previa sin girar nada
+     ni tocar el CSS. */
+  --w: min(100vw, calc(100vh * 9 / 16));
+  --pad: calc(var(--w) * 0.052);
+  --gold: #e4bb72;
+  --paper: #fff8ed;
+  --paper-soft: rgba(244, 239, 229, 0.72);
 }
 
 .cursorHidden {
   cursor: none;
+}
+
+.column {
+  position: relative;
+  width: var(--w);
+  height: min(100vh, calc(var(--w) * 16 / 9));
+  overflow: hidden;
+  background:
+    radial-gradient(120% 55% at 50% 0%, rgba(228, 187, 114, 0.09), transparent 62%),
+    linear-gradient(168deg, var(--green-deep) 0%, var(--ink) 100%);
 }
 
 .slide {
@@ -21,333 +43,298 @@
   inset: 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(28px, 3.5vh, 64px);
-  padding: clamp(48px, 5vw, 120px) clamp(48px, 6vw, 132px) clamp(56px, 7vh, 96px);
+  /* Más aire abajo: ahí viven los puntos de progreso. */
+  padding: var(--pad) var(--pad) calc(var(--pad) * 1.9);
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.9s ease, transform 0.9s ease;
+  transition: opacity 0.9s ease;
   pointer-events: none;
 }
 
 .slide.active {
   opacity: 1;
-  transform: translateY(0);
 }
 
-.slideHeader {
+/* ---------- Encabezado fijo de la sección ---------- */
+
+.sectionHeader {
+  flex: none;
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 32px;
+  flex-direction: column;
 }
 
-.eyebrow {
-  margin: 0 0 clamp(10px, 1.4vh, 20px);
-  font-size: clamp(14px, 1vw, 22px);
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: #e4bb72;
-}
-
-.categoryTitle {
+.sectionTitle {
   margin: 0;
-  font-family: var(--sans);
-  font-size: clamp(24px, 1.7vw, 38px);
+  font-size: calc(var(--w) * 0.062);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--paper);
+}
+
+.sectionTagline {
+  margin: calc(var(--w) * 0.015) 0 0;
+  font-size: calc(var(--w) * 0.021);
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #e4bb72;
+  text-align: center;
+  color: var(--gold);
 }
 
-/* La subsección acompaña al nombre de la carta con el mismo dorado, algo más
-   tenue, para que no compita con el título. */
-.subCategoryTitle {
-  color: rgba(228, 187, 114, 0.8);
-  font-weight: 500;
+.sectionRule {
+  margin-top: calc(var(--w) * 0.028);
+  height: calc(var(--w) * 0.0035);
+  background: var(--gold);
+  opacity: 0.85;
 }
 
-.categoryPage {
-  color: rgba(228, 187, 114, 0.65);
+/* Los tres niveles de densidad, elegidos en el servidor por resolveStoryDensity()
+   según cuánto texto trae la sección. La pantalla no tiene scroll: en vez de
+   dejar que el encabezado empuje los productos fuera, el cuerpo del relato y de
+   la ficha se ajustan al contenido, siempre dentro de lo legible a 2-3 metros. */
+.holgada {
+  --story-size: calc(var(--w) * 0.027);
+  --story-label: calc(var(--w) * 0.021);
+  --fact-size: calc(var(--w) * 0.021);
 }
 
-.origin {
+.media {
+  --story-size: calc(var(--w) * 0.023);
+  --story-label: calc(var(--w) * 0.019);
+  --fact-size: calc(var(--w) * 0.019);
+}
+
+.compacta {
+  --story-size: calc(var(--w) * 0.020);
+  --story-label: calc(var(--w) * 0.017);
+  --fact-size: calc(var(--w) * 0.017);
+}
+
+/* La barra dorada a la izquierda del relato es la marca de la carta en papel. */
+.storyBox {
+  margin-top: calc(var(--w) * 0.03);
+  padding: calc(var(--w) * 0.024) calc(var(--w) * 0.028);
+  border-left: calc(var(--w) * 0.007) solid var(--gold);
+  background: rgba(255, 248, 237, 0.05);
+}
+
+.storyTitle {
+  margin: 0 0 calc(var(--w) * 0.013);
+  font-size: var(--story-label);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.storyText {
   margin: 0;
-  font-size: clamp(14px, 1vw, 22px);
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(244, 239, 229, 0.55);
-  white-space: nowrap;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--story-size);
+  line-height: 1.55;
+  color: var(--paper);
 }
 
-/* Foto de la categoría a un lado y lista al otro: la foto se ve completa y el
-   texto conserva todo su contraste sobre el fondo verde (legible a varios metros). */
+.factsBox {
+  margin-top: calc(var(--w) * 0.022);
+  padding: calc(var(--w) * 0.022) calc(var(--w) * 0.028);
+  border: 1px solid rgba(228, 187, 114, 0.24);
+  border-radius: calc(var(--w) * 0.012);
+  background: rgba(228, 187, 114, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--w) * 0.008);
+}
+
+.fact {
+  margin: 0;
+  font-size: var(--fact-size);
+  line-height: 1.4;
+  color: var(--paper-soft);
+}
+
+.factLabel {
+  font-weight: 700;
+  color: var(--paper);
+}
+
+/* ---------- Cuerpo que rota: los productos ---------- */
+
 .slideBody {
   flex: 1;
   min-height: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
-  gap: clamp(32px, 3.5vw, 72px);
-  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--w) * 0.032);
 }
 
-.slideBodyNoPhoto {
-  grid-template-columns: minmax(0, 1fr);
+.subCategoryTitle {
+  margin: 0 0 calc(var(--w) * 0.012);
+  font-size: calc(var(--w) * 0.027);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
 }
 
-.slidePhoto {
-  margin: 0;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
-  border-radius: 20px;
-  border: 1px solid rgba(228, 187, 114, 0.28);
-}
-
-.slidePhoto img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.pageCounter {
+  color: rgba(228, 187, 114, 0.6);
 }
 
 .items {
   margin: 0;
   padding: 0;
   list-style: none;
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0 clamp(48px, 5vw, 96px);
-  align-content: start;
-}
-
-.itemsTwoColumns {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
 }
 
 .item {
-  display: flex;
-  align-items: baseline;
-  gap: clamp(20px, 2vw, 40px);
-  padding: clamp(12px, 1.8vh, 26px) 0;
+  padding: calc(var(--w) * 0.017) 0;
   border-bottom: 1px solid rgba(244, 239, 229, 0.12);
 }
 
-.itemCopy {
-  min-width: 0;
+.item:last-child {
+  border-bottom: none;
+}
+
+.itemRow {
   display: flex;
-  flex-direction: column;
-  gap: clamp(4px, 0.7vh, 10px);
+  align-items: baseline;
+  gap: calc(var(--w) * 0.02);
 }
 
 .itemName {
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(40px, 3.2vw, 74px);
+  font-size: calc(var(--w) * 0.046);
   font-weight: 500;
-  line-height: 1.05;
-  color: #fff8ed;
-}
-
-.itemDescription {
-  margin: 0;
-  font-size: clamp(19px, 1.35vw, 30px);
-  line-height: 1.35;
-  color: rgba(244, 239, 229, 0.72);
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
+  line-height: 1.1;
+  color: var(--paper);
 }
 
 .itemPrice {
   margin: 0 0 0 auto;
-  font-size: clamp(32px, 2.5vw, 58px);
+  font-size: calc(var(--w) * 0.044);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: #e4bb72;
+  color: var(--gold);
   white-space: nowrap;
 }
 
 .itemInquiry {
   margin: 0 0 0 auto;
-  font-size: clamp(22px, 1.8vw, 42px);
-  font-weight: 500;
+  font-size: calc(var(--w) * 0.026);
+  font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(228, 187, 114, 0.65);
   white-space: nowrap;
 }
 
-/* Con foto lateral la lista tiene menos ancho: se baja un punto la escala para
-   que quepan los 5 productos completos sin perder legibilidad a distancia. */
-.slideBody:not(.slideBodyNoPhoto) .itemName {
-  font-size: clamp(34px, 2.6vw, 60px);
+.itemDescription {
+  margin: calc(var(--w) * 0.008) 0 0;
+  font-size: calc(var(--w) * 0.024);
+  line-height: 1.4;
+  color: var(--paper-soft);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
-.slideBody:not(.slideBodyNoPhoto) .itemDescription {
-  font-size: clamp(17px, 1.15vw, 26px);
-}
-
-.slideBody:not(.slideBodyNoPhoto) .itemPrice {
-  font-size: clamp(28px, 2.1vw, 48px);
-}
-
-.slideBody:not(.slideBodyNoPhoto) .itemInquiry {
-  font-size: clamp(20px, 1.6vw, 38px);
-}
-
-.slideBody:not(.slideBodyNoPhoto) .item {
-  padding: clamp(10px, 1.4vh, 22px) 0;
-}
-
-/* Pantalla de historia: aquí el texto ES el contenido, así que crece bastante
-   por encima de la descripción de un producto. Se lee desde la mesa. */
-.storyCopy {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(20px, 2.4vh, 36px);
-  min-width: 0;
-}
-
-/* El escenario no tiene scroll: lo que no entra se recorta. Por eso el cuerpo y
-   la medida del relato dependen de su largo, que el servidor resuelve en
-   resolveStoryDensity(). Al crecer el texto se ensancha la medida antes de
-   achicar la letra, así ninguna variante baja del tamaño legible a 2-3 metros. */
-.holgada {
-  --story-size: clamp(24px, 1.8vw, 38px);
-  --story-measure: 34ch;
-  --sourcing-size: clamp(15px, 1.05vw, 22px);
-  --sourcing-measure: 46ch;
-}
-
-.media {
-  --story-size: clamp(20px, 1.4vw, 30px);
-  --story-measure: 46ch;
-  --sourcing-size: clamp(14px, 1vw, 21px);
-  --sourcing-measure: 58ch;
-}
-
-.compacta {
-  --story-size: clamp(18px, 1.15vw, 25px);
-  --story-measure: 56ch;
-  --sourcing-size: clamp(13px, 0.9vw, 19px);
-  --sourcing-measure: 66ch;
-}
-
-.storyText {
-  margin: 0;
-  max-width: var(--story-measure);
-  font-family: var(--serif);
-  font-size: var(--story-size);
-  font-weight: 400;
-  line-height: 1.5;
-  color: #fff8ed;
-}
-
-.storySourcing {
-  margin: 0;
-  max-width: var(--sourcing-measure);
-  padding-top: clamp(14px, 1.8vh, 24px);
-  border-top: 1px solid rgba(228, 187, 114, 0.28);
-  font-size: var(--sourcing-size);
-  line-height: 1.5;
-  color: rgba(244, 239, 229, 0.66);
-}
+/* ---------- Pantalla de marca, cierre del ciclo ---------- */
 
 .brandSlide {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(64px, 8vw, 160px);
-}
-
-.brandIdentity {
-  display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(16px, 2.4vh, 32px);
+  justify-content: center;
+  gap: calc(var(--w) * 0.028);
   text-align: center;
 }
 
 .brandLogo {
-  width: clamp(160px, 15vw, 300px);
+  width: calc(var(--w) * 0.26);
   height: auto;
-  border-radius: 18px;
+  border-radius: calc(var(--w) * 0.02);
 }
 
 .brandWordmark {
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(64px, 6vw, 120px);
+  font-size: calc(var(--w) * 0.11);
   font-weight: 500;
   line-height: 1;
 }
 
 .brandTagline {
   margin: 0;
-  font-size: clamp(15px, 1.2vw, 24px);
+  font-size: calc(var(--w) * 0.022);
   font-weight: 600;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: #e4bb72;
+  color: var(--gold);
 }
 
 .qrCard {
+  margin-top: calc(var(--w) * 0.04);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(12px, 1.8vh, 24px);
-  background: #fff8ed;
+  gap: calc(var(--w) * 0.018);
+  background: var(--paper);
   color: var(--ink);
-  border-radius: 24px;
-  padding: clamp(32px, 3.4vw, 56px);
+  border-radius: calc(var(--w) * 0.028);
+  padding: calc(var(--w) * 0.045);
 }
 
 .qrImage {
-  width: clamp(180px, 14vw, 260px);
+  width: calc(var(--w) * 0.32);
   height: auto;
 }
 
 .qrLead {
   margin: 0;
-  font-size: clamp(18px, 1.4vw, 28px);
+  font-size: calc(var(--w) * 0.028);
   font-weight: 600;
 }
 
 .qrUrl {
   margin: 0;
-  font-size: clamp(14px, 1.1vw, 22px);
+  font-size: calc(var(--w) * 0.022);
   color: var(--ink-soft);
 }
+
+/* ---------- Progreso ---------- */
 
 .progress {
   position: absolute;
   left: 50%;
-  bottom: clamp(20px, 3vh, 40px);
+  bottom: calc(var(--w) * 0.028);
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: calc(var(--w) * 0.011);
+  z-index: 2;
 }
 
 .progressDot {
-  width: 8px;
-  height: 8px;
+  width: calc(var(--w) * 0.008);
+  height: calc(var(--w) * 0.008);
   border-radius: 50%;
   background: rgba(228, 187, 114, 0.35);
 }
 
 .progressActive {
   position: relative;
-  width: 32px;
-  height: 8px;
-  border-radius: 4px;
+  width: calc(var(--w) * 0.03);
+  height: calc(var(--w) * 0.008);
+  border-radius: calc(var(--w) * 0.004);
   background: rgba(228, 187, 114, 0.35);
   overflow: hidden;
 }
@@ -355,7 +342,7 @@
 .progressFill {
   position: absolute;
   inset: 0;
-  background: #e4bb72;
+  background: var(--gold);
   transform-origin: left center;
   transform: scaleX(0);
   animation-name: tvProgress;
@@ -374,7 +361,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .slide {
-    transform: none;
     transition: opacity 0.2s ease;
   }
 
