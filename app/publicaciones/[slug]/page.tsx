@@ -56,24 +56,25 @@ export default async function PostPage({ params }: PostPageProps) {
         ])}
       />
       <SiteHeader />
-      <main className="detail-page post-page">
-        <section className="detail-hero post-hero">
-          <div className="detail-hero-pattern" aria-hidden="true" />
-          <div className="page-shell post-hero-grid">
-            <div>
-              <Link href="/publicaciones" className="back-link">← Volver a publicaciones</Link>
-              <p className="eyebrow light">
-                <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
-                {post.author ? ` · ${post.author}` : ""}
-              </p>
-              <h1>{post.title}</h1>
-              <p className="detail-lead">{post.excerpt}</p>
-            </div>
-            <div className="post-hero-media">
-              <img src={post.coverImage.src} alt={post.coverImage.alt} />
-            </div>
+      {/* Familia de clases propia y completa: no hereda de detail-* para que
+          ninguna regla de las fichas de producto se cuele sin querer. */}
+      <main className="post-page">
+        <header className="post-header">
+          <div className="posts-hero-pattern" aria-hidden="true" />
+          <div className="page-shell post-header-inner">
+            <Link href="/publicaciones" className="post-back">← Volver a publicaciones</Link>
+            <p className="post-meta">
+              <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
+              {post.author ? ` · ${post.author}` : ""}
+            </p>
+            <h1 className="post-title">{post.title}</h1>
+            <p className="post-lead">{post.excerpt}</p>
           </div>
-        </section>
+        </header>
+
+        <figure className="page-shell post-cover">
+          <img src={post.coverImage.src} alt={post.coverImage.alt} />
+        </figure>
 
         <article className="page-shell post-article">
           <PostBody value={post.body} />

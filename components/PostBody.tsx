@@ -97,5 +97,7 @@ export function PostBody({ value }: { value: PostBodyBlock[] }) {
 
   flushList();
 
-  return <div className="post-body portable-copy">{rendered}</div>;
+  // Sin `portable-copy`: .post-body trae sus propios estilos y así el artículo
+  // no depende de reglas pensadas para las fichas de producto.
+  return <div className="post-body">{rendered}</div>;
 }
