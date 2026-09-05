@@ -160,21 +160,24 @@
   color: var(--clay);
 }
 
+/* La medida la define el layout, no un número fijo. Con la columna de fotos el
+   relato hereda el ancho del cuerpo de la categoría; sin fotos ocupa la hoja
+   entera en vez de dejar un margen muerto a la derecha. Al ensancharse la línea
+   se compensa con algo más de interlineado, que es lo que sostiene la lectura
+   cuando la medida crece. */
 .categoryStoryText {
   margin: 0;
-  max-width: 68ch;
   font-size: 10px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--ink-soft);
 }
 
 .categorySourcing {
   margin: 2px 0 0;
-  max-width: 68ch;
   padding-top: 4px;
   border-top: 1px solid var(--line);
   font-size: 9px;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--ink-soft);
 }
 
