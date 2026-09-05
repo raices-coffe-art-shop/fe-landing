@@ -176,8 +176,45 @@
   color: var(--ink-soft);
 }
 
+/* La ficha de origen del PDF del cliente: una fila por dato. En dos columnas
+   cuando hay ancho —la carta sin fotos— y en una sola cuando el relato comparte
+   la línea con la columna de fotografías. */
+.categoryFacts {
+  margin: 4px 0 0;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(58mm, 1fr));
+  gap: 2px 10mm;
+}
+
+.categoryFact {
+  display: flex;
+  gap: 4px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  break-inside: avoid;
+}
+
+.categoryFactLabel {
+  margin: 0;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.categoryFactLabel::after {
+  content: ":";
+}
+
+.categoryFactValue {
+  margin: 0;
+  min-width: 0;
+}
+
 /* Los insumos son el pie del relato: al nivel de una subsección, legibles sin
-   competir con la historia. */
+   competir con la historia. Se usan cuando la sección no tiene ficha de origen. */
 .categorySourcing {
   margin: 2px 0 0;
   padding-top: 4px;

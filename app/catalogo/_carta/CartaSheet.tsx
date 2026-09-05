@@ -28,6 +28,7 @@ type CategoryGroup = {
   storyTitle?: string;
   story?: string;
   sourcing?: string;
+  sourcingFacts?: CatalogItem["category"]["sourcingFacts"];
   image?: CatalogItem["category"]["image"];
   order: number;
   items: CatalogItem[];
@@ -49,6 +50,7 @@ function groupByCategory(items: CatalogItem[]): CategoryGroup[] {
         storyTitle: item.category.storyTitle,
         story: item.category.story,
         sourcing: item.category.sourcing,
+        sourcingFacts: item.category.sourcingFacts,
         image: item.category.image,
         order: item.category.order,
         items: [item],
@@ -136,8 +138,22 @@ export async function CartaSheet({ withPhotos, showActions }: CartaSheetProps) {
                             </p>
                           )}
                           <p className={styles.categoryStoryText}>{group.story}</p>
-                          {group.sourcing && (
-                            <p className={styles.categorySourcing}>{group.sourcing}</p>
+                          {/* La ficha de origen es la misma retícula de las cartas
+                              en PDF del cliente. Cuando no existe se cae al párrafo
+                              de insumos, que es lo que tenían las secciones antes. */}
+                          {group.sourcingFacts && group.sourcingFacts.length > 0 ? (
+                            <dl className={styles.categoryFacts}>
+                              {group.sourcingFacts.map((fact) => (
+                                <div key={fact.label} className={styles.categoryFact}>
+                                  <dt className={styles.categoryFactLabel}>{fact.label}</dt>
+                                  <dd className={styles.categoryFactValue}>{fact.value}</dd>
+                                </div>
+                              ))}
+                            </dl>
+                          ) : (
+                            group.sourcing && (
+                              <p className={styles.categorySourcing}>{group.sourcing}</p>
+                            )
                           )}
                         </div>
                       ) : (
