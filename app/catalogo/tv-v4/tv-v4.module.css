@@ -1,7 +1,13 @@
-/* Cuarta versión de la pantalla del local: el fondo y el cromado de la primera
-   —verde profundo, dorado, título centrado bajo su regla, sin barra de logo— con
-   la compacidad de la tercera: productos sin descripción, subsecciones con su
-   título y dos columnas cuando hay productos de sobra.
+/* Cuarta versión de la pantalla del local: el cromado de la primera —título
+   centrado bajo su regla, sin barra de logo— con la compacidad de la tercera:
+   productos sin descripción, subsecciones con su título y dos columnas cuando
+   hay productos de sobra.
+
+   El fondo es el arena #d1b996 que pidió el cliente. Al ser un tono claro, el
+   dorado de la primera versión perdía todo el contraste, así que los acentos
+   pasan a una arcilla profunda (#7c3b31, 4,8:1 sobre el fondo) y el texto al
+   marrón tinta de la marca (8,2:1). El fondo va plano, como el color entregado:
+   la profundidad la ponen las cajas, una más clara y otra más honda.
 
    La historia y la ficha de origen conservan el tratamiento de la v3: título en
    serif, cita destacada aparte y datos a dos columnas. */
@@ -13,8 +19,10 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--ink);
-  color: #fff8ed;
+  /* Fuera de la columna 9:16 el fondo enmarca la carta en un monitor apaisado
+     y desaparece en el televisor girado. */
+  background: #241a14;
+  color: var(--ink);
   font-family: var(--sans);
 
   /* Toda la escala cuelga del ancho de una columna 9:16: en el televisor girado
@@ -22,9 +30,10 @@
      la vista previa real. */
   --w: min(100vw, calc(100vh * 9 / 16));
   --pad: calc(var(--w) * 0.052);
-  --gold: #e4bb72;
-  --paper: #fff8ed;
-  --paper-soft: rgba(244, 239, 229, 0.72);
+  --sand: #d1b996;
+  --sand-lift: #ddc8aa;
+  --sand-deep: #c3a781;
+  --accent: #7c3b31;
 }
 
 .cursorHidden {
@@ -36,9 +45,7 @@
   width: var(--w);
   height: min(100vh, calc(var(--w) * 16 / 9));
   overflow: hidden;
-  background:
-    radial-gradient(120% 55% at 50% 0%, rgba(228, 187, 114, 0.09), transparent 62%),
-    linear-gradient(168deg, var(--green-deep) 0%, var(--ink) 100%);
+  background: var(--sand);
 }
 
 .slide {
@@ -94,7 +101,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-align: center;
-  color: var(--paper);
+  color: var(--ink);
 }
 
 .sectionTagline {
@@ -104,14 +111,14 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   text-align: center;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .sectionRule {
   margin-top: calc(var(--w) * 0.028);
   height: calc(var(--w) * 0.0035);
-  background: var(--gold);
-  opacity: 0.85;
+  background: var(--accent);
+  opacity: 0.9;
 }
 
 /* ---------- Cuerpo ---------- */
@@ -127,8 +134,8 @@
   flex: none;
   margin-top: calc(var(--w) * 0.028);
   padding: calc(var(--w) * 0.022) calc(var(--w) * 0.026);
-  border-left: calc(var(--w) * 0.006) solid var(--gold);
-  background: rgba(255, 248, 237, 0.05);
+  border-left: calc(var(--w) * 0.006) solid var(--accent);
+  background: var(--sand-lift);
 }
 
 .storyTitle {
@@ -138,7 +145,7 @@
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .storyText {
@@ -147,7 +154,7 @@
   font-style: italic;
   font-size: var(--story-size);
   line-height: 1.55;
-  color: var(--paper);
+  color: var(--ink);
 }
 
 /* La voz del productor, cuando el relato cierra con ella. */
@@ -155,22 +162,22 @@
   margin: calc(var(--w) * 0.016) 0 0;
   padding: calc(var(--w) * 0.014) calc(var(--w) * 0.018);
   border-radius: calc(var(--w) * 0.008);
-  background: rgba(228, 187, 114, 0.12);
+  background: var(--sand-deep);
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
   font-size: var(--quote-size);
   line-height: 1.45;
-  color: var(--paper);
+  color: var(--ink);
 }
 
 .factsBox {
   flex: none;
   margin-top: calc(var(--w) * 0.022);
   padding: calc(var(--w) * 0.02) calc(var(--w) * 0.026);
-  border: 1px solid rgba(228, 187, 114, 0.24);
+  border: 1px solid rgba(43, 33, 28, 0.16);
   border-radius: calc(var(--w) * 0.012);
-  background: rgba(228, 187, 114, 0.07);
+  background: var(--sand-deep);
 }
 
 .factsTitle {
@@ -180,7 +187,7 @@
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .factsGrid {
@@ -200,7 +207,7 @@
 .factLabel {
   margin: 0;
   font-weight: 700;
-  color: var(--paper);
+  color: var(--ink);
   white-space: nowrap;
 }
 
@@ -211,7 +218,7 @@
 .factValue {
   margin: 0;
   min-width: 0;
-  color: rgba(228, 187, 114, 0.85);
+  color: var(--green-deep);
 }
 
 /* ---------- Productos por subsección ---------- */
@@ -241,13 +248,13 @@
 .groupTitle {
   margin: 0 0 calc(var(--w) * 0.008);
   padding-bottom: calc(var(--w) * 0.006);
-  border-bottom: 1px solid rgba(228, 187, 114, 0.28);
+  border-bottom: 1px solid rgba(124, 59, 49, 0.35);
   font-size: calc(var(--w) * 0.024);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .items {
@@ -261,7 +268,7 @@
   align-items: baseline;
   gap: calc(var(--w) * 0.016);
   padding: calc(var(--w) * 0.011) 0;
-  border-bottom: 1px solid rgba(244, 239, 229, 0.12);
+  border-bottom: 1px solid var(--line);
 }
 
 .items > .item:last-child {
@@ -273,7 +280,7 @@
   font-size: calc(var(--w) * 0.038);
   font-weight: 500;
   line-height: 1.15;
-  color: var(--paper);
+  color: var(--ink);
 }
 
 .itemPrice {
@@ -281,7 +288,7 @@
   font-size: calc(var(--w) * 0.036);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--gold);
+  color: var(--accent);
   white-space: nowrap;
 }
 
@@ -291,7 +298,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(228, 187, 114, 0.65);
+  color: var(--ink-soft);
   white-space: nowrap;
 }
 
@@ -327,7 +334,7 @@
   font-weight: 600;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .qrCard {
@@ -336,7 +343,7 @@
   flex-direction: column;
   align-items: center;
   gap: calc(var(--w) * 0.018);
-  background: var(--paper);
+  background: #fff8ed;
   color: var(--ink);
   border-radius: calc(var(--w) * 0.028);
   padding: calc(var(--w) * 0.045);
@@ -376,7 +383,7 @@
   width: calc(var(--w) * 0.008);
   height: calc(var(--w) * 0.008);
   border-radius: 50%;
-  background: rgba(228, 187, 114, 0.35);
+  background: rgba(124, 59, 49, 0.28);
 }
 
 .progressActive {
@@ -384,14 +391,14 @@
   width: calc(var(--w) * 0.03);
   height: calc(var(--w) * 0.008);
   border-radius: calc(var(--w) * 0.004);
-  background: rgba(228, 187, 114, 0.35);
+  background: rgba(124, 59, 49, 0.28);
   overflow: hidden;
 }
 
 .progressFill {
   position: absolute;
   inset: 0;
-  background: var(--gold);
+  background: var(--accent);
   transform-origin: left center;
   transform: scaleX(0);
   animation-name: tvV4Progress;
