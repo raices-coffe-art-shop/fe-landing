@@ -18,10 +18,6 @@ export const MAX_ITEMS_PER_SCREEN = 18;
 // conceptos con Chocolatería y con Bebidas Andinas.
 export const TWO_COLUMN_THRESHOLD = 8;
 
-// La primera página de cada sección estrena su relato: se queda más tiempo para
-// que alcance a leerse. Con una pantalla por sección esto aplica a casi todas.
-export const SECTION_OPENING_DWELL = 1.4;
-
 export type MenuScreenItem = {
   id: string;
   title: string;
@@ -67,7 +63,6 @@ export type MenuScreenSlide =
       section: MenuScreenSection;
       groups: MenuScreenGroup[];
       twoColumns: boolean;
-      dwell: number;
     }
   | { kind: "brand" };
 
@@ -219,7 +214,6 @@ export function buildMenuScreenSlides(
         section,
         groups: pageGroups,
         twoColumns: slice.length > TWO_COLUMN_THRESHOLD,
-        dwell: page === 0 ? SECTION_OPENING_DWELL : 1,
       });
     }
   }

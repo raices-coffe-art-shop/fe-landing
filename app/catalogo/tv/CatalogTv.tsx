@@ -37,15 +37,14 @@ export function CatalogTv({ slides, intervalMs, logo, qrDataUrl, catalogDisplayU
     if (slideCount <= 1) return;
 
     let timer = 0;
-    // La pantalla que estrena el relato de una sección necesita más tiempo.
-    const current = slides[activeIndex];
-    const dwell = current && "dwell" in current ? current.dwell : 1;
+    // Todas las pantallas duran lo mismo. El temporizador se rearma en cada
+    // avance, por eso el efecto depende de activeIndex.
     const start = () => {
       if (timer) return;
       timer = window.setTimeout(() => {
         timer = 0;
         setActiveIndex((index) => (index + 1) % slideCount);
-      }, intervalMs * dwell);
+      }, intervalMs);
     };
     const stop = () => {
       window.clearTimeout(timer);
@@ -62,7 +61,7 @@ export function CatalogTv({ slides, intervalMs, logo, qrDataUrl, catalogDisplayU
       document.removeEventListener("visibilitychange", onVisibilityChange);
       stop();
     };
-  }, [slideCount, intervalMs, rotationEpoch, slides, activeIndex]);
+  }, [slideCount, intervalMs, rotationEpoch, activeIndex]);
 
   useEffect(() => {
     if (slideCount <= 1) return;
@@ -294,11 +293,7 @@ export function CatalogTv({ slides, intervalMs, logo, qrDataUrl, catalogDisplayU
                   <span
                     key={`${key}-${rotationEpoch}-${activeIndex}`}
                     className={styles.progressFill}
-                    style={{
-                      animationDuration: `${
-                        intervalMs * (slide && "dwell" in slide ? slide.dwell : 1)
-                      }ms`,
-                    }}
+                    style={{ animationDuration: `${intervalMs}ms` }}
                   />
                 </span>
               ) : (

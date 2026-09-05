@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const DEFAULT_INTERVAL_SECONDS = 12;
+const DEFAULT_INTERVAL_SECONDS = 10;
 const MIN_INTERVAL_SECONDS = 5;
 const MAX_INTERVAL_SECONDS = 120;
 

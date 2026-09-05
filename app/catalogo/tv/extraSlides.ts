@@ -12,9 +12,6 @@ import type { CatalogItem } from "@/sanity/lib/catalogTypes";
 
 export const PEOPLE_PER_SLIDE = 2;
 
-// Estas pantallas son de lectura, no de precios: se quedan más tiempo.
-export const NARRATIVE_DWELL = 1.5;
-
 // Solo el primer párrafo y medio entran cómodos a distancia; el resto del relato
 // vive en la web, a la que lleva el QR de la pantalla anterior.
 const ORIGIN_PARAGRAPHS = 2;
@@ -56,7 +53,6 @@ export type TvScreenSlide =
       tagline: string;
       title: string;
       photos: TvCollagePhoto[];
-      dwell: number;
     }
   | {
       kind: "origin";
@@ -67,7 +63,6 @@ export type TvScreenSlide =
       paragraphs: string[];
       photo: { src: string; alt: string };
       note: { label: string; text: string };
-      dwell: number;
     }
   | {
       kind: "people";
@@ -75,7 +70,6 @@ export type TvScreenSlide =
       tagline: string;
       title: string;
       cards: TvPersonCard[];
-      dwell: number;
     };
 
 export function buildCollageSlide(items: CatalogItem[]): TvScreenSlide | null {
@@ -111,7 +105,6 @@ export function buildCollageSlide(items: CatalogItem[]): TvScreenSlide | null {
       angle: (((index * 47) % 15) - 7),
       delayMs: index * COLLAGE_STAGGER_MS,
     })),
-    dwell: NARRATIVE_DWELL,
   };
 }
 
@@ -126,7 +119,6 @@ export function buildOriginSlide(): TvScreenSlide {
     paragraphs: humanOrigin.paragraphs.slice(0, ORIGIN_PARAGRAPHS),
     photo: { src: humanOrigin.foundersPhoto, alt: humanOrigin.foundersPhotoAlt },
     note: { label: languageNote.label, text: languageNote.text },
-    dwell: NARRATIVE_DWELL,
   };
 }
 
@@ -154,8 +146,7 @@ export function buildPeopleSlides(): TvScreenSlide[] {
       tagline: "Personas antes que productos",
       title: "Las personas detrás de Raíces",
       cards: cards.slice(page * PEOPLE_PER_SLIDE, (page + 1) * PEOPLE_PER_SLIDE),
-      dwell: NARRATIVE_DWELL,
-    });
+      });
   }
   return slides;
 }
