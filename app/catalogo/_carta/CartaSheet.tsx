@@ -25,6 +25,9 @@ type CategoryGroup = {
   id: string;
   title: string;
   description?: string;
+  storyTitle?: string;
+  story?: string;
+  sourcing?: string;
   image?: CatalogItem["category"]["image"];
   order: number;
   items: CatalogItem[];
@@ -43,6 +46,9 @@ function groupByCategory(items: CatalogItem[]): CategoryGroup[] {
         id: item.category.id,
         title: item.category.title,
         description: item.category.description,
+        storyTitle: item.category.storyTitle,
+        story: item.category.story,
+        sourcing: item.category.sourcing,
         image: item.category.image,
         order: item.category.order,
         items: [item],
@@ -122,7 +128,23 @@ export async function CartaSheet({ withPhotos, showActions }: CartaSheetProps) {
                   >
                     <div className={styles.categoryBody}>
                       <h2 className={styles.categoryTitle}>{group.title}</h2>
-                      {group.description && <p className={styles.categoryNote}>{group.description}</p>}
+                      {withPhotos && group.story ? (
+                        <div className={styles.categoryStory}>
+                          {group.storyTitle && (
+                            <p className={styles.categoryStoryTitle}>
+                              Nuestra historia · {group.storyTitle}
+                            </p>
+                          )}
+                          <p className={styles.categoryStoryText}>{group.story}</p>
+                          {group.sourcing && (
+                            <p className={styles.categorySourcing}>{group.sourcing}</p>
+                          )}
+                        </div>
+                      ) : (
+                        group.description && (
+                          <p className={styles.categoryNote}>{group.description}</p>
+                        )
+                      )}
                       {group.subGroups.map((subGroup) => (
                         <div key={subGroup.title ?? "sin-subseccion"} className={styles.subGroup}>
                           {subGroup.title && (

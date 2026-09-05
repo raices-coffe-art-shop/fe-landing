@@ -140,6 +140,44 @@
   break-after: avoid;
 }
 
+/* La historia de origen: es lo que distingue a Raíces, pero acompaña a los
+   productos, no compite con ellos. Por eso va en cuerpo pequeño con buen
+   interlineado, y el encabezado se lee como una firma. */
+.categoryStory {
+  margin: -2px 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  break-inside: avoid;
+}
+
+.categoryStoryTitle {
+  margin: 0;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+.categoryStoryText {
+  margin: 0;
+  max-width: 68ch;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.categorySourcing {
+  margin: 2px 0 0;
+  max-width: 68ch;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+  font-size: 9px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
 .items {
   margin: 0;
   padding: 0;

@@ -27,6 +27,9 @@ export type CatalogCategory = {
   title: string;
   slug: string;
   description?: string;
+  storyTitle?: string;
+  story?: string;
+  sourcing?: string;
   image?: CatalogImage;
   order: number;
   isVisible: boolean;

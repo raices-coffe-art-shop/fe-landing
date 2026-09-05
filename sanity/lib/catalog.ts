@@ -41,6 +41,9 @@ type SanityCategory = {
   title?: string;
   slug?: string;
   description?: string;
+  storyTitle?: string;
+  story?: string;
+  sourcing?: string;
   image?: SanityImageSource;
   imageAlt?: string;
   order?: number;
@@ -142,6 +145,9 @@ function normalizeCategory(category: SanityCategory | undefined): CatalogCategor
     title: category?.title?.trim() || "Sin categoría",
     slug: category?.slug?.trim() || "sin-categoria",
     description: category?.description?.trim() || undefined,
+    storyTitle: category?.storyTitle?.trim() || undefined,
+    story: category?.story?.trim() || undefined,
+    sourcing: category?.sourcing?.trim() || undefined,
     image: normalizeCategoryImage(category),
     order: typeof category?.order === "number" ? category.order : 999,
     isVisible: category?.isVisible !== false,
