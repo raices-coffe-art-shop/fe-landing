@@ -153,7 +153,7 @@
 
 .categoryStoryTitle {
   margin: 0;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -164,19 +164,25 @@
    relato hereda el ancho del cuerpo de la categoría; sin fotos ocupa la hoja
    entera en vez de dejar un margen muerto a la derecha. Al ensancharse la línea
    se compensa con algo más de interlineado, que es lo que sostiene la lectura
-   cuando la medida crece. */
+   cuando la medida crece.
+
+   El cuerpo va por encima de la descripción de producto (11px): el relato es lo
+   que distingue a la casa, así que no puede leerse como una nota al pie de un
+   espresso. 12px equivale a 9pt impresos, el piso cómodo de una carta. */
 .categoryStoryText {
   margin: 0;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.55;
   color: var(--ink-soft);
 }
 
+/* Los insumos son el pie del relato: al nivel de una subsección, legibles sin
+   competir con la historia. */
 .categorySourcing {
   margin: 2px 0 0;
   padding-top: 4px;
   border-top: 1px solid var(--line);
-  font-size: 9px;
+  font-size: 10.5px;
   line-height: 1.5;
   color: var(--ink-soft);
 }
