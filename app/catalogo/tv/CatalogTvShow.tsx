@@ -157,7 +157,7 @@ export function CatalogTvShow({ slides, intervalMs, logo, qrDataUrl, catalogDisp
                     <img src={slide.image.src} alt={slide.image.alt} />
                   </figure>
                 )}
-                <div className={styles.storyCopy}>
+                <div className={`${styles.storyCopy} ${styles[slide.density]}`}>
                   <p className={styles.storyText}>{slide.story}</p>
                   {slide.sourcing && <p className={styles.storySourcing}>{slide.sourcing}</p>}
                 </div>

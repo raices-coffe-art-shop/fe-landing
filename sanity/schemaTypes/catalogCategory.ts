@@ -57,10 +57,10 @@ export const catalogCategory = defineType({
     defineField({
       name: "story",
       title: "Historia de origen",
-      description: "El relato de esta sección: de dónde viene el producto y quién lo trabaja. Aparece en la carta que se imprime y en su propia pantalla en el local. Si lo dejas vacío, la sección se muestra solo con sus productos.",
+      description: "El relato de esta sección: de dónde viene el producto y quién lo trabaja. Aparece en la carta que se imprime y en su propia pantalla en el local. Si lo dejas vacío, la sección se muestra solo con sus productos. El máximo es lo que entra completo en la pantalla del local sin recortarse.",
       type: "text",
       rows: 6,
-      validation: (Rule) => Rule.max(900),
+      validation: (Rule) => Rule.max(700),
     }),
     defineField({
       name: "sourcing",

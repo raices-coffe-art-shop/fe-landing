@@ -214,11 +214,36 @@
   min-width: 0;
 }
 
+/* El escenario no tiene scroll: lo que no entra se recorta. Por eso el cuerpo y
+   la medida del relato dependen de su largo, que el servidor resuelve en
+   resolveStoryDensity(). Al crecer el texto se ensancha la medida antes de
+   achicar la letra, así ninguna variante baja del tamaño legible a 2-3 metros. */
+.holgada {
+  --story-size: clamp(24px, 1.8vw, 38px);
+  --story-measure: 34ch;
+  --sourcing-size: clamp(15px, 1.05vw, 22px);
+  --sourcing-measure: 46ch;
+}
+
+.media {
+  --story-size: clamp(20px, 1.4vw, 30px);
+  --story-measure: 46ch;
+  --sourcing-size: clamp(14px, 1vw, 21px);
+  --sourcing-measure: 58ch;
+}
+
+.compacta {
+  --story-size: clamp(18px, 1.15vw, 25px);
+  --story-measure: 56ch;
+  --sourcing-size: clamp(13px, 0.9vw, 19px);
+  --sourcing-measure: 66ch;
+}
+
 .storyText {
   margin: 0;
-  max-width: 32ch;
+  max-width: var(--story-measure);
   font-family: var(--serif);
-  font-size: clamp(24px, 1.85vw, 40px);
+  font-size: var(--story-size);
   font-weight: 400;
   line-height: 1.5;
   color: #fff8ed;
@@ -226,10 +251,10 @@
 
 .storySourcing {
   margin: 0;
-  max-width: 40ch;
+  max-width: var(--sourcing-measure);
   padding-top: clamp(14px, 1.8vh, 24px);
   border-top: 1px solid rgba(228, 187, 114, 0.28);
-  font-size: clamp(15px, 1.05vw, 22px);
+  font-size: var(--sourcing-size);
   line-height: 1.5;
   color: rgba(244, 239, 229, 0.66);
 }

@@ -18,6 +18,20 @@ export type TvMenuItem = {
 // precios: dwell multiplica el intervalo base para ese slide.
 export const STORY_DWELL_FACTOR = 1.6;
 
+// La pantalla del local no tiene scroll: lo que no entra, se recorta. Como los
+// relatos varían mucho de largo (224 a 475 caracteres hoy), el tamaño del texto
+// se elige según lo que hay que mostrar, contando también los insumos porque
+// comparten la misma columna. Los cortes están calculados para que el caso más
+// largo que admite el schema entre completo en 1080p.
+export type TvStoryDensity = "holgada" | "media" | "compacta";
+
+export function resolveStoryDensity(story: string, sourcing: string | null): TvStoryDensity {
+  const total = story.length + (sourcing?.length ?? 0);
+  if (total <= 380) return "holgada";
+  if (total <= 700) return "media";
+  return "compacta";
+}
+
 export type TvSlide =
   | {
       kind: "story";
@@ -27,6 +41,7 @@ export type TvSlide =
       story: string;
       sourcing: string | null;
       image: { src: string; alt: string } | null;
+      density: TvStoryDensity;
       dwell: number;
     }
   | {
@@ -85,14 +100,16 @@ export function buildTvSlides(
     const story = category?.story?.trim();
     if (story) {
       const storyImage = subGroupImages[0];
+      const sourcing = category?.sourcing?.trim() || null;
       slides.push({
         kind: "story",
         key: `${categoryId}-historia`,
         categoryTitle: group.title,
         storyTitle: category?.storyTitle?.trim() || null,
         story,
-        sourcing: category?.sourcing?.trim() || null,
+        sourcing,
         image: storyImage ? { src: storyImage.src, alt: storyImage.alt } : null,
+        density: resolveStoryDensity(story, sourcing),
         dwell: STORY_DWELL_FACTOR,
       });
     }
