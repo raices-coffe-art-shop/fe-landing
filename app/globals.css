@@ -8832,11 +8832,12 @@ img { max-width: 100%; }
   background: #efe7da;
 }
 
+/* Una sola columna: la nota que ocupaba la segunda se retiro del catalogo y
+   dejarla declarada solo generaba media reticula vacia a la derecha. */
 .catalogo-public-intro {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, .48fr);
-  gap: 70px;
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
 }
 
 .catalogo-public-intro h2 {

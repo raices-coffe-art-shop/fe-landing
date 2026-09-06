@@ -63,7 +63,6 @@ export default async function CatalogoPage({ searchParams }: CatalogoPageProps) 
               <p className="eyebrow">Archivo disponible</p>
               <h2>Filtra por categoría o recorre el catálogo completo.</h2>
             </div>
-            <p>La disponibilidad puede variar. El botón Consultar abre el canal oficial configurado en Sanity.</p>
           </div>
 
           <CatalogCollection
