@@ -16,7 +16,7 @@ export const personCardPhotos = {
   pedro: [
     { src: "/media/people/pedro-01.webp", alt: "Pedro Ñahui Atao junto a productos de Café Ayacuchano en una feria", position: "center 42%" },
     { src: "/media/people/pedro-02.webp", alt: "Pedro Ñahui Atao frente a un espacio de Café Ayacuchano", position: "center 44%" },
-    { src: "/media/people/pedro-03.webp", alt: "Pedro Ñahui Atao junto a Lized y Francisco Arica durante un encuentro en una zona de cultivo de café", position: "center 48%" },
+    { src: "/media/people/pedro-03.webp", alt: "Pedro Ñahui Atao junto a Lized Huamán Ramírez y Francisco Arica Cruz durante un encuentro en una zona de cultivo de café", position: "center 48%" },
     { src: "/media/people/pedro-04.webp", alt: "Pedro Ñahui Atao junto a una tostadora de café", position: "center 42%" },
   ],
   fortunato: [
@@ -27,7 +27,7 @@ export const personCardPhotos = {
   ],
   dina: [
     { src: "/media/people/dina-01.webp", alt: "Dina Torres presentada por su trabajo con cacao", position: "center 38%" },
-    { src: "/media/people/dina-02.webp", alt: "Francisco Arica, un productor, Dina Torres y Lized durante una visita vinculada con la producción de cacao", position: "center 45%" },
+    { src: "/media/people/dina-02.webp", alt: "Francisco Arica Cruz, un productor, Dina Torres y Lized Huamán Ramírez durante una visita vinculada con la producción de cacao", position: "center 45%" },
     { src: "/media/people/dina-03.webp", alt: "Dina Torres mostrando productos elaborados con cacao", position: "center 36%" },
   ],
   karen: [

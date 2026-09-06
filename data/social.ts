@@ -14,16 +14,16 @@ export const humanOrigin = {
   eyebrow: "Cómo comenzó",
   title: "Raíces nació del deseo de mantener a Ayacucho cerca.",
   paragraphs: [
-    "Raíces fue creado por Francisco Arica y Lized. Ambos comparten un vínculo profundo con Ayacucho y conocen el quechua, una lengua que les permitió acercarse a productores y proveedores de una manera más directa y personal.",
+    "Raíces fue creado por Francisco Arica Cruz y Lized Huamán Ramírez. Ambos comparten un vínculo profundo con Ayacucho y conocen el quechua, una lengua que les permitió acercarse a productores y proveedores de una manera más directa y personal.",
     "Las conversaciones no comenzaron únicamente alrededor de precios o productos. En varios casos, los acuerdos y relaciones se construyeron en quechua, escuchando a las personas, conociendo sus procesos y visitando los lugares donde trabajan.",
     "De esa forma, Raíces empezó a reunir no solo productos de Ayacucho, sino también las historias, familias, conocimientos y formas de trabajo que existen detrás de ellos.",
     "Desde el comienzo, Francisco y Lized decidieron que ningún producto debía presentarse como algo anónimo. Siempre que fuera posible, Raíces debía poder explicar de dónde viene, quién lo produce y qué relación existe con la persona o comunidad que lo hizo posible."
   ],
-  founders: "Francisco Arica y Lized",
+  founders: "Francisco Arica Cruz y Lized Huamán Ramírez",
   foundersPhoto: "/media/lized-variants/hero-con-lized.webp",
-  foundersPhotoAlt: "Francisco Arica y Lized juntos durante una visita de Raíces al campo",
+  foundersPhotoAlt: "Francisco Arica Cruz y Lized Huamán Ramírez juntos durante una visita de Raíces al campo",
   notes: [
-    { label: "Fundadores", text: "Francisco Arica y Lized, fundadores de Raíces." },
+    { label: "Fundadores", text: "Francisco Arica Cruz y Lized Huamán Ramírez, fundadores de Raíces." },
     { label: "Lengua", text: "El quechua ha permitido construir conversaciones directas con productores y proveedores de Ayacucho." },
   ],
 };

@@ -7,7 +7,7 @@ export type HeroImage = {
 export const heroImages: HeroImage[] = [
   {
     src: "/hero-principal.webp",
-    alt: "Francisco Arica y Lized en una zona de cultivo vinculada con Raíces",
+    alt: "Francisco Arica Cruz y Lized Huamán Ramírez en una zona de cultivo vinculada con Raíces",
     linksPosition: "50% 18%",
   },
   {
