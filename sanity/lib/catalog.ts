@@ -47,6 +47,7 @@ type SanityCategory = {
   storyTitle?: string;
   story?: string;
   sourcing?: string;
+  factsTitle?: string;
   sourcingFacts?: Array<{ label?: string; value?: string } | null>;
   image?: SanityImageSource;
   imageAlt?: string;
@@ -163,6 +164,7 @@ function normalizeCategory(category: SanityCategory | undefined): CatalogCategor
     storyTitle: category?.storyTitle?.trim() || undefined,
     story: category?.story?.trim() || undefined,
     sourcing: category?.sourcing?.trim() || undefined,
+    factsTitle: category?.factsTitle?.trim() || undefined,
     sourcingFacts: normalizeSourcingFacts(category?.sourcingFacts),
     image: normalizeCategoryImage(category),
     order: typeof category?.order === "number" ? category.order : 999,

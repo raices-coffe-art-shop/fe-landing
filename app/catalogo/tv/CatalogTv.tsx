@@ -245,7 +245,7 @@ export function CatalogTv({ slides, intervalMs, logo, qrDataUrl, catalogDisplayU
 
                 {section.facts.length > 0 && (
                   <div className={styles.factsBox}>
-                    <p className={styles.factsTitle}>Origen y productores</p>
+                    <p className={styles.factsTitle}>{section.factsTitle}</p>
                     <dl className={styles.factsGrid}>
                       {section.facts.map((fact, factIndex) => (
                         <div key={`${fact.label}-${factIndex}`} className={styles.fact}>

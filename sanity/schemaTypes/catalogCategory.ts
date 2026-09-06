@@ -78,6 +78,13 @@ export const catalogCategory = defineType({
       validation: (Rule) => Rule.max(400),
     }),
     defineField({
+      name: "factsTitle",
+      title: "Título del recuadro de datos",
+      description: "Opcional. El encabezado del recuadro en la pantalla del local. Si lo dejas vacío dice “Origen y productores”. Cámbialo cuando el recuadro no hable de origen: por ejemplo “Personaliza a tu gusto” en Jugos & Smoothies.",
+      type: "string",
+      validation: (Rule) => Rule.max(60),
+    }),
+    defineField({
       name: "sourcingFacts",
       title: "Ficha de origen y productores",
       description: "Opcional. Los datos que acompañan al relato en la pantalla del local, uno por fila: origen, productor, altitud, perfil… Si la sección no tiene ficha, déjalo vacío y la pantalla no muestra ese recuadro.",

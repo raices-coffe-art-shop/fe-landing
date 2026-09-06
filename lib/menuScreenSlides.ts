@@ -47,12 +47,17 @@ export function resolveScreenDensity(
   return "compacta";
 }
 
+export const DEFAULT_FACTS_TITLE = "Origen y productores";
+
 export type MenuScreenSection = {
   title: string;
   tagline: string | null;
   story: string | null;
   quote: string | null;
   facts: SourcingFact[];
+  // El encabezado del recuadro de datos. No siempre habla de origen: en Jugos &
+  // Smoothies es la caja "Personaliza a tu gusto", con los añadidos y su precio.
+  factsTitle: string;
   density: MenuScreenDensity;
 };
 
@@ -78,6 +83,7 @@ type ScreenSource = {
   story: string | null;
   quote: string | null;
   facts: SourcingFact[];
+  factsTitle: string;
   entries: ScreenEntry[];
 };
 
@@ -135,6 +141,7 @@ export function buildMenuScreenSlides(
       story: story || null,
       quote,
       facts,
+      factsTitle: category?.factsTitle?.trim() || DEFAULT_FACTS_TITLE,
       entries: toEntries(sortedItems),
     });
   }
@@ -151,6 +158,7 @@ export function buildMenuScreenSlides(
       story: null,
       quote: null,
       facts: [],
+      factsTitle: DEFAULT_FACTS_TITLE,
       entries: toEntries(only.items),
     });
   } else if (plain.length > 1) {
@@ -164,6 +172,7 @@ export function buildMenuScreenSlides(
       story: null,
       quote: null,
       facts: [],
+      factsTitle: DEFAULT_FACTS_TITLE,
       entries: plain.flatMap((section) =>
         section.items.map((item) => ({ groupTitle: section.title, item })),
       ),
@@ -187,6 +196,7 @@ export function buildMenuScreenSlides(
       story: source.story,
       quote: source.quote,
       facts: source.facts,
+      factsTitle: source.factsTitle,
       density: resolveScreenDensity(source.story ?? "", source.quote, source.facts),
     };
 
