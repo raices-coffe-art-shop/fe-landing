@@ -135,7 +135,7 @@ export function CatalogTv({ slides, intervalMs, logo, qrDataUrl, catalogDisplayU
                   <p className={styles.sectionTagline}>{slide.tagline}</p>
                   <div className={styles.sectionRule} />
                 </header>
-                <div className={styles.collage}>
+                <div className={`${styles.collage} ${styles[slide.animation]}`}>
                   {slide.photos.map((photo) => (
                     <figure
                       key={photo.id}

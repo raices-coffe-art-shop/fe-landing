@@ -5,7 +5,12 @@ import { getSiteSettings } from "@/sanity/lib/siteSettings";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { filterPrintedMenuItems } from "@/lib/printedMenu";
 import { buildMenuScreenSlides } from "@/lib/menuScreenSlides";
-import { buildCollageSlide, buildOriginSlide, buildPeopleSlides } from "./extraSlides";
+import {
+  buildCollageSlide,
+  buildOriginSlide,
+  buildPeopleSlides,
+  resolveCollageAnimation,
+} from "./extraSlides";
 import { CatalogTv } from "./CatalogTv";
 
 // La pantalla del local: televisor girado en vertical. Primero la carta, una
@@ -21,7 +26,7 @@ const MIN_INTERVAL_SECONDS = 5;
 const MAX_INTERVAL_SECONDS = 120;
 
 type TvPageProps = {
-  searchParams: Promise<{ s?: string | string[] }>;
+  searchParams: Promise<{ s?: string | string[]; animation?: string | string[] }>;
 };
 
 function resolveIntervalMs(raw: string | string[] | undefined): number {
@@ -34,6 +39,9 @@ function resolveIntervalMs(raw: string | string[] | undefined): number {
 export default async function CartaTvPage({ searchParams }: TvPageProps) {
   const resolvedSearchParams = await searchParams;
   const intervalMs = resolveIntervalMs(resolvedSearchParams.s);
+  // La entrada del muro se prueba desde la URL del televisor, sin desplegar:
+  // ?animation=caida | zoom | giro | revelado. Cualquier otro valor cae a caida.
+  const collageAnimation = resolveCollageAnimation(resolvedSearchParams.animation);
 
   const [items, categories, settings] = await Promise.all([
     getCatalogItems(),
@@ -43,7 +51,7 @@ export default async function CartaTvPage({ searchParams }: TvPageProps) {
   // El QR cierra la carta; después vienen las pantallas narrativas: el muro de
   // fotos de producto, cómo nació Raíces y quiénes están detrás.
   const menuItems = filterPrintedMenuItems(items);
-  const collage = buildCollageSlide(menuItems);
+  const collage = buildCollageSlide(menuItems, settings.collagePhotos, collageAnimation);
   const slides = [
     ...buildMenuScreenSlides(menuItems, settings.showCatalogPrices, categories),
     ...(collage ? [collage] : []),

@@ -3,6 +3,7 @@ import { people } from "@/data/people";
 import { CATALOG_FALLBACK_IMAGE_SRC, resizeCatalogImage } from "@/lib/categoryImage";
 import type { MenuScreenSlide } from "@/lib/menuScreenSlides";
 import type { CatalogItem } from "@/sanity/lib/catalogTypes";
+import type { CollagePhoto } from "@/sanity/lib/siteSettings";
 
 // Después del código QR la pantalla deja de ser carta y pasa a contar quiénes
 // están detrás: primero cómo nació Raíces, con la fotografía de los fundadores,
@@ -27,6 +28,17 @@ const COLLAGE_MIN_PHOTOS = 4;
 // Cada foto entra con un giro distinto y su propio retardo, para que caigan una
 // a una en vez de aparecer todas juntas.
 const COLLAGE_STAGGER_MS = 180;
+
+// Las cuatro entradas del muro, elegibles por ?animation= sin desplegar nada.
+// Los nombres van en español porque los escribe el equipo en la URL del televisor.
+export const COLLAGE_ANIMATIONS = ["caida", "zoom", "giro", "revelado"] as const;
+export type CollageAnimation = (typeof COLLAGE_ANIMATIONS)[number];
+export const DEFAULT_COLLAGE_ANIMATION: CollageAnimation = "caida";
+
+export function resolveCollageAnimation(raw: string | string[] | undefined): CollageAnimation {
+  const value = (Array.isArray(raw) ? raw[0] : raw)?.trim().toLowerCase();
+  return COLLAGE_ANIMATIONS.find((name) => name === value) ?? DEFAULT_COLLAGE_ANIMATION;
+}
 
 export type TvCollagePhoto = {
   id: string;
@@ -53,6 +65,7 @@ export type TvScreenSlide =
       tagline: string;
       title: string;
       photos: TvCollagePhoto[];
+      animation: CollageAnimation;
     }
   | {
       kind: "origin";
@@ -72,9 +85,18 @@ export type TvScreenSlide =
       cards: TvPersonCard[];
     };
 
-export function buildCollageSlide(items: CatalogItem[]): TvScreenSlide | null {
-  // Solo las fotos reales: normalizeImage rellena con el paisaje de Ayacucho a
-  // los productos sin fotografía propia, y ese no representa a ninguno.
+// Las fotos que el equipo subió al Studio para este muro. Solo se usan si hay
+// suficientes: con dos o tres el muro quedaría desangelado y es mejor seguir con
+// las de producto mientras el cliente termina de cargarlas.
+function collageFromSettings(photos: CollagePhoto[]): Array<{ id: string; src: string; alt: string }> {
+  if (photos.length < COLLAGE_MIN_PHOTOS) return [];
+  return photos.map((photo, index) => ({ id: `muro-${index}`, src: photo.src, alt: photo.alt }));
+}
+
+// El respaldo: las fotografías de los productos del catálogo. Solo las reales,
+// porque normalizeImage rellena con el paisaje de Ayacucho a los productos sin
+// fotografía propia y ese no representa a ninguno.
+function collageFromCatalog(items: CatalogItem[]): Array<{ id: string; src: string; alt: string }> {
   const seen = new Set<string>();
   const photos = items
     .filter((item) => {
@@ -83,24 +105,38 @@ export function buildCollageSlide(items: CatalogItem[]): TvScreenSlide | null {
       seen.add(src);
       return true;
     })
-    .map((item) => ({ item, image: resizeCatalogImage(item.mainImage, COLLAGE_PHOTO_WIDTH, COLLAGE_PHOTO_HEIGHT) }));
+    .map((item) => {
+      const image = resizeCatalogImage(item.mainImage, COLLAGE_PHOTO_WIDTH, COLLAGE_PHOTO_HEIGHT);
+      return { id: item.id, src: image.src, alt: image.alt };
+    });
 
-  if (photos.length < COLLAGE_MIN_PHOTOS) return null;
+  if (photos.length < COLLAGE_MIN_PHOTOS) return [];
 
   // Los productos llegan agrupados por categoría; recorrerlos a saltos mezcla el
   // muro sin azar, que rompería la hidratación al no coincidir servidor y cliente.
   const stride = photos.length % 7 === 0 ? 5 : 7;
-  const mixed = photos.map((_, index) => photos[(index * stride) % photos.length]);
+  return photos.map((_, index) => photos[(index * stride) % photos.length]);
+}
+
+export function buildCollageSlide(
+  items: CatalogItem[],
+  screenPhotos: CollagePhoto[] = [],
+  animation: CollageAnimation = DEFAULT_COLLAGE_ANIMATION,
+): TvScreenSlide | null {
+  const chosen = collageFromSettings(screenPhotos);
+  const photos = chosen.length > 0 ? chosen : collageFromCatalog(items);
+  if (photos.length === 0) return null;
 
   return {
     kind: "collage",
     key: "collage",
     tagline: "Con nombre, procedencia y una historia detrás",
     title: "Nuestros productos",
-    photos: mixed.slice(0, COLLAGE_MAX_PHOTOS).map(({ item, image }, index) => ({
-      id: item.id,
-      src: image.src,
-      alt: image.alt,
+    animation,
+    photos: photos.slice(0, COLLAGE_MAX_PHOTOS).map((photo, index) => ({
+      id: photo.id,
+      src: photo.src,
+      alt: photo.alt,
       // Giros repartidos entre -7° y 7°, siempre los mismos para el mismo orden.
       angle: (((index * 47) % 15) - 7),
       delayMs: index * COLLAGE_STAGGER_MS,

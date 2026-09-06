@@ -338,18 +338,81 @@
   background: var(--sand-deep);
 }
 
-/* Las fotos caen una a una: la animación arranca al entrar la pantalla, porque
+/* Las fotos entran una a una: la animación arranca al entrar la pantalla, porque
    se declara solo sobre el slide activo, y se rebobina al salir. `backwards`
-   mantiene cada foto fuera de cuadro hasta que le toca su turno. */
+   mantiene cada foto fuera de cuadro hasta que le toca su turno.
+
+   Cuál de las cuatro entradas se usa lo decide ?animation= en la URL del
+   televisor; el reparto y el escalonado son los mismos en todas. */
 .slide.active .collageItem {
-  animation: collageFall 0.85s cubic-bezier(0.22, 0.9, 0.28, 1) backwards;
+  animation-duration: 0.85s;
+  animation-timing-function: cubic-bezier(0.22, 0.9, 0.28, 1);
+  animation-fill-mode: backwards;
   animation-delay: var(--delay);
 }
 
-@keyframes collageFall {
+/* Cae desde arriba enderezando su giro. */
+.slide.active .caida .collageItem {
+  animation-name: collageCaida;
+}
+
+@keyframes collageCaida {
   from {
     opacity: 0;
     transform: translateY(-70%) rotate(calc(var(--angle) * 2.5));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--angle));
+  }
+}
+
+/* Crece en su sitio, sin desplazarse. */
+.slide.active .zoom .collageItem {
+  animation-name: collageZoom;
+}
+
+@keyframes collageZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotate(calc(var(--angle) * 1.6));
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(var(--angle));
+  }
+}
+
+/* Voltea sobre su eje vertical, como una carta que se da vuelta. */
+.slide.active .giro .collageItem {
+  animation-name: collageGiro;
+  animation-duration: 0.95s;
+}
+
+@keyframes collageGiro {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateY(-88deg) rotate(var(--angle));
+  }
+
+  to {
+    opacity: 1;
+    transform: perspective(900px) rotateY(0deg) rotate(var(--angle));
+  }
+}
+
+/* Aparece donde está, con una subida corta y sin giro extra: la más sobria. */
+.slide.active .revelado .collageItem {
+  animation-name: collageRevelado;
+  animation-timing-function: ease-out;
+}
+
+@keyframes collageRevelado {
+  from {
+    opacity: 0;
+    transform: translateY(14%) rotate(var(--angle));
   }
 
   to {
@@ -628,7 +691,12 @@
     transform: scaleX(1);
   }
 
-  .slide.active .collageItem {
+  /* Hay que igualar la especificidad de los selectores por animacion, si no la
+     regla mas concreta seguiria imponiendo su animation-name aqui dentro. */
+  .slide.active .caida .collageItem,
+  .slide.active .zoom .collageItem,
+  .slide.active .giro .collageItem,
+  .slide.active .revelado .collageItem {
     animation: none;
   }
 }
