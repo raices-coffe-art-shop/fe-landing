@@ -9,6 +9,7 @@ export const siteSettings = defineType({
     { name: "brand", title: "Marca", default: true },
     { name: "catalog", title: "Catálogo" },
     { name: "social", title: "Redes sociales" },
+    { name: "screen", title: "Pantalla del local" },
   ],
   initialValue: {
     brandLogoAlt: "Raíces — Café y Cultura",
@@ -99,6 +100,39 @@ export const siteSettings = defineType({
           }
           return true;
         }),
+    }),
+    defineField({
+      name: "collagePhotos",
+      title: "Fotos del muro de la pantalla",
+      description: "El muro de fotografías que aparece en la pantalla del local, después del código QR. Sube aquí las fotos que quieras mostrar; si dejas la lista vacía, el muro usa las fotografías de los productos del catálogo. Hacen falta al menos cuatro para que tome las tuyas.",
+      type: "array",
+      group: "screen",
+      options: { sortable: true, layout: "grid" },
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "collagePhoto",
+          title: "Foto",
+          fields: [
+            defineField({
+              name: "image",
+              title: "Fotografía",
+              type: "image",
+              options: { hotspot: true },
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "alt",
+              title: "Descripción de la imagen",
+              description: "Describe lo que se ve, para personas que usan lectores de pantalla. Ejemplo: “Taza de café sobre una mesa de madera”.",
+              type: "string",
+              validation: (Rule) => Rule.max(180),
+            }),
+          ],
+          preview: { select: { title: "alt", media: "image" } },
+        }),
+      ],
+      validation: (Rule) => Rule.max(24),
     }),
   ],
   preview: {

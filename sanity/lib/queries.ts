@@ -5,6 +5,10 @@ export const siteSettingsQuery = defineQuery(`
     brandLogo,
     brandLogoAlt,
     showCatalogPrices,
+    "collagePhotos": collagePhotos[]{
+      image,
+      alt
+    },
     "socialLinks": socialLinks[] | order(order asc){
       platform,
       label,

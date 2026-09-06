@@ -25,9 +25,16 @@ export type SocialLink = {
   order: number;
 };
 
+// Una foto del muro de la pantalla del local, ya resuelta contra el CDN.
+export type CollagePhoto = {
+  src: string;
+  alt: string;
+};
+
 export type SiteSettings = {
   brandLogo: BrandLogo;
   showCatalogPrices: boolean;
+  collagePhotos: CollagePhoto[];
   socialLinks: SocialLink[];
 };
 
@@ -37,6 +44,7 @@ type SanitySiteSettings = {
   brandLogo?: SanityImageSource;
   brandLogoAlt?: string | null;
   showCatalogPrices?: boolean | null;
+  collagePhotos?: Array<{ image?: SanityImageSource; alt?: string | null } | null> | null;
   socialLinks?: SanitySocialLink[] | null;
 } | null;
 
@@ -130,6 +138,28 @@ function normalizeSocialLinks(links: SanitySocialLink[] | null | undefined, useF
   return useFallback ? fallbackSocialLinks : [];
 }
 
+// Las fotos del muro se piden al CDN al tamaño de celda que usa la pantalla:
+// veinticuatro imágenes a tamaño original pesarían de más en un televisor que se
+// recarga solo cada cuatro horas. Las filas sin imagen se descartan.
+const COLLAGE_PHOTO_WIDTH = 420;
+const COLLAGE_PHOTO_HEIGHT = 520;
+
+function normalizeCollagePhotos(photos: NonNullable<SanitySiteSettings>["collagePhotos"]): CollagePhoto[] {
+  if (!Array.isArray(photos)) return [];
+  const resolved: CollagePhoto[] = [];
+  for (const photo of photos) {
+    const src = urlForImage(photo?.image)
+      ?.width(COLLAGE_PHOTO_WIDTH)
+      .height(COLLAGE_PHOTO_HEIGHT)
+      .fit("crop")
+      .auto("format")
+      .url();
+    if (!src) continue;
+    resolved.push({ src, alt: photo?.alt?.trim() || "Fotografía de Raíces" });
+  }
+  return resolved;
+}
+
 function normalizeSettings(settings: SanitySiteSettings): SiteSettings {
   const sanityLogo = urlForImage(settings?.brandLogo)?.width(360).height(360).fit("max").auto("format").url();
   const alt = settings?.brandLogoAlt?.trim() || fallbackBrandLogo.alt;
@@ -148,6 +178,7 @@ function normalizeSettings(settings: SanitySiteSettings): SiteSettings {
           alt,
         },
     showCatalogPrices: settings?.showCatalogPrices !== false,
+    collagePhotos: normalizeCollagePhotos(settings?.collagePhotos),
     socialLinks: normalizeSocialLinks(settings?.socialLinks, !settings || !Array.isArray(settings.socialLinks)),
   };
 }
