@@ -109,10 +109,13 @@ Cada categoría tiene cinco campos de relato, todos opcionales:
 | **Título de la historia** | Encabezado del relato, en la carta impresa y en la pantalla | 120 caracteres |
 | **Historia de origen** | Bajo el título de la sección en las tres cartas y en la pantalla | 700 caracteres |
 | **Insumos y productores** | Pie del relato, en la carta impresa | 400 caracteres |
+| **Título del recuadro de datos** | Encabezado de ese recuadro | 60 caracteres |
 | **Ficha de origen y productores** | Recuadro de datos en la pantalla del local | 8 filas de dato + valor |
 
 La **ficha de origen** es la retícula de las cartas en PDF del cliente: una fila por dato
-(`Origen`, `Altitud`, `Puntaje SCA`, `Productora`…). Cada fila necesita etiqueta y valor; una
+(`Origen`, `Altitud`, `Puntaje SCA`, `Productora`…). El recuadro se titula "Origen y productores"
+salvo que la sección diga otra cosa en **Título del recuadro de datos**: Jugos & Smoothies lo usa
+para su caja "Personaliza a tu gusto", donde las filas son añadidos con su precio y no procedencias. Cada fila necesita etiqueta y valor; una
 fila a medio llenar se descarta sola y no pinta un renglón vacío en la pantalla. Bebidas Andinas
 no tiene ficha, igual que su carta impresa, y esa sección simplemente no muestra el recuadro.
 
@@ -159,11 +162,11 @@ arena de la marca. El ciclo completo son diez pantallas:
 
 | Pantallas | Contenido |
 |---|---|
-| 1–5 | Una por sección de la carta: título, subtítulo, historia, cita, ficha y productos |
-| 6 | Marca y código QR hacia `/catalogo` |
-| 7 | Muro de fotografías, que entran una a una |
-| 8 | Cómo nació Raíces, con la fotografía de los fundadores |
-| 9–10 | Los productores, de dos en dos |
+| 1–6 | Una por sección de la carta: título, subtítulo, historia, cita, ficha y productos |
+| 7 | Marca y código QR hacia `/catalogo` |
+| 8 | Muro de fotografías, que entran una a una |
+| 9 | Cómo nació Raíces, con la fotografía de los fundadores |
+| 10–11 | Los productores, de dos en dos |
 
 Las secciones **sin historia ni ficha** se fusionan en una sola pantalla —hoy Alimentos y Para
 llevar— y el nombre de cada una pasa a ser el título de su subsección. Si alguna recibe una historia
@@ -204,12 +207,30 @@ La animación se elige desde la URL del televisor, sin desplegar nada:
 Cualquier otro valor cae a `caida`. Se puede combinar con el intervalo:
 `/catalogo/tv?s=14&animation=giro`.
 
-Las otras pantallas narrativas (8 a 10) no salen de Sanity: leen `humanOrigin` de `data/social.ts`
+Las otras pantallas narrativas (9 a 11) no salen de Sanity: leen `humanOrigin` de `data/social.ts`
 y `people` de `data/people.ts` — el mismo contenido que la landing muestra en `#historia` y en
 "Las personas detrás de Raíces". Todas se arman en `app/catalogo/tv/extraSlides.ts`.
 
 El intervalo de rotación se ajusta por URL: `/catalogo/tv?s=15` para 15 segundos (entre 5 y 120).
 Las pantallas de lectura duran 1,5 veces ese intervalo.
+
+## Carta de jugos y smoothies (septiembre 2026)
+
+La cuarta carta del cliente añadió la sección **Jugos & Smoothies** (orden 35, entre Bebidas Andinas
+y Sándwiches) con nueve productos en tres subsecciones: jugos naturales, smoothies cremosos y
+funcionales & keto boost. Se cargó con:
+
+```bash
+npm run jugos:migrate:dry   # revisar
+npm run jugos:migrate       # aplicar
+```
+
+Su recuadro de datos no habla de origen sino de añadidos —leche, endulzantes y proteína, con su
+precio—, y por eso estrena el campo **Título del recuadro de datos** con "Personaliza a tu gusto".
+
+La descripción del *Golden Bulletproof Coffee* venía a 185 caracteres en el PDF y se acortó a 133:
+la carta impresa recorta las descripciones a dos líneas, alrededor de los 144, y se habría truncado
+con puntos suspensivos.
 
 ## Webhook
 

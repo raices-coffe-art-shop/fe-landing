@@ -1,0 +1,92 @@
+{
+  "category": {
+    "slug": "jugos-y-smoothies",
+    "title": "Jugos & Smoothies",
+    "order": 35,
+    "description": "Fruta fresca seleccionada y procesada al instante, en jugos naturales, smoothies cremosos y bebidas funcionales.",
+    "tagline": "Fruta fresca · Nutrición & bebidas funcionales",
+    "storyTitle": "Frescura natural & vitalidad",
+    "story": "Fruta fresca seleccionada, extraída y procesada al instante para conservar todos sus nutrientes, aromas y vitalidad. Una propuesta pensada para hidratar, energizar y nutrir tu día de manera auténtica y natural.",
+    "factsTitle": "Personaliza a tu gusto",
+    "facts": [
+      { "label": "Leche (+S/ 2.00)", "value": "Entera o soya natural" },
+      { "label": "Endulzantes (+S/ 4.00)", "value": "Miel, polen, algarrobina o panela" },
+      { "label": "Proteína (+S/ 6.00)", "value": "Scoop proteico para tu batido" }
+    ],
+    "showInPrintedMenu": true
+  },
+  "products": [
+    {
+      "slug": "jugo-fresa",
+      "title": "Fresa",
+      "subcategory": "Jugos naturales & refrescantes",
+      "order": 10,
+      "price": 12,
+      "shortDescription": "Fruta fresca seleccionada, pura vitalidad."
+    },
+    {
+      "slug": "jugo-mango",
+      "title": "Mango",
+      "subcategory": "Jugos naturales & refrescantes",
+      "order": 20,
+      "price": 10,
+      "shortDescription": "Dulce, aromático y refrescante."
+    },
+    {
+      "slug": "jugo-pina",
+      "title": "Piña",
+      "subcategory": "Jugos naturales & refrescantes",
+      "order": 30,
+      "price": 9,
+      "shortDescription": "Ligero, digestivo y muy fresco."
+    },
+    {
+      "slug": "jugo-papaya",
+      "title": "Papaya",
+      "subcategory": "Jugos naturales & refrescantes",
+      "order": 40,
+      "price": 8,
+      "shortDescription": "El clásico suave y nutritivo de todas las mañanas."
+    },
+    {
+      "slug": "jugo-platano",
+      "title": "Plátano",
+      "subcategory": "Jugos naturales & refrescantes",
+      "order": 50,
+      "price": 8,
+      "shortDescription": "Textura suave y energía natural al instante."
+    },
+    {
+      "slug": "jugo-naranja",
+      "title": "Naranja",
+      "subcategory": "Jugos naturales & refrescantes",
+      "order": 60,
+      "price": 12,
+      "shortDescription": "Zumo 100% puro recién exprimido al momento."
+    },
+    {
+      "slug": "jugo-surtido-raices",
+      "title": "Jugo Surtido Raíces",
+      "subcategory": "Jugos naturales & refrescantes",
+      "order": 70,
+      "price": 13,
+      "shortDescription": "Nuestra deliciosa combinación de frutas selectas de la estación."
+    },
+    {
+      "slug": "smoothie-lucuma-palta-beterraga",
+      "title": "Lúcuma / Palta / Beterraga",
+      "subcategory": "Smoothies cremosos (especialidades)",
+      "order": 80,
+      "price": 16,
+      "shortDescription": "Batido súper cremoso preparado con abundante leche, hielo, fruta seleccionada y un toque energético de algarrobina pura."
+    },
+    {
+      "slug": "golden-bulletproof-coffee",
+      "title": "Golden Bulletproof Coffee",
+      "subcategory": "Funcionales & keto boost",
+      "order": 90,
+      "price": 14,
+      "shortDescription": "Café de especialidad emulsionado con ghee, aceite de coco virgen/MCT y cúrcuma, con un toque de canela. Energía prolongada y saciante."
+    }
+  ]
+}
