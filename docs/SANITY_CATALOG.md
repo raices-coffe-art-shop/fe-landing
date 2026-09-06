@@ -2,7 +2,7 @@
 
 ## Qué se administra desde `/studio`
 
-- Configuración del sitio: logo, texto alternativo y redes sociales.
+- Configuración del sitio: logo, texto alternativo, redes sociales y las fotos del muro de la pantalla del local.
 - Catálogo > Categorías: nombre, slug, descripción, subtítulo, historia de origen, insumos y productores, ficha de origen, fotografía, orden, visibilidad y si la categoría entra en la carta del café.
 - Catálogo > Productos: contenido, imágenes, procedencia, estado, destacado y orden.
 - Publicaciones: el blog editable por el cliente (ver ).
@@ -161,7 +161,7 @@ arena de la marca. El ciclo completo son diez pantallas:
 |---|---|
 | 1–5 | Una por sección de la carta: título, subtítulo, historia, cita, ficha y productos |
 | 6 | Marca y código QR hacia `/catalogo` |
-| 7 | Muro con las fotografías de producto, que caen una a una |
+| 7 | Muro de fotografías, que entran una a una |
 | 8 | Cómo nació Raíces, con la fotografía de los fundadores |
 | 9–10 | Los productores, de dos en dos |
 
@@ -181,10 +181,32 @@ Como la pantalla no tiene scroll, `resolveScreenDensity()` en `lib/menuScreenSli
 cuerpo del relato y de la ficha según cuánto texto trae la sección, para que el encabezado nunca
 empuje los productos fuera de cuadro.
 
-Las pantallas narrativas (7 a 10) no salen de Sanity: el muro usa las fotografías de producto que ya
-están en el Studio, y las dos últimas leen `humanOrigin` de `data/social.ts` y `people` de
-`data/people.ts` — el mismo contenido que la landing muestra en `#historia` y en "Las personas
-detrás de Raíces". Se arman en `app/catalogo/tv/extraSlides.ts`.
+### El muro de fotografías
+
+Se administra desde **Configuración del sitio > Pantalla del local > Fotos del muro de la pantalla**.
+Suben ahí las imágenes que quieran mostrar, en el orden que quieran, hasta 24.
+
+Si esa lista tiene **menos de cuatro fotos**, el muro cae a las fotografías de producto del catálogo
+—hoy dieciséis— para que la pantalla nunca se quede sin muro mientras el equipo termina de cargar
+las suyas.
+
+### Cómo entran las fotos
+
+La animación se elige desde la URL del televisor, sin desplegar nada:
+
+| URL | Entrada |
+|---|---|
+| `/catalogo/tv` o `?animation=caida` | Caen desde arriba enderezando su giro (por defecto) |
+| `?animation=zoom` | Crecen en su sitio, sin desplazarse |
+| `?animation=giro` | Voltean sobre su eje vertical, como una carta |
+| `?animation=revelado` | Aparecen donde están, con una subida corta |
+
+Cualquier otro valor cae a `caida`. Se puede combinar con el intervalo:
+`/catalogo/tv?s=14&animation=giro`.
+
+Las otras pantallas narrativas (8 a 10) no salen de Sanity: leen `humanOrigin` de `data/social.ts`
+y `people` de `data/people.ts` — el mismo contenido que la landing muestra en `#historia` y en
+"Las personas detrás de Raíces". Todas se arman en `app/catalogo/tv/extraSlides.ts`.
 
 El intervalo de rotación se ajusta por URL: `/catalogo/tv?s=15` para 15 segundos (entre 5 y 120).
 Las pantallas de lectura duran 1,5 veces ese intervalo.
