@@ -59,8 +59,10 @@ export default async function CartaTvPage({ searchParams }: TvPageProps) {
     ...buildPeopleSlides(),
   ];
 
-  const catalogUrl = `${getSiteUrl()}/catalogo`;
-  const qrDataUrl = await QRCode.toDataURL(catalogUrl, {
+  // El QR lleva a la carta limpia, no al catálogo completo: quien escanea desde
+  // la mesa quiere los productos y sus precios, no el archivo con fichas y arte.
+  const cartaUrl = `${getSiteUrl()}/catalogo/carta`;
+  const qrDataUrl = await QRCode.toDataURL(cartaUrl, {
     width: 480,
     margin: 1,
     errorCorrectionLevel: "M",
@@ -73,7 +75,7 @@ export default async function CartaTvPage({ searchParams }: TvPageProps) {
       intervalMs={intervalMs}
       logo={settings.brandLogo}
       qrDataUrl={qrDataUrl}
-      catalogDisplayUrl={catalogUrl.replace(/^https?:\/\//, "")}
+      cartaDisplayUrl={cartaUrl.replace(/^https?:\/\//, "")}
     />
   );
 }

@@ -14,10 +14,10 @@ type CatalogTvProps = {
   intervalMs: number;
   logo: BrandLogo;
   qrDataUrl: string;
-  catalogDisplayUrl: string;
+  cartaDisplayUrl: string;
 };
 
-export function CatalogTv({ slides, intervalMs, logo, qrDataUrl, catalogDisplayUrl }: CatalogTvProps) {
+export function CatalogTv({ slides, intervalMs, logo, qrDataUrl, cartaDisplayUrl }: CatalogTvProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   // Cada navegación manual cambia el epoch para reiniciar el temporizador.
   const [rotationEpoch, setRotationEpoch] = useState(0);
@@ -117,10 +117,10 @@ export function CatalogTv({ slides, intervalMs, logo, qrDataUrl, catalogDisplayU
                     <img
                       className={styles.qrImage}
                       src={qrDataUrl}
-                      alt={`Código QR de la carta: ${catalogDisplayUrl}`}
+                      alt={`Código QR de la carta: ${cartaDisplayUrl}`}
                     />
                     <p className={styles.qrLead}>Escanea la carta desde tu mesa</p>
-                    <p className={styles.qrUrl}>{catalogDisplayUrl}</p>
+                    <p className={styles.qrUrl}>{cartaDisplayUrl}</p>
                   </div>
                 </div>
               </section>
