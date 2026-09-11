@@ -1,72 +1,68 @@
 # Guía simple de Sanity — Raíces
 
-Sanity es el panel donde se cambia el contenido del sitio sin tocar código. En cada campo aparece un botón **i**. Al pulsarlo se explica en lenguaje simple qué significa, qué conviene escribir y, cuando hace falta, un ejemplo.
+El Studio está organizado en tres apartados principales. Antes de crear algo, elige el apartado correcto.
 
-## Tres controles que parecen similares, pero no lo son
+## Carta
 
-- **¿Mostrar este producto en el sitio?** controla si la ficha existe públicamente. Si marcas **No**, el producto desaparece del catálogo sin borrarse de Sanity.
-- **¿Se puede comprar o pedir ahora?** controla el estado comercial. Si marcas **No**, la ficha sigue visible, pero se indica que el producto no está disponible en ese momento.
-- **¿Destacar este producto en la portada?** solo decide si tiene prioridad en la portada. No controla su disponibilidad ni su visibilidad normal en el catálogo.
+Úsalo para lo que aparece en la carta del café: bebidas, alimentos y precios.
 
-Ejemplo: un café agotado puede seguir visible para que la gente conozca el producto. En ese caso: **Mostrar en el sitio = Sí** y **Se puede comprar ahora = No**.
+### Elementos de la Carta
 
-## Productos
+- **Nombre:** lo que verá el cliente.
+- **Categoría:** dónde aparece dentro de la Carta.
+- **Subcategoría:** opcional; sirve para grupos como Calientes/Frías.
+- **Descripción corta:** texto bajo el nombre.
+- **Imagen:** opcional, usada en versiones con fotos y TV.
+- **Precio:** solo el número.
+- **¿Mostrar precio?:** oculta o muestra el precio sin borrarlo.
+- **¿Mostrar este elemento?:** permite retirarlo temporalmente sin eliminarlo.
+- **Orden:** números menores aparecen antes.
 
-- **Título:** nombre público del producto.
-- **Dirección web (slug):** parte final de la URL; normalmente se genera desde el título.
-- **Categoría:** grupo principal del catálogo.
-- **Subcategoría:** clasificación más específica, solo si aporta información adicional.
-- **Procedencia:** lugar general de origen.
-- **Lugar específico (opcional):** solo si da más precisión que Procedencia. No debe repetir exactamente el mismo texto.
-- **Descripción corta:** 1 o 2 frases naturales. No es una lista de tags.
-- **Descripción completa:** texto más amplio para contar historia y contexto.
-- **Imagen principal / Galería:** fotos del producto.
-- **Descripción de imagen:** explica qué se ve; sirve para accesibilidad y ayuda a los buscadores a interpretar la imagen.
-- **Productor, artesano o creador:** persona, familia, asociación o taller responsable.
-- **Presentaciones:** tamaños o formas de venta, por ejemplo 250 g o 500 g.
-- **¿Se puede comprar o pedir ahora?:** Sí/No. No es cantidad de stock y no oculta la ficha.
-- **Proceso:** cómo se produce, prepara o crea.
-- **Ingredientes / Alérgenos:** información alimentaria cuando corresponda.
-- **Afirmaciones verificadas:** solo datos que puedan respaldarse.
-- **Precio / Moneda:** monto y moneda. La moneda aparece solo cuando existe un precio.
-- **¿Mostrar el precio de este producto?:** aparece solo cuando hay un precio y permite ocultar ese monto sin borrarlo.
-- **Mensaje de consulta por WhatsApp:** texto personalizado al pulsar Consultar. Si queda vacío, se genera automáticamente.
-- **Tono visual:** acento gráfico de la tarjeta; no cambia la categoría ni el contenido.
-- **¿Mostrar este producto en el sitio?:** visibilidad completa de la ficha.
-- **¿Destacar este producto en la portada?:** prioridad en portada; el producto puede seguir en catálogo aunque marques No.
-- **Orden:** números menores aparecen primero.
+### Categorías de la Carta
 
-## SEO (Google)
+Aquí se organizan las secciones y, cuando corresponde, la historia de origen, productores y ficha que usan la Carta y TV.
 
-SEO no significa llenar campos con palabras sueltas o tags. El contenido debe leerse como texto normal escrito para una persona.
+## Productos de Origen
 
-Ejemplo incorrecto: `café, ayacucho, lima, artesanal, comprar café, café peruano`
+Úsalo para productos del antiguo catálogo. No agregues aquí cuadros, toritos, retablos, nacimientos u otras piezas de arte.
 
-Ejemplo correcto: `Café molido de origen ayacuchano, disponible en Raíces Café y Cultura en Lima.`
+La ficha de producto conserva los campos que ya existían: título, categoría, textos, imágenes, procedencia, productor/creador, presentaciones, disponibilidad, precio, información adicional, publicación y SEO.
 
-- **Título para Google:** título corto y natural. Si queda vacío, se usa el nombre normal del producto.
-- **Descripción para Google:** 1 o 2 frases que expliquen qué encontrará la persona. Si queda vacía, se usa la descripción corta.
+- **¿Mostrar este producto en el sitio?** controla si la ficha aparece públicamente.
+- **¿Disponible para comprar?** indica disponibilidad comercial; no es lo mismo que ocultar la ficha.
+- **¿Destacar este producto?** solo cambia prioridad visual donde se use contenido destacado.
 
-Estos campos son una **sobrescritura opcional**, no información que tengas que duplicar. Si no necesitas una versión distinta para Google, déjalos vacíos.
+La URL se genera automáticamente como `/productos-de-origen/nombre-del-producto`.
 
-## Categorías
+## Galería de Arte
 
-- **Nombre / slug:** identifican la categoría y permiten los filtros del catálogo.
-- **Descripción:** se usa en la carta impresa y en datos para buscadores.
-- **Imagen de la categoría:** se usa en carta impresa y TV; si falta, el sistema toma una foto de producto.
-- **Descripción de la imagen:** solo aparece cuando existe una imagen de categoría.
-- **Orden:** determina la posición entre categorías.
-- **¿Mostrar esta categoría en el sitio?:** oculta o muestra la categoría completa y sus productos.
+Úsalo para piezas artísticas o artesanales: toritos, retablos, nacimientos, pinturas y similares.
 
-## Configuración del sitio
+La ficha se mantiene simple:
 
-- **Logo principal:** logo usado en distintas zonas del sitio.
-- **Descripción del logo:** texto de accesibilidad del logo.
-- **¿Permitir mostrar precios en el sitio?:** control general. Si marcas No, se ocultan todos los precios sin borrar montos.
-- **Redes sociales y contacto:** administra los botones del footer y de `/links`.
+- **Nombre de la pieza**
+- **Categoría**
+- **Subcategoría** opcional
+- **Texto corto** para la tarjeta
+- **Descripción completa**
+- **Imagen principal** y fotos adicionales opcionales
+- **Procedencia**
+- **Artista, artesano o creador** opcional
+- **Disponible para comprar**
+- **Precio** opcional
+- **Mostrar/ocultar pieza**
+- **Orden**
 
-Se eliminó el antiguo **Título interno** porque no tenía efecto en la web.
+La URL se genera automáticamente como `/galeria-de-arte/nombre-de-la-pieza`.
 
-## Redes sociales y contacto
+## Slugs o direcciones web
 
-Cada enlace tiene únicamente Plataforma, Texto visible, URL, Visibilidad y Orden. Se eliminó **Nombre personalizado** porque duplicaba la función del texto visible del botón y no tenía uso real en la página.
+No escribas `/`, espacios ni URLs completas. El sistema genera el slug a partir del nombre y comprueba que no esté repetido dentro del mismo tipo de contenido.
+
+## Textos
+
+Escribe frases naturales. No llenes descripciones con listas de palabras clave, hashtags o repeticiones pensando en Google.
+
+## Imágenes
+
+Cuando aparezca el campo de descripción de imagen, explica brevemente lo que se ve. Es para accesibilidad, no para colocar tags.

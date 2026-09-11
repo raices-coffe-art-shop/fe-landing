@@ -5,18 +5,17 @@ import { isUniqueSlugWithinType } from "../lib/slugUniqueness";
 
 export const catalogCategory = defineType({
   name: "catalogCategory",
-  title: "Categoría de catálogo",
+  title: "Categoría de Productos de Origen",
   type: "document",
   initialValue: {
     order: 100,
     isVisible: true,
-    showInPrintedMenu: true,
   },
   fields: [
     defineField({
       name: "title",
       title: "Nombre",
-      description: "Es el nombre que verá la gente para agrupar productos. Ejemplos: “Café y cacao”, “Alimentos” o “Arte”. Debe ser corto y fácil de entender.",
+      description: "Es el nombre que verá la gente para agrupar productos. Ejemplos: “Café de origen”, “Alimentos” o “Artesanía utilitaria”. Debe ser corto y fácil de entender.",
       type: "string",
       validation: (Rule) => Rule.required().min(2).max(80),
     }),
@@ -47,36 +46,12 @@ export const catalogCategory = defineType({
       rows: 3,
       validation: (Rule) => Rule.max(300),
     }),
-    defineField({
-      name: "tagline",
-      title: "Subtítulo de la sección",
-      description: "La línea corta que va bajo el título en la pantalla del local. Ejemplos: “Café de especialidad · Origen directo”, “Tradición ayacuchana · Insumos de origen”. Es distinta de la descripción, que es la frase larga del catálogo web.",
-      type: "string",
-      validation: (Rule) => Rule.max(80),
-    }),
-    defineField({
-      name: "storyTitle",
-      title: "Título de la historia",
-      description: "El encabezado del relato de origen. Ejemplos: “Finca La Fortuna de Pedro”, “Dina Torres Barboza”. Se muestra sobre la historia en la carta impresa y en la pantalla del local.",
-      type: "string",
-      validation: (Rule) => Rule.max(120),
-    }),
-    defineField({
-      name: "story",
-      title: "Historia de origen",
-      description: "El relato de esta sección: de dónde viene el producto y quién lo trabaja. Aparece en la carta que se imprime y en su propia pantalla en el local. Si lo dejas vacío, la sección se muestra solo con sus productos. El máximo es lo que entra completo en la pantalla del local sin recortarse.",
-      type: "text",
-      rows: 6,
-      validation: (Rule) => Rule.max(700),
-    }),
-    defineField({
-      name: "sourcing",
-      title: "Insumos y productores",
-      description: "Opcional. Los proveedores e insumos de esta sección, en una o dos frases. Ejemplo: “Pan chapla de la panadería Kullany Pan (Sra. Karen Córdova)”. Se muestra debajo de la historia en la carta impresa.",
-      type: "text",
-      rows: 3,
-      validation: (Rule) => Rule.max(400),
-    }),
+    // Campos heredados de cuando Productos de Origen y Carta compartían el mismo modelo.
+    // Se conservan para no perder datos antiguos, pero ya no se editan aquí.
+    defineField({ name: "tagline", title: "Subtítulo legado de Carta", type: "string", hidden: true, readOnly: true }),
+    defineField({ name: "storyTitle", title: "Título de historia legado de Carta", type: "string", hidden: true, readOnly: true }),
+    defineField({ name: "story", title: "Historia legado de Carta", type: "text", hidden: true, readOnly: true }),
+    defineField({ name: "sourcing", title: "Insumos legado de Carta", type: "text", hidden: true, readOnly: true }),
     defineField({
       name: "factsTitle",
       title: "Título del recuadro de datos",
@@ -86,59 +61,27 @@ export const catalogCategory = defineType({
     }),
     defineField({
       name: "sourcingFacts",
-      title: "Ficha de origen y productores",
-      description: "Opcional. Los datos que acompañan al relato en la pantalla del local, uno por fila: origen, productor, altitud, perfil… Si la sección no tiene ficha, déjalo vacío y la pantalla no muestra ese recuadro.",
+      title: "Ficha legado de Carta",
       type: "array",
+      hidden: true,
+      readOnly: true,
       of: [
         defineArrayMember({
           type: "object",
           name: "sourcingFact",
-          title: "Dato",
           fields: [
-            defineField({
-              name: "label",
-              title: "Dato",
-              description: "El nombre del dato, corto. Ejemplos: “Origen”, “Altitud”, “Productora”.",
-              type: "string",
-              validation: (Rule) => Rule.required().max(40),
-            }),
-            defineField({
-              name: "value",
-              title: "Valor",
-              description: "El contenido del dato. Ejemplo: “Nueva Unión, Ayna – San Francisco (VRAEM, Ayacucho)”.",
-              type: "string",
-              validation: (Rule) => Rule.required().max(160),
-            }),
+            defineField({ name: "label", title: "Dato", type: "string" }),
+            defineField({ name: "value", title: "Valor", type: "string" }),
           ],
-          preview: { select: { title: "label", subtitle: "value" } },
         }),
       ],
-      validation: (Rule) => Rule.max(8),
     }),
-    defineField({
-      name: "image",
-      title: "Imagen de la categoría",
-      description: "Foto representativa de toda la categoría. Se usa en la carta impresa y en la pantalla del local. Si se deja vacía, el sitio puede usar la foto del primer producto destacado de esa categoría.",
-      type: "image",
-      options: { hotspot: true },
-    }),
-    defineField({
-      name: "imageAlt",
-      title: "Descripción de la imagen",
-      description: "Describe lo que se ve en la foto para personas que usan lectores de pantalla. Ejemplo: “Granos de café tostado sobre una mesa”. No uses hashtags ni listas de palabras clave.",
-      type: "string",
-      hidden: ({ document }) => !document?.image,
-      validation: (Rule) =>
-        Rule.max(180).custom((value, context) => {
-          const document = context.document as { image?: unknown } | undefined;
-          if (document?.image && !value?.trim()) return "Describe brevemente la imagen.";
-          return true;
-        }),
-    }),
+    defineField({ name: "image", title: "Imagen legado de Carta", type: "image", hidden: true, readOnly: true, options: { hotspot: true } }),
+    defineField({ name: "imageAlt", title: "Descripción legado de Carta", type: "string", hidden: true, readOnly: true }),
     defineField({
       name: "order",
       title: "Orden",
-      description: "Define qué categoría aparece primero cuando el catálogo usa orden manual. Un número menor aparece antes. Recomendación: 10, 20, 30…",
+      description: "Define qué categoría aparece primero cuando Productos de Origen usa orden manual. Un número menor aparece antes. Recomendación: 10, 20, 30…",
       type: "number",
       initialValue: 100,
       validation: (Rule) => Rule.required().integer().min(0),
@@ -154,12 +97,11 @@ export const catalogCategory = defineType({
     }),
     defineField({
       name: "showInPrintedMenu",
-      title: "¿Mostrar en la carta del café?",
-      description: "Sí = la categoría aparece en la carta que se imprime y en la pantalla del local. No = se queda solo en el catálogo de la web. Úsalo para lo que no se consume en la mesa, como el arte o las piezas artesanales.",
+      title: "Mostrar en Carta (legado)",
+      description: "Campo antiguo conservado solo para compatibilidad durante la migración. La Carta ahora se administra en su propio apartado.",
       type: "boolean",
-      initialValue: true,
-      components: { input: YesNoBooleanInput },
-      validation: (Rule) => Rule.required(),
+      hidden: true,
+      readOnly: true,
     }),
   ],
   orderings: [

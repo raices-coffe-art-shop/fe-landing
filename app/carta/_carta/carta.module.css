@@ -1,0 +1,471 @@
+/* Carta imprimible: en pantalla se ve como una hoja centrada (preview);
+   en @media print se convierte en el documento A4 real. */
+
+.page {
+  min-height: 100vh;
+  background: var(--paper);
+  padding: 48px 16px 96px;
+  font-family: var(--sans);
+  color: var(--ink);
+}
+
+.sheet {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff8ed;
+  padding: 56px 64px 48px;
+  box-shadow: 0 18px 48px rgba(43, 33, 28, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+
+.logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.wordmark {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+.category {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px 18px;
+  break-inside: auto;
+}
+
+/* Con fotos, la lista queda a la izquierda y la columna de imágenes a la derecha,
+   siguiendo la referencia de carta impresa que entregó el cliente. */
+.categoryWithPhotos {
+  grid-template-columns: minmax(0, 1fr) 58mm;
+  align-items: start;
+}
+
+/* Todo el texto de la categoría vive en una sola columna, así la columna de
+   fotos empieza a la misma altura que el título. */
+.categoryBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.categoryPhotos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  break-inside: avoid;
+}
+
+.categoryPhoto {
+  display: block;
+  width: 100%;
+  /* Cuadrada: formato estable para la columna. Pendiente que el cliente envíe
+     fotografías mejor encuadradas para este espacio. */
+  height: 58mm;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  /* Fondo papel: si la foto no carga, el bloque conserva su alto y la
+     paginación no cambia. */
+  background: rgba(43, 33, 28, 0.06);
+  break-inside: avoid;
+}
+
+.categoryTitle {
+  margin: 0 0 6px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+  break-after: avoid;
+}
+
+.categoryNote {
+  margin: -2px 0 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+/* Segundo nivel: los subtítulos de cada carta (Clásicos, Triples…). Comparten
+   el verde de la sección pero con menos peso y sin el interletrado amplio, para
+   que la jerarquía se lea de un vistazo sin competir con el título. */
+.subGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.subGroup:first-of-type {
+  margin-top: 0;
+}
+
+.subCategoryTitle {
+  margin: 0 0 3px;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--clay);
+  break-after: avoid;
+}
+
+/* La historia de origen: es lo que distingue a Raíces, pero acompaña a los
+   productos, no compite con ellos. Por eso va en cuerpo pequeño con buen
+   interlineado, y el encabezado se lee como una firma. */
+.categoryStory {
+  margin: -2px 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  break-inside: avoid;
+}
+
+.categoryStoryTitle {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+/* La medida la define el layout, no un número fijo. Con la columna de fotos el
+   relato hereda el ancho del cuerpo de la categoría; sin fotos ocupa la hoja
+   entera en vez de dejar un margen muerto a la derecha. Al ensancharse la línea
+   se compensa con algo más de interlineado, que es lo que sostiene la lectura
+   cuando la medida crece.
+
+   El cuerpo va por encima de la descripción de producto (11px): el relato es lo
+   que distingue a la casa, así que no puede leerse como una nota al pie de un
+   espresso. 12px equivale a 9pt impresos, el piso cómodo de una carta. */
+.categoryStoryText {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* La ficha de origen del PDF del cliente: una fila por dato. En dos columnas
+   cuando hay ancho —la carta sin fotos— y en una sola cuando el relato comparte
+   la línea con la columna de fotografías. */
+.categoryFacts {
+  margin: 4px 0 0;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(58mm, 1fr));
+  gap: 2px 10mm;
+}
+
+.categoryFact {
+  display: flex;
+  gap: 4px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  break-inside: avoid;
+}
+
+.categoryFactLabel {
+  margin: 0;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.categoryFactLabel::after {
+  content: ":";
+}
+
+.categoryFactValue {
+  margin: 0;
+  min-width: 0;
+}
+
+/* Los insumos son el pie del relato: al nivel de una subsección, legibles sin
+   competir con la historia. Se usan cuando la sección no tiene ficha de origen. */
+.categorySourcing {
+  margin: 2px 0 0;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.item {
+  break-inside: avoid;
+}
+
+.itemRow {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.itemName {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.leader {
+  flex: 1;
+  border-bottom: 1.5px dotted rgba(43, 33, 28, 0.45);
+  transform: translateY(-3px);
+}
+
+.itemPrice {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.itemInquiry {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.itemDescription {
+  margin: 2px 0 0;
+  max-width: 60ch;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.emptyNote {
+  margin: 24px 0;
+  font-family: var(--serif);
+  font-size: 17px;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  break-inside: avoid;
+}
+
+.qr {
+  width: 88px;
+  height: 88px;
+  border: 1px solid var(--line);
+}
+
+.footerCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footerLead {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.footerUrl {
+  margin: 0;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.footerContact {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
+}
+
+.footerContact p {
+  margin: 0;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.printTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.printTable td {
+  padding: 0;
+}
+
+.printSpacer {
+  height: 0;
+}
+
+.printActions {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.printToggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 50px;
+  padding: 0 18px;
+  background: #fff8ed;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.25s ease;
+  box-shadow: 0 10px 28px rgba(43, 33, 28, 0.18);
+}
+
+.printToggle:hover {
+  background: var(--paper-deep);
+}
+
+.printButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 23px;
+  border: 1px solid transparent;
+  background: var(--green-deep);
+  color: #fff8ed;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  box-shadow: 0 10px 28px rgba(38, 55, 45, 0.35);
+}
+
+.printButton:hover {
+  background: var(--green);
+}
+
+.printButton:disabled {
+  opacity: 0.75;
+  cursor: progress;
+}
+
+/* Margen 0: así el navegador no imprime fecha, título ni URL en los bordes.
+   Los márgenes reales los ponen .printSpacer (arriba/abajo, en cada página) y .sheet (laterales). */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  .page {
+    min-height: auto;
+    padding: 0;
+    background: #fff;
+  }
+
+  .sheet {
+    max-width: none;
+    margin: 0;
+    padding: 0 16mm;
+    background: #fff;
+    box-shadow: none;
+    gap: 20px;
+    /* Sin esto los navegadores descartan imágenes y fondos al imprimir. */
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .printSpacer {
+    height: 14mm;
+  }
+
+  .printActions {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .sheet {
+    padding: 36px 24px 32px;
+  }
+
+  .categoryWithPhotos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+
+  .categoryPhoto {
+    height: 200px;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .footerContact {
+    margin-left: 0;
+    text-align: left;
+  }
+}

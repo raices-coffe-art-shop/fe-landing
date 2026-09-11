@@ -82,7 +82,7 @@ export function CatalogCard({
           </a>
           <Link
             className="catalog-action catalog-action-secondary"
-            href={`/catalogo/${item.slug}`}
+            href={`/productos-de-origen/${item.slug}`}
             aria-label={`Ver ficha completa de ${item.title}`}
           >
             <FileIcon />

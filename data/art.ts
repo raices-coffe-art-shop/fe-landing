@@ -10,7 +10,6 @@ export const artShopSlides = [
     right: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1600&q=86",
     rightAlt: "Pinceles y pintura durante un proceso creativo",
     status: "editorial-reference",
-    catalogSlug: "cuadros-lized",
   },
   {
     slug: "proceso-creativo",
@@ -23,20 +22,18 @@ export const artShopSlides = [
     right: "https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=1600&q=86",
     rightAlt: "Detalle de pintura y textura",
     status: "editorial-reference",
-    catalogSlug: "cuadros-lized",
   },
   {
     slug: "galeria",
     number: "03",
     eyebrow: "Galería",
-    title: "Las obras disponibles se conectan con el catálogo.",
-    text: "Las pinturas y piezas vendibles enlazan con su ficha de catálogo para mostrar procedencia, disponibilidad, precio y forma de consulta.",
+    title: "Las obras disponibles forman parte de la Galería de Arte.",
+    text: "Las pinturas y piezas pueden abrir su propia ficha en la Galería de Arte para mostrar procedencia, disponibilidad, precio y forma de consulta.",
     left: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1600&q=86",
     leftAlt: "Galería con piezas de arte",
     right: "https://images.unsplash.com/photo-1564399579883-451a5d44ec08?auto=format&fit=crop&w=1600&q=86",
     rightAlt: "Pieza artística en exhibición",
     status: "editorial-reference",
-    catalogSlug: "cuadros-lized",
   },
   {
     slug: "obras-invitadas",
@@ -49,6 +46,5 @@ export const artShopSlides = [
     right: "/images/art-shop/art-shop-extra-02.webp",
     rightAlt: "Detalle de una pieza cultural",
     status: "editorial-reference",
-    catalogSlug: "manualidades",
   },
 ];

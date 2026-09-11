@@ -36,7 +36,7 @@ NAP = Nombre, Dirección (Address) y Teléfono. Google penaliza inconsistencias:
 En el panel del perfil → **Editar perfil**:
 
 - **Sitio web**: la URL del dominio definitivo (la misma que se configure como `NEXT_PUBLIC_SITE_URL` en Vercel).
-- **Enlace del menú**: `https://DOMINIO/catalogo` — siempre al dominio propio, nunca a un PDF ni a un tercero. El mismo QR de las mesas apunta ahí.
+- **Enlace del menú**: `https://DOMINIO/carta` — siempre al dominio propio, nunca a un PDF ni a un tercero. El mismo QR de las mesas apunta ahí.
 - **Importante**: los precios que se carguen en el perfil (si se usa el editor de menú de Google) deben coincidir con los de la web. Recomendación: no duplicar el menú en Google; usar solo el enlace, así hay una única fuente de precios que se administra desde Sanity Studio.
 
 La web ya está preparada para esta vinculación: publica datos estructurados de cafetería (nombre, ubicación, teléfono, redes y enlace a la carta) que Google lee automáticamente.
@@ -47,7 +47,7 @@ Google prioriza perfiles con fotos reales y recientes (mínimo 720×720 px, form
 
 - **Portada**: la fachada/entrada del local (referencia: `public/media/raices/raices-local-entrada.webp`).
 - **Interior**: mesas, barra, los cuadros de Lized en pared.
-- **Productos**: café servido, pan chapla, miel, retablos — las mismas categorías del catálogo.
+- **Productos**: café servido, pan chapla, miel, retablos — las mismas categorías administradas desde Sanity.
 - **Equipo**: Francisco y Lized atendiendo (humaniza el perfil).
 
 ## 5. Obtener la URL del place

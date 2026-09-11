@@ -10,7 +10,7 @@ const currencies = [
 
 export const catalogItem = defineType({
   name: "catalogItem",
-  title: "Producto de catálogo",
+  title: "Producto de origen",
   type: "document",
   groups: [
     { name: "content", title: "Contenido", default: true },
@@ -40,7 +40,7 @@ export const catalogItem = defineType({
     defineField({
       name: "slug",
       title: "Dirección web (automática)",
-      description: "Se genera automáticamente a partir del título. No tienes que escribir ni editar nada aquí. Por ejemplo, “Café molido” crea /catalogo/cafe-molido. Si otro producto ya usa esa dirección, el sistema elegirá automáticamente cafe-molido-2, cafe-molido-3, etc.",
+      description: "Se genera automáticamente a partir del título. No tienes que escribir ni editar nada aquí. Por ejemplo, “Café molido” crea /productos-de-origen/cafe-molido. Si otro producto ya usa esa dirección, el sistema elegirá automáticamente cafe-molido-2, cafe-molido-3, etc.",
       type: "slug",
       group: "content",
       components: { input: AutoSlugInput },
@@ -60,10 +60,11 @@ export const catalogItem = defineType({
     defineField({
       name: "category",
       title: "Categoría",
-      description: "Elige el grupo principal al que pertenece el producto. Ejemplo: Café y cacao, Alimentos o Arte. Esto ayuda a ordenar el catálogo y las recomendaciones.",
+      description: "Elige el grupo principal al que pertenece el producto. Ejemplo: Café y cacao, Alimentos o Productos regionales. Esto ayuda a ordenar los Productos de Origen y las recomendaciones.",
       type: "reference",
       group: "content",
       to: [{ type: "catalogCategory" }],
+      options: { filter: 'slug.current != "arte"' },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -121,7 +122,7 @@ export const catalogItem = defineType({
     defineField({
       name: "mainImage",
       title: "Imagen principal",
-      description: "Es la foto principal del producto. Aparece en el catálogo, en su ficha y al compartir el enlace. Usa una imagen clara, de buena calidad y que represente realmente el artículo.",
+      description: "Es la foto principal del producto. Aparece en Productos de Origen, en su ficha y al compartir el enlace. Usa una imagen clara, de buena calidad y que represente realmente el artículo.",
       type: "image",
       group: "media",
       options: { hotspot: true },
@@ -268,6 +269,28 @@ export const catalogItem = defineType({
       group: "details",
       validation: (Rule) => Rule.max(260),
     }),
+    // Estado interno de separación. No se muestra al cliente ni al editor.
+    // Permite conservar el documento original completo, pero sacarlo de
+    // Productos de Origen cuando ya fue copiado a Carta o Galería de Arte.
+    defineField({
+      name: "migrationDestination",
+      title: "Destino de migración",
+      type: "string",
+      options: { list: [
+        { title: "Carta", value: "carta" },
+        { title: "Galería de Arte", value: "galeria-de-arte" },
+      ] },
+      hidden: true,
+      readOnly: true,
+    }),
+    defineField({
+      name: "migratedAt",
+      title: "Fecha de migración",
+      type: "datetime",
+      hidden: true,
+      readOnly: true,
+    }),
+
     // Compatibilidad silenciosa con documentos antiguos: el campo ya no aparece
     // en Studio ni lo usa el frontend, pero reconocerlo evita avisos de
     // “Unknown field” mientras existan productos viejos que aún lo guarden.
@@ -281,7 +304,7 @@ export const catalogItem = defineType({
     defineField({
       name: "isActive",
       title: "¿Mostrar este producto en el sitio?",
-      description: "Este campo controla la VISIBILIDAD de toda la ficha. Sí = el producto puede aparecer en catálogo y abrirse públicamente. No = se oculta por completo sin borrarlo. Es distinto de “¿Se puede comprar o pedir ahora?”: un producto puede seguir visible aunque temporalmente no esté disponible.",
+      description: "Este campo controla la VISIBILIDAD de toda la ficha. Sí = el producto puede aparecer en Productos de Origen y abrirse públicamente. No = se oculta por completo sin borrarlo. Es distinto de “¿Se puede comprar o pedir ahora?”: un producto puede seguir visible aunque temporalmente no esté disponible.",
       type: "boolean",
       group: "publishing",
       initialValue: true,
@@ -291,7 +314,7 @@ export const catalogItem = defineType({
     defineField({
       name: "isFeatured",
       title: "¿Destacar este producto en la portada?",
-      description: "Sí = puede aparecer entre los productos destacados de la página principal y también tiene prioridad como imagen representativa de su categoría. No = sigue apareciendo normalmente en el catálogo si está visible.",
+      description: "Sí = puede aparecer entre los productos destacados de la página principal y también tiene prioridad como imagen representativa de su categoría. No = sigue apareciendo normalmente en Productos de Origen si está visible.",
       type: "boolean",
       group: "publishing",
       initialValue: false,

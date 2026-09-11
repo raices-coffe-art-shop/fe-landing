@@ -28,7 +28,17 @@
     "sanity:migrate-availability": "node --env-file=.env.local scripts/migrate-availability-boolean.mjs",
     "sanity:audit-slugs": "node scripts/audit-slugs.mjs",
     "sanity:availability-all-yes:dry": "node scripts/backfill-availability-yes.mjs --dry-run",
-    "sanity:availability-all-yes": "node scripts/backfill-availability-yes.mjs"
+    "sanity:availability-all-yes": "node scripts/backfill-availability-yes.mjs",
+    "content:split:dry": "node --env-file=.env.local scripts/split-carta-art.mjs --dry-run",
+    "content:split": "node --env-file=.env.local scripts/split-carta-art.mjs",
+    "content:split:verify": "node --env-file=.env.local scripts/verify-content-split.mjs",
+    "art:split:dry": "node --env-file=.env.local scripts/migrate-art-gallery.mjs --dry-run",
+    "art:split": "node --env-file=.env.local scripts/migrate-art-gallery.mjs",
+    "art:split:verify": "node --env-file=.env.local scripts/verify-art-gallery.mjs",
+    "menu:split:dry": "node --env-file=.env.local scripts/migrate-menu-only.mjs --dry-run",
+    "menu:split": "node --env-file=.env.local scripts/migrate-menu-only.mjs",
+    "menu:split:user:dry": "sanity exec scripts/migrate-menu-user-token.mjs --with-user-token -- --dry-run",
+    "menu:split:user": "sanity exec scripts/migrate-menu-user-token.mjs --with-user-token"
   },
   "dependencies": {
     "lenis": "^1.3.25",

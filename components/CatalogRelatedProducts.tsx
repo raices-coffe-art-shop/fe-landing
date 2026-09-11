@@ -18,7 +18,7 @@ export function CatalogRelatedProducts({ items }: CatalogRelatedProductsProps) {
   }, []);
 
   const movePreview = (clientX: number, clientY: number) => {
-    if (typeof window === "undefined" || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (typeof window === "undefined") return;
     if (frameRef.current != null) cancelAnimationFrame(frameRef.current);
 
     frameRef.current = requestAnimationFrame(() => {
@@ -48,12 +48,15 @@ export function CatalogRelatedProducts({ items }: CatalogRelatedProductsProps) {
           {items.map((item) => (
             <Link
               key={item.slug}
-              href={`/catalogo/${item.slug}`}
+              href={`/productos-de-origen/${item.slug}`}
               onPointerEnter={(event) => {
+                if (event.pointerType !== "mouse") return;
                 setActiveItem(item);
                 movePreview(event.clientX, event.clientY);
               }}
-              onPointerMove={(event) => movePreview(event.clientX, event.clientY)}
+              onPointerMove={(event) => {
+                if (event.pointerType === "mouse") movePreview(event.clientX, event.clientY);
+              }}
               onPointerLeave={() => setActiveItem(null)}
               onFocus={(event) => {
                 setActiveItem(item);

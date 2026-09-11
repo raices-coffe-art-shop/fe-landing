@@ -26,15 +26,16 @@ export async function CatalogPreview() {
   const featuredCategories = categories.filter((category) => featuredCategorySlugs.has(category.slug));
 
   return (
-    <section className="catalog-section" id="catalogo">
+    <section className="catalog-section" id="productos-de-origen">
+      <span id="catalogo" className="legacy-catalog-anchor" aria-hidden="true" />
       <div className="catalog-title page-shell">
         <div>
-          <p className="eyebrow">Catálogo visual</p>
+          <p className="eyebrow">Productos de Origen</p>
           <h2>Productos con nombre, procedencia y una historia detrás.</h2>
         </div>
         <div className="catalog-title-side">
           <p>Explora cafés, alimentos, postres, pinturas y piezas seleccionadas. Cada ficha explica qué es, de dónde viene y cómo consultarlo.</p>
-          <Link className="catalog-title-cta" href="/catalogo">Ver catálogo completo <span aria-hidden="true">↗</span></Link>
+          <Link className="catalog-title-cta" href="/productos-de-origen">Ver Productos de Origen <span aria-hidden="true">↗</span></Link>
         </div>
       </div>
 
@@ -47,8 +48,8 @@ export async function CatalogPreview() {
       />
 
       <div className="catalog-closing page-shell">
-        <p>El catálogo cambia con las cosechas, las piezas disponibles y las historias que pueden documentarse con claridad.</p>
-        <Link href="/catalogo">Explorar el catálogo completo <span aria-hidden="true">↗</span></Link>
+        <p>Los Productos de Origen cambian con las cosechas, las piezas disponibles y las historias que pueden documentarse con claridad.</p>
+        <Link href="/productos-de-origen">Explorar todos los Productos de Origen <span aria-hidden="true">↗</span></Link>
       </div>
     </section>
   );

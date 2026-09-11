@@ -194,7 +194,7 @@ for (const product of seed.products) {
       order: product.order,
       seo: {
         _type: "seo",
-        title: `${product.title} — Catálogo Raíces`,
+        title: `${product.title} — Productos de Origen — Raíces`,
         description: product.shortDescription,
       },
     });

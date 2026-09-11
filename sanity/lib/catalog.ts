@@ -22,6 +22,7 @@ import {
   catalogItemBySlugQuery,
   catalogItemsQuery,
   featuredCatalogItemsQuery,
+  legacyCatalogDestinationBySlugQuery,
   relatedCatalogItemsQuery,
 } from "./queries";
 
@@ -106,6 +107,16 @@ const fallbackImage: CatalogImage = {
   height: 1400,
 };
 
+// La antigua categoría "arte" ya no forma parte de Productos de Origen.
+// Sus piezas viven en Galería de Arte y se migran a tipos propios de Sanity.
+const isProductsOfOriginItem = (item: CatalogItem) => item.category.slug !== "arte";
+const productsOfOriginFallbackItems = fallbackCatalogItems.filter(isProductsOfOriginItem);
+const productsOfOriginFallbackCategories = fallbackCatalogCategories.filter((category) => category.slug !== "arte");
+// Los datos estáticos son solo una ayuda de desarrollo. En producción, si Sanity
+// está vacío o falla, es preferible mostrar cero elementos antes que inventar contenido.
+const runtimeFallbackItems = () => process.env.NODE_ENV === "development" ? productsOfOriginFallbackItems : [];
+const runtimeFallbackCategories = () => process.env.NODE_ENV === "development" ? productsOfOriginFallbackCategories : [];
+
 function fetchOptions(tags: string[]) {
   if (process.env.NODE_ENV === "development") {
     return { cache: "no-store" as const };
@@ -138,7 +149,7 @@ function normalizeCategoryImage(category: SanityCategory | undefined): CatalogIm
   if (!src) return undefined;
   return {
     src,
-    alt: category.imageAlt?.trim() || category.title?.trim() || "Categoría del catálogo de Raíces",
+    alt: category.imageAlt?.trim() || category.title?.trim() || "Categoría de Productos de Origen de Raíces",
     width: CATEGORY_IMAGE_WIDTH,
     height: CATEGORY_IMAGE_HEIGHT,
   };
@@ -241,12 +252,12 @@ function normalizeItems(items: SanityCatalogItem[] | null | undefined) {
   return (items || [])
     .map(normalizeItem)
     .filter((item): item is CatalogItem => item !== null)
-    .filter((item) => item.isActive && item.category.isVisible && !isRetiredLegacyArtItem(item))
+    .filter((item) => item.isActive && item.category.isVisible && item.category.slug !== "arte" && !isRetiredLegacyArtItem(item))
     .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"));
 }
 
 export const getFeaturedCatalogItems = cache(async (): Promise<CatalogItem[]> => {
-  if (!sanityClient) return fallbackCatalogItems.filter((item) => item.isFeatured).slice(0, 6);
+  if (!sanityClient) return runtimeFallbackItems().filter((item) => item.isFeatured).slice(0, 6);
   try {
     const items = await sanityClient.fetch<SanityCatalogItem[]>(
       featuredCatalogItemsQuery,
@@ -256,12 +267,12 @@ export const getFeaturedCatalogItems = cache(async (): Promise<CatalogItem[]> =>
     return normalizeItems(items).filter((item) => item.isFeatured).slice(0, 6);
   } catch (error) {
     reportCatalogError("getFeaturedCatalogItems", error);
-    return fallbackCatalogItems.filter((item) => item.isFeatured).slice(0, 6);
+    return runtimeFallbackItems().filter((item) => item.isFeatured).slice(0, 6);
   }
 });
 
 export const getCatalogItems = cache(async (): Promise<CatalogItem[]> => {
-  if (!sanityClient) return fallbackCatalogItems;
+  if (!sanityClient) return runtimeFallbackItems();
   try {
     const items = await sanityClient.fetch<SanityCatalogItem[]>(
       catalogItemsQuery,
@@ -269,15 +280,15 @@ export const getCatalogItems = cache(async (): Promise<CatalogItem[]> => {
       fetchOptions([CATALOG_TAG]),
     );
     const normalized = normalizeItems(items);
-    return normalized.length > 0 ? normalized : fallbackCatalogItems;
+    return normalized;
   } catch (error) {
     reportCatalogError("getCatalogItems", error);
-    return fallbackCatalogItems;
+    return runtimeFallbackItems();
   }
 });
 
 export const getCatalogCategories = cache(async (): Promise<CatalogCategory[]> => {
-  if (!sanityClient) return fallbackCatalogCategories;
+  if (!sanityClient) return runtimeFallbackCategories();
   try {
     const categories = await sanityClient.fetch<SanityCategory[]>(
       catalogCategoriesQuery,
@@ -286,18 +297,22 @@ export const getCatalogCategories = cache(async (): Promise<CatalogCategory[]> =
     );
     const normalized = (categories || [])
       .map(normalizeCategory)
-      .filter((category) => category.isVisible)
+      .filter((category) => category.isVisible && category.slug !== "arte" && category.itemCount > 0)
       .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"));
-    return normalized.length > 0 ? normalized : fallbackCatalogCategories;
+    return normalized;
   } catch (error) {
     reportCatalogError("getCatalogCategories", error);
-    return fallbackCatalogCategories;
+    return runtimeFallbackCategories();
   }
 });
 
 export const getCatalogItemBySlug = cache(async (slug: string): Promise<CatalogItem | null> => {
   if (!slug) return null;
-  if (!sanityClient) return getFallbackCatalogItemBySlug(slug);
+  if (!sanityClient) {
+    if (process.env.NODE_ENV !== "development") return null;
+    const fallback = getFallbackCatalogItemBySlug(slug);
+    return fallback && isProductsOfOriginItem(fallback) ? fallback : null;
+  }
   try {
     const item = await sanityClient.fetch<SanityCatalogItem | null>(
       catalogItemBySlugQuery,
@@ -305,19 +320,26 @@ export const getCatalogItemBySlug = cache(async (slug: string): Promise<CatalogI
       fetchOptions([CATALOG_TAG, catalogItemTag(slug)]),
     );
     const normalized = item ? normalizeItem(item) : null;
-    return normalized?.isActive && normalized.category.isVisible && !isRetiredLegacyArtItem(normalized)
-      ? normalized
-      : getFallbackCatalogItemBySlug(slug);
+    if (normalized?.isActive && normalized.category.isVisible && normalized.category.slug !== "arte" && !isRetiredLegacyArtItem(normalized)) {
+      return normalized;
+    }
+    if (process.env.NODE_ENV !== "development") return null;
+    const fallback = getFallbackCatalogItemBySlug(slug);
+    return fallback && isProductsOfOriginItem(fallback) ? fallback : null;
   } catch (error) {
     reportCatalogError(`getCatalogItemBySlug(${slug})`, error);
-    return getFallbackCatalogItemBySlug(slug);
+    if (process.env.NODE_ENV !== "development") return null;
+    const fallback = getFallbackCatalogItemBySlug(slug);
+    return fallback && isProductsOfOriginItem(fallback) ? fallback : null;
   }
 });
 
 export const getRelatedCatalogItems = cache(async (categoryId: string, slug: string): Promise<CatalogItem[]> => {
   if (!categoryId || !slug) return [];
   if (!sanityClient || categoryId.startsWith("fallback-category-")) {
-    return getFallbackRelatedCatalogItems(categoryId, slug);
+    return process.env.NODE_ENV === "development"
+      ? getFallbackRelatedCatalogItems(categoryId, slug).filter(isProductsOfOriginItem)
+      : [];
   }
   try {
     const items = await sanityClient.fetch<SanityCatalogItem[]>(
@@ -329,5 +351,29 @@ export const getRelatedCatalogItems = cache(async (categoryId: string, slug: str
   } catch (error) {
     reportCatalogError(`getRelatedCatalogItems(${slug})`, error);
     return [];
+  }
+});
+
+export type LegacyCatalogDestination = "carta" | "galeria-de-arte" | "productos-de-origen";
+
+/**
+ * Resuelve URLs antiguas después de separar el catálogo histórico. No devuelve
+ * el documento completo: solo indica a qué sección pertenece ahora ese slug.
+ */
+export const getLegacyCatalogDestinationBySlug = cache(async (slug: string): Promise<LegacyCatalogDestination | null> => {
+  if (!slug || !sanityClient) return null;
+  try {
+    const result = await sanityClient.fetch<{ migrationDestination?: string; categorySlug?: string } | null>(
+      legacyCatalogDestinationBySlugQuery,
+      { slug },
+      fetchOptions([CATALOG_TAG]),
+    );
+    if (!result) return null;
+    if (result.migrationDestination === "carta") return "carta";
+    if (result.migrationDestination === "galeria-de-arte" || result.categorySlug === "arte") return "galeria-de-arte";
+    return "productos-de-origen";
+  } catch (error) {
+    reportCatalogError(`getLegacyCatalogDestinationBySlug(${slug})`, error);
+    return null;
   }
 });

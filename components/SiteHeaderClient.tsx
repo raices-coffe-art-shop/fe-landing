@@ -6,18 +6,27 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { BrandLogo } from "@/sanity/lib/siteSettings";
 import { SocialPlatformIcon } from "@/components/SocialPlatformIcon";
 
-type NavLink = { label: string; href: string };
+type NavLink = { kind: "link"; label: string; href: string };
+type NavGroup = { kind: "group"; label: string; children: Array<{ label: string; href: string }> };
+type NavItem = NavLink | NavGroup;
 
-// Seis destinos en el orden en que se recorre la marca: del relato al producto
-// y cierre en la visita. Territorio y Comunidad quedan dentro de la portada, y
-// Links vive en el pie, que es su lugar natural.
-const navLinks: NavLink[] = [
-  { label: "Historia", href: "/#historia" },
-  { label: "Personas", href: "/#personas" },
-  { label: "Arte", href: "/arte" },
-  { label: "Catálogo", href: "/catalogo" },
-  { label: "Publicaciones", href: "/publicaciones" },
-  { label: "Visítanos", href: "/#visita" },
+// El mismo orden alimenta la barra de escritorio y el menú sándwich móvil.
+// Carta y Productos de Origen son conceptos separados: la primera es la carta
+// del café; el segundo es la colección pública administrada desde Sanity.
+const navItems: NavItem[] = [
+  { kind: "link", label: "La Carta", href: "/carta" },
+  { kind: "link", label: "Productos de Origen", href: "/productos-de-origen" },
+  { kind: "link", label: "Galería de Arte", href: "/galeria-de-arte" },
+  {
+    kind: "group",
+    label: "Acerca de nosotros",
+    children: [
+      { label: "Nuestra Historia", href: "/#historia" },
+      { label: "Personas", href: "/#personas" },
+    ],
+  },
+  { kind: "link", label: "Publicaciones", href: "/publicaciones" },
+  { kind: "link", label: "Visítanos", href: "/#visita" },
 ];
 
 type SiteHeaderClientProps = {
@@ -28,6 +37,7 @@ type SiteHeaderClientProps = {
 export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileGroupsOpen, setMobileGroupsOpen] = useState<Record<string, boolean>>({});
   const pathname = usePathname();
   const navigationId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -78,8 +88,6 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
     const previousInert = backgroundElements.map((element) => element.inert);
     backgroundElements.forEach((element) => { element.inert = true; });
 
-    // Además de pausar Lenis, estos listeners evitan que el scroll nativo
-    // reaccione detrás del panel en dispositivos táctiles.
     const preventBackgroundScroll = (event: Event) => {
       const target = event.target as Node | null;
       if (target && menuRef.current?.contains(target)) return;
@@ -119,7 +127,7 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
       if (event.key === "Tab") {
         const focusable = [
           buttonRef.current,
-          ...Array.from(menuRef.current?.querySelectorAll<HTMLElement>("a[href]") ?? [])
+          ...Array.from(menuRef.current?.querySelectorAll<HTMLElement>("a[href], button[data-mobile-group-trigger]") ?? [])
         ].filter((element): element is HTMLElement => Boolean(element));
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
@@ -168,65 +176,101 @@ export function SiteHeaderClient({ brandLogo, contactHref }: SiteHeaderClientPro
   return (
     <>
       <header className={`site-header ${scrolled ? "is-scrolled" : ""} ${open ? "is-open" : ""}`}>
-      <div className="header-inner">
-        <Link href="/" className="brand" aria-label="Raíces, inicio">
-          <img className="brand-logo" src={brandLogo.src} alt={brandLogo.alt} width={52} height={52} />
-          <span className="brand-tag">Café y cultura</span>
-        </Link>
+        <div className="header-inner">
+          <Link href="/" className="brand" aria-label="Raíces, inicio">
+            <img className="brand-logo" src={brandLogo.src} alt={brandLogo.alt} width={52} height={52} />
+            <span className="brand-tag">Café y cultura</span>
+          </Link>
 
-        <nav className="desktop-nav" aria-label="Navegación principal">
-          {navLinks.map(({ label, href }) => (
-            <a key={href} href={href}>{label}</a>
-          ))}
-          <a className="nav-cta" href={contactHref} target="_blank" rel="noreferrer">
-            <SocialPlatformIcon platform="whatsapp" className="nav-whatsapp-icon" /><span>Conversemos</span>
-          </a>
-        </nav>
-
-        <button
-          ref={buttonRef}
-          className="menu-button"
-          type="button"
-          onClick={() => setOpen((value) => !value)}
-          aria-expanded={open}
-          aria-controls={navigationId}
-          aria-label={open ? "Cerrar menú" : "Abrir menú"}
-        >
-          <span className="menu-button-label">{open ? "Cerrar" : "Menú"}</span>
-          <span className="menu-button-lines" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </span>
-        </button>
-      </div>
-
-      <div
-        className="mobile-menu-backdrop"
-        aria-hidden="true"
-        onClick={() => closeMenu()}
-      />
-
-      <div
-        ref={menuRef}
-        id={navigationId}
-        className="mobile-menu"
-        aria-hidden={!open}
-      >
-        <nav aria-label="Navegación móvil">
-          <p>Explora Raíces</p>
-          {navLinks.map(({ label, href }, index) => (
-            <a key={href} href={href} onClick={() => closeMenu()} tabIndex={open ? 0 : -1}>
-              <span>{String(index + 1).padStart(2, "0")}</span>{label}
+          <nav className="desktop-nav" aria-label="Navegación principal">
+            {navItems.map((item) =>
+              item.kind === "link" ? (
+                <a key={item.href} href={item.href}>{item.label}</a>
+              ) : (
+                <details key={item.label} className="nav-dropdown">
+                  <summary>
+                    <span>{item.label}</span>
+                    <span className="nav-dropdown-caret" aria-hidden="true">⌄</span>
+                  </summary>
+                  <div className="nav-dropdown-menu">
+                    {item.children.map((child) => (
+                      <a key={child.href} href={child.href}>{child.label}</a>
+                    ))}
+                  </div>
+                </details>
+              )
+            )}
+            <a className="nav-cta" href={contactHref} target="_blank" rel="noreferrer">
+              <SocialPlatformIcon platform="whatsapp" className="nav-whatsapp-icon" /><span>Conversemos</span>
             </a>
-          ))}
-          <a className="mobile-wa" href={contactHref} target="_blank" rel="noreferrer" onClick={() => closeMenu()} tabIndex={open ? 0 : -1}>
-            <SocialPlatformIcon platform="whatsapp" className="mobile-wa-icon" />
-            <span>Escribir por WhatsApp</span>
-          </a>
-        </nav>
-      </div>
+          </nav>
 
+          <button
+            ref={buttonRef}
+            className="menu-button"
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-controls={navigationId}
+            aria-label={open ? "Cerrar menú" : "Abrir menú"}
+          >
+            <span className="menu-button-label">{open ? "Cerrar" : "Menú"}</span>
+            <span className="menu-button-lines" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+          </button>
+        </div>
+
+        <div className="mobile-menu-backdrop" aria-hidden="true" onClick={() => closeMenu()} />
+
+        <div ref={menuRef} id={navigationId} className="mobile-menu" aria-hidden={!open}>
+          <nav aria-label="Navegación móvil">
+            <p>Explora Raíces</p>
+            {navItems.map((item, index) => {
+              const number = String(index + 1).padStart(2, "0");
+              if (item.kind === "link") {
+                return (
+                  <a key={item.href} href={item.href} onClick={() => closeMenu()} tabIndex={open ? 0 : -1}>
+                    <span>{number}</span>{item.label}
+                  </a>
+                );
+              }
+
+              const groupOpen = Boolean(mobileGroupsOpen[item.label]);
+              const submenuId = `${navigationId}-${index}-submenu`;
+              return (
+                <div key={item.label} className="mobile-nav-group" data-open={groupOpen ? "true" : "false"}>
+                  <button
+                    type="button"
+                    className="mobile-nav-group-trigger"
+                    data-mobile-group-trigger
+                    aria-expanded={groupOpen}
+                    aria-controls={submenuId}
+                    tabIndex={open ? 0 : -1}
+                    onClick={() => setMobileGroupsOpen((current) => ({ ...current, [item.label]: !current[item.label] }))}
+                  >
+                    <span className="mobile-nav-index">{number}</span>
+                    <span className="mobile-nav-group-label">{item.label}</span>
+                    <span className="mobile-nav-caret" aria-hidden="true">+</span>
+                  </button>
+                  <div id={submenuId} className="mobile-nav-submenu" aria-hidden={!groupOpen}>
+                    {item.children.map((child, childIndex) => (
+                      <a key={child.href} href={child.href} onClick={() => closeMenu()} tabIndex={open && groupOpen ? 0 : -1}>
+                        <span>{`${index + 1}.${childIndex + 1}`}</span>{child.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+            <a className="mobile-wa" href={contactHref} target="_blank" rel="noreferrer" onClick={() => closeMenu()} tabIndex={open ? 0 : -1}>
+              <SocialPlatformIcon platform="whatsapp" className="mobile-wa-icon" />
+              <span>Escribir por WhatsApp</span>
+            </a>
+          </nav>
+        </div>
       </header>
 
       <a
