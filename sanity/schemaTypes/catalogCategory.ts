@@ -53,13 +53,6 @@ export const catalogCategory = defineType({
     defineField({ name: "story", title: "Historia legado de Carta", type: "text", hidden: true, readOnly: true }),
     defineField({ name: "sourcing", title: "Insumos legado de Carta", type: "text", hidden: true, readOnly: true }),
     defineField({
-      name: "factsTitle",
-      title: "Título del recuadro de datos",
-      description: "Opcional. El encabezado del recuadro en la pantalla del local. Si lo dejas vacío dice “Origen y productores”. Cámbialo cuando el recuadro no hable de origen: por ejemplo “Personaliza a tu gusto” en Jugos & Smoothies.",
-      type: "string",
-      validation: (Rule) => Rule.max(60),
-    }),
-    defineField({
       name: "sourcingFacts",
       title: "Ficha legado de Carta",
       type: "array",

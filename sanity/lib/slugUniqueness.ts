@@ -32,7 +32,7 @@ type SlugUniquenessContext = {
 export async function isUniqueSlugWithinType(
   slug: SlugValue | string | undefined,
   context: SlugUniquenessContext,
-): Promise<boolean> {
+): Promise<true | string> {
   const currentSlug = (typeof slug === "string" ? slug : slug?.current)?.trim();
   const documentId = context.document?._id;
   const documentType = context.document?._type;
@@ -65,5 +65,5 @@ export async function isUniqueSlugWithinType(
   ][0]._id)`;
 
   const result = await client.fetch<boolean>(query, params, { perspective: "raw" });
-  return result === true;
+  return result === true ? true : "Ya existe otro documento del mismo tipo con esta dirección web.";
 }

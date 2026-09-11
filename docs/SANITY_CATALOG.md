@@ -1,84 +1,23 @@
 # Carta, Productos de Origen y Galería de Arte en Sanity
 
-Desde septiembre de 2026, Carta, Productos de Origen y Galería de Arte se administran por separado en Sanity.
-
-Esta separación evita que un producto de la Carta aparezca como Producto de Origen o que una pieza de arte termine dentro del catálogo comercial.
+Desde septiembre de 2026 los tres contenidos se administran por separado. Esta separación evita que una pieza de arte termine como producto o que un cambio del catálogo altere la Carta.
 
 ## 1. Carta
 
 Tipos de Sanity:
 
-- `menuCategory` — categorías o secciones de la Carta.
+- `menuCategory` — categorías de la Carta.
 - `menuItem` — bebidas, alimentos y demás elementos de la Carta.
 
 Rutas:
 
-- `/carta` — vista pública de la Carta.
-- `/carta/imprimir` — vista preparada para impresión o PDF.
+- `/carta` — vista pública.
+- `/carta/imprimir` — impresión/PDF.
 - `/carta/tv` — pantalla vertical del local.
 
-Los elementos de Carta no tienen una ficha pública `/carta/[slug]`.
+Los elementos de Carta no tienen ficha `/carta/[slug]`.
 
-### Organización
-
-La Carta funciona en dos niveles:
-
-- **Sección:** categoría principal, por ejemplo Café, Chocolatería, Bebidas Andinas, Jugos & Smoothies, Sándwiches, Alimentos o Para llevar.
-- **Subsección:** clasificación interna de los productos, por ejemplo Clásicos, Filtrados & Métodos, Con Leche, Opciones Frías, Triples, etc.
-
-Cada categoría puede conservar información narrativa y de origen, como:
-
-- descripción;
-- subtítulo;
-- título de historia;
-- historia de origen;
-- insumos y productores;
-- ficha de origen y productores;
-- imagen;
-- orden.
-
-Cada elemento puede mantener:
-
-- nombre;
-- categoría;
-- subcategoría;
-- descripción;
-- imagen;
-- precio;
-- moneda;
-- visibilidad del precio;
-- activo/inactivo;
-- orden.
-
-### Carta y TV
-
-`/carta`, `/carta/imprimir` y `/carta/tv` utilizan los documentos separados de Carta.
-
-La pantalla del local acepta parámetros de URL.
-
-Ejemplo:
-
-```text
-/carta/tv?s=14&animation=giro
-```
-
-El intervalo `s` controla el tiempo entre pantallas.
-
-Los modos de animación disponibles siguen siendo los utilizados por la pantalla del local.
-
-La ruta antigua:
-
-```text
-/catalogo/tv
-```
-
-se conserva únicamente como redirección de compatibilidad hacia:
-
-```text
-/carta/tv
-```
-
-También conserva los parámetros `s` y `animation`.
+Las categorías pueden conservar los textos de origen, ficha de procedencia y foto usados por la versión impresa y TV. Los elementos mantienen nombre, categoría, subcategoría, descripción corta, foto, precio, visibilidad y orden.
 
 ## 2. Productos de Origen
 
@@ -92,28 +31,9 @@ Rutas:
 - `/productos-de-origen`
 - `/productos-de-origen/[slug]`
 
-Productos de Origen corresponde a lo que anteriormente se mostraba públicamente como Catálogo.
+Este apartado conserva la ficha amplia que el cliente ya conocía. La categoría histórica `arte` queda excluida de Productos de Origen y ya no puede seleccionarse para productos nuevos.
 
-Cada producto puede tener una ficha individual y mantener los campos que ya utilizaba anteriormente, como:
-
-- título;
-- slug;
-- categoría;
-- subcategoría;
-- descripción;
-- imagen principal;
-- galería;
-- precio;
-- procedencia;
-- productor, artesano o creador;
-- disponibilidad;
-- presentaciones;
-- estado;
-- orden.
-
-La categoría histórica `arte` queda excluida de Productos de Origen.
-
-Las piezas artísticas deben administrarse desde Galería de Arte y no como `catalogItem`.
+Los campos antiguos que pertenecían a Carta se conservan en los documentos históricos para no perder información, pero están ocultos y en solo lectura en este editor.
 
 ## 3. Galería de Arte
 
@@ -127,115 +47,33 @@ Rutas:
 - `/galeria-de-arte`
 - `/galeria-de-arte/[slug]`
 
-Cada pieza puede tener:
+Cada pieza puede tener nombre, categoría, subcategoría, textos, imágenes, procedencia, artista/artesano, disponibilidad, precio y orden. No debe crearse como `catalogItem`.
 
-- nombre;
-- slug;
-- categoría;
-- subcategoría;
-- descripción corta;
-- descripción amplia;
-- imagen principal;
-- galería;
-- procedencia;
-- artista, artesano o creador;
-- disponibilidad;
-- precio;
-- estado;
-- orden.
+La introducción editorial de Lized forma parte de la página de Galería de Arte, pero las piezas reales se administran aquí.
 
-La introducción editorial relacionada con Lized forma parte de la página de Galería de Arte, pero las piezas reales se administran mediante `artItem`.
+## Migración desde el modelo anterior
 
-No deben crearse piezas de arte como `catalogItem`.
-
-## 4. Migración desde el modelo anterior
-
-La separación original se realizó copiando los documentos anteriores a sus nuevos tipos sin borrar los documentos históricos.
-
-Comandos:
+El despliegue mantiene lectura de compatibilidad para no vaciar el sitio. Antes de editar por separado, ejecutar:
 
 ```bash
 npm run content:split:dry
 npm run content:split
-npm run content:split:verify
 ```
 
-- `content:split:dry` muestra lo que se migrará sin escribir nada.
-- `content:split` realiza la separación.
-- `content:split:verify` comprueba cantidades, referencias y paridad.
+El script copia el contenido a los tipos nuevos sin borrar ni modificar los documentos antiguos. No ejecutar los scripts históricos `carta:migrate` o `cartas:migrate` para la administración normal después de esta separación.
 
-También existen scripts específicos para Carta y Galería de Arte cuando se necesita revisar una migración por separado.
+## TV
 
-Después de la separación no deben utilizarse los scripts históricos de carga de Carta como procedimiento normal de administración.
+`/carta/tv` está pensada para pantalla vertical. El intervalo puede ajustarse con `?s=15` y los modos de entrada existentes siguen aceptando `?animation=...`.
 
-La edición cotidiana debe hacerse directamente desde Sanity Studio.
-
-## 5. Estado actual de la separación
-
-La Carta utiliza:
-
-- `menuCategory`
-- `menuItem`
-
-Productos de Origen utiliza:
-
-- `catalogCategory`
-- `catalogItem`
-
-Galería de Arte utiliza:
-
-- `artCategory`
-- `artItem`
-
-Esto permite editar cada sección de forma independiente sin alterar las otras dos.
-
-## 6. Revalidación
-
-El webhook de Sanity debe responder, como mínimo, a cambios en:
-
-- `menuCategory`
-- `menuItem`
-- `catalogCategory`
-- `catalogItem`
-- `artCategory`
-- `artItem`
-- `post`
-- `siteSettings`
-
-Las rutas revalidadas deben corresponder a la sección afectada.
-
-### Carta
-
-- `/carta`
-- `/carta/imprimir`
-- `/carta/tv`
-
-### Productos de Origen
-
-- `/productos-de-origen`
-- `/productos-de-origen/[slug]`
-
-### Galería de Arte
-
-- `/galeria-de-arte`
-- `/galeria-de-arte/[slug]`
-
-Consultar `sanity/WEBHOOKS.md` para el filtro y la proyección completos.
-
-## 7. Rutas antiguas
-
-Las rutas antiguas bajo `/catalogo` pueden mantenerse como redirecciones para no romper enlaces guardados, QR o accesos antiguos.
-
-La arquitectura pública actual es:
+Ejemplo:
 
 ```text
-/carta
-/carta/imprimir
-/carta/tv
-
-/productos-de-origen
-/productos-de-origen/[slug]
-
-/galeria-de-arte
-/galeria-de-arte/[slug]
+/carta/tv?s=14&animation=giro
 ```
+
+El QR de TV apunta a `/carta`.
+
+## Revalidación
+
+El webhook debe incluir `menuCategory`, `menuItem`, `catalogCategory`, `catalogItem`, `artCategory`, `artItem`, `post` y `siteSettings`. Revisar `sanity/WEBHOOKS.md`.

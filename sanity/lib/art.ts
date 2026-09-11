@@ -120,7 +120,7 @@ function normalizeItem(item: SanityArtItem): CatalogItem | null {
     price: typeof item.price === "number" && item.price >= 0 ? item.price : undefined,
     showPrice: item.showPrice !== false,
     currency: item.currency === "USD" ? "USD" : "PEN",
-    isActive: item.isActive !== false,
+    isActive: item.isActive ?? true,
     isFeatured: item.isFeatured === true,
     order: typeof item.order === "number" ? item.order : 999,
   };

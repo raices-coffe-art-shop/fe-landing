@@ -125,7 +125,7 @@ function normalizeItem(item: SanityMenuItem): CatalogItem | null {
     price: typeof item.price === "number" && item.price >= 0 ? item.price : undefined,
     showPrice: item.showPrice !== false,
     currency: item.currency === "USD" ? "USD" : "PEN",
-    isActive: item.isActive !== false,
+    isActive: item.isActive ?? true,
     isFeatured: false,
     order: typeof item.order === "number" ? item.order : 999,
   };

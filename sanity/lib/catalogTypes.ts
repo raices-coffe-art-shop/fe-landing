@@ -38,7 +38,6 @@ export type CatalogCategory = {
   storyTitle?: string;
   story?: string;
   sourcing?: string;
-  factsTitle?: string;
   sourcingFacts?: SourcingFact[];
   image?: CatalogImage;
   order: number;
