@@ -183,7 +183,7 @@ export function ContinuousRoots() {
       const journey = relativeBox("#origen", parentRect);
       const archive = relativeBox("#archivo", parentRect);
       const art = relativeBox("#arte", parentRect);
-      const catalog = relativeBox("#catalogo", parentRect);
+      const catalog = relativeBox("#productos-de-origen", parentRect);
       const purpose = relativeBox("#comunidad", parentRect);
       const visit = relativeBox("#visita", parentRect);
 

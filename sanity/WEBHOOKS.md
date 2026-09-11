@@ -20,7 +20,7 @@ SANITY_REVALIDATE_SECRET=...
 - Filtro:
 
 ```groq
-_type in ["siteSettings", "catalogCategory", "catalogItem", "post"]
+_type in ["siteSettings", "menuCategory", "menuItem", "catalogCategory", "catalogItem", "artCategory", "artItem", "post"]
 ```
 
 - Proyección:
@@ -37,6 +37,14 @@ _type in ["siteSettings", "catalogCategory", "catalogItem", "post"]
 - Drafts: desactivado
 - Versions: desactivado
 - Secret: el mismo valor de `SANITY_REVALIDATE_SECRET`
+
+## Qué revalida cada apartado
+
+- `menuItem` / `menuCategory`: `/carta`, `/carta/imprimir` y `/carta/tv`.
+- `catalogItem` / `catalogCategory`: `/productos-de-origen` y sus fichas.
+- `artItem` / `artCategory`: `/galeria-de-arte` y sus fichas.
+- `post`: `/publicaciones` y la publicación correspondiente.
+- `siteSettings`: superficies generales del sitio.
 
 ## Respuestas esperadas
 

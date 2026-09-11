@@ -142,8 +142,8 @@ export function LayeredRevealGallery() {
         <div className={styles.finalCopy}>
           <span>Selección Raíces</span>
           <h3>La imagen se recoge. La colección aparece.</h3>
-          <p>Así el catálogo se siente curado: una pieza central que se repliega para abrir espacio a más oficios, productos y procedencias.</p>
-          <a href="#catalogo">Ver la selección <b>↘</b></a>
+          <p>Así, Productos de Origen se siente como una colección curada: una pieza central que se repliega para abrir espacio a más oficios, productos y procedencias.</p>
+          <a href="#productos-de-origen">Ver la selección <b>↘</b></a>
         </div>
 
         <p className={styles.scrollNote}>Desciende para reunir la colección</p>

@@ -59,7 +59,7 @@ export async function Footer() {
           </p>
           <FooterSocialLinks links={settings.socialLinks} />
         </div>
-        <div><span>Explora</span><p><a href="/#personas">Personas</a><br /><a href="/catalogo">Catálogo</a><br /><a href="/publicaciones">Publicaciones</a><br /><a href="/arte">Arte</a><br /><a href="/comunidad">Comunidad</a></p></div>
+        <div><span>Explora</span><p><a href="/carta">La Carta</a><br /><a href="/productos-de-origen">Productos de Origen</a><br /><a href="/galeria-de-arte">Galería de Arte</a><br /><a href="/#historia">Nuestra Historia</a><br /><a href="/#personas">Personas</a><br /><a href="/publicaciones">Publicaciones</a><br /><a href="/#visita">Visítanos</a></p></div>
         <div><span>Reconocimiento</span><p>A productores, artistas y artesanos cuyas historias sostienen este espacio.</p></div>
       </div>
       <div className="footer-bottom page-shell"><span>© 2026 Raíces</span><span>Ayacucho presente en Lima</span><span>Café y cultura</span></div>

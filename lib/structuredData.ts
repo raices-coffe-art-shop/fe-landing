@@ -5,7 +5,7 @@ import { absoluteUrl, getSiteUrl } from "./siteUrl";
 
 // Los precios solo se emiten cuando también son visibles en la web: Google no
 // debe mostrar un precio que la página oculta.
-function itemOffer(item: CatalogItem, showCatalogPrices: boolean) {
+function itemOffer(item: CatalogItem, showCatalogPrices: boolean, offerUrl = absoluteUrl(`/productos-de-origen/${item.slug}`)) {
   if (!shouldDisplayCatalogPrice(item, showCatalogPrices) || typeof item.price !== "number") {
     return {};
   }
@@ -14,7 +14,7 @@ function itemOffer(item: CatalogItem, showCatalogPrices: boolean) {
       "@type": "Offer",
       price: item.price,
       priceCurrency: item.currency,
-      url: absoluteUrl(`/catalogo/${item.slug}`),
+      url: offerUrl,
       ...(typeof item.availability === "boolean"
         ? { availability: item.availability ? "https://schema.org/InStock" : "https://schema.org/OutOfStock" }
         : {}),
@@ -55,7 +55,7 @@ export function cafeJsonLd(): Record<string, unknown> {
       latitude: business.geo.latitude,
       longitude: business.geo.longitude,
     },
-    hasMenu: absoluteUrl("/catalogo"),
+    hasMenu: absoluteUrl("/carta"),
     ...(business.mapsPlaceUrl ? { hasMap: business.mapsPlaceUrl } : {}),
     ...(business.openingHours
       ? {
@@ -88,8 +88,8 @@ export function menuJsonLd(
           name: item.title,
           description: item.shortDescription,
           image: item.mainImage.src,
-          url: absoluteUrl(`/catalogo/${item.slug}`),
-          ...itemOffer(item, showCatalogPrices),
+          url: absoluteUrl("/carta"),
+          ...itemOffer(item, showCatalogPrices, absoluteUrl("/carta")),
         })),
       };
     })
@@ -99,23 +99,53 @@ export function menuJsonLd(
     "@context": "https://schema.org",
     "@type": "Menu",
     name: `Carta de ${business.name}`,
-    url: absoluteUrl("/catalogo"),
+    url: absoluteUrl("/carta"),
     inLanguage: "es-PE",
     hasMenuSection: sections,
   };
 }
 
-export function productJsonLd(item: CatalogItem, showCatalogPrices: boolean): Record<string, unknown> {
+export function productCatalogJsonLd(
+  items: CatalogItem[],
+  showCatalogPrices: boolean,
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Productos de Origen de Raíces",
+    url: absoluteUrl("/productos-de-origen"),
+    inLanguage: "es-PE",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.title,
+      url: absoluteUrl(`/productos-de-origen/${item.slug}`),
+      item: {
+        "@type": "Product",
+        name: item.title,
+        description: item.shortDescription,
+        image: item.mainImage.src,
+        url: absoluteUrl(`/productos-de-origen/${item.slug}`),
+        brand: { "@type": "Brand", name: business.name },
+        ...(item.category ? { category: item.category.title } : {}),
+        ...itemOffer(item, showCatalogPrices),
+      },
+    })),
+  };
+}
+
+export function productJsonLd(item: CatalogItem, showCatalogPrices: boolean, basePath = "/productos-de-origen"): Record<string, unknown> {
+  const itemUrl = absoluteUrl(`${basePath}/${item.slug}`);
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     name: item.title,
     description: item.shortDescription,
     image: item.mainImage.src,
-    url: absoluteUrl(`/catalogo/${item.slug}`),
+    url: itemUrl,
     brand: { "@type": "Brand", name: business.name },
     ...(item.category ? { category: item.category.title } : {}),
-    ...itemOffer(item, showCatalogPrices),
+    ...itemOffer(item, showCatalogPrices, itemUrl),
   };
 }
 

@@ -112,7 +112,7 @@ export default async function HomePage() {
           <section className="art-section" id="arte">
             <div className="art-intro page-shell">
               <div>
-                <p className="eyebrow light">Arte en Raíces</p>
+                <p className="eyebrow light">Galería de Arte</p>
                 <h2>La mirada de Lized también forma parte de la historia de Raíces.</h2>
               </div>
               <p>Los cuadros de Lized ocupan un lugar central dentro del espacio. En ellos aparecen ideas, memorias y una forma personal de acercarse a Ayacucho.</p>
@@ -172,7 +172,7 @@ export default async function HomePage() {
               <div className="visit-actions">
                 <a className="button button-dark" href={contactChannels.maps} target="_blank" rel="noreferrer">Cómo llegar</a>
                 <a className="text-link" href={whatsappHref} target="_blank" rel="noreferrer">Escribir por WhatsApp ↗</a>
-                <a className="text-link" href="/catalogo">Ver catálogo ↗</a>
+                <a className="text-link" href="/productos-de-origen">Ver Productos de Origen ↗</a>
               </div>
             </div>
           </section>

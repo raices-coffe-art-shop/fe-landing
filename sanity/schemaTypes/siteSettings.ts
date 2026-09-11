@@ -7,7 +7,7 @@ export const siteSettings = defineType({
   type: "document",
   groups: [
     { name: "brand", title: "Marca", default: true },
-    { name: "catalog", title: "Catálogo" },
+    { name: "catalog", title: "Productos de Origen" },
     { name: "social", title: "Redes sociales" },
     { name: "screen", title: "Pantalla del local" },
   ],
@@ -104,7 +104,7 @@ export const siteSettings = defineType({
     defineField({
       name: "collagePhotos",
       title: "Fotos del muro de la pantalla",
-      description: "El muro de fotografías que aparece en la pantalla del local, después del código QR. Sube aquí las fotos que quieras mostrar; si dejas la lista vacía, el muro usa las fotografías de los productos del catálogo. Hacen falta al menos cuatro para que tome las tuyas.",
+      description: "El muro de fotografías que aparece en la pantalla del local, después del código QR. Sube aquí las fotos que quieras mostrar; si dejas la lista vacía, el muro usa las fotografías de los Productos de Origen. Hacen falta al menos cuatro para que tome las tuyas.",
       type: "array",
       group: "screen",
       options: { sortable: true, layout: "grid" },

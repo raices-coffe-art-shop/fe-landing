@@ -81,10 +81,10 @@ export async function CartaSheet({ withPhotos, showActions }: CartaSheetProps) {
   const [items, settings] = await Promise.all([getCatalogItems(), getSiteSettings()]);
   const groups = groupByCategory(filterPrintedMenuItems(items));
   const siteUrl = getSiteUrl();
-  const catalogUrl = `${siteUrl}/catalogo`;
-  const catalogDisplayUrl = catalogUrl.replace(/^https?:\/\//, "");
+  const productsUrl = `${siteUrl}/productos-de-origen`;
+  const productsDisplayUrl = productsUrl.replace(/^https?:\/\//, "");
 
-  const qrDataUrl = await QRCode.toDataURL(catalogUrl, {
+  const qrDataUrl = await QRCode.toDataURL(productsUrl, {
     width: 480,
     margin: 1,
     errorCorrectionLevel: "M",
@@ -113,7 +113,7 @@ export async function CartaSheet({ withPhotos, showActions }: CartaSheetProps) {
 
             {groups.length === 0 ? (
               <p className={styles.emptyNote}>
-                La carta se está actualizando. Escanea el código para ver el catálogo en línea.
+                La carta se está actualizando. Escanea el código para ver los Productos de Origen en línea.
               </p>
             ) : (
               groups.map((group) => {
@@ -212,10 +212,10 @@ export async function CartaSheet({ withPhotos, showActions }: CartaSheetProps) {
             )}
 
             <footer className={styles.footer}>
-              <img className={styles.qr} src={qrDataUrl} alt={`Código QR de la carta: ${catalogDisplayUrl}`} />
+              <img className={styles.qr} src={qrDataUrl} alt={`Código QR de Productos de Origen: ${productsDisplayUrl}`} />
               <div className={styles.footerCopy}>
-                <p className={styles.footerLead}>Escanea para ver el catálogo completo</p>
-                <p className={styles.footerUrl}>{catalogDisplayUrl}</p>
+                <p className={styles.footerLead}>Escanea para ver Productos de Origen</p>
+                <p className={styles.footerUrl}>{productsDisplayUrl}</p>
               </div>
               <div className={styles.footerContact}>
                 <p>WhatsApp {contactChannels.whatsappDisplay}</p>

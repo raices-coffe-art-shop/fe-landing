@@ -27,6 +27,8 @@ export const featuredCatalogItemsQuery = defineQuery(`
   *[
     _type == "catalogItem" &&
     coalesce(isActive, true) == true &&
+    !defined(migrationDestination) &&
+    category->slug.current != "arte" &&
     coalesce(isFeatured, false) == true
   ] | order(order asc, _updatedAt desc)[0...12]{
     _id,
@@ -78,7 +80,12 @@ export const featuredCatalogItemsQuery = defineQuery(`
 `);
 
 export const catalogItemsQuery = defineQuery(`
-  *[_type == "catalogItem" && coalesce(isActive, true) == true]
+  *[
+    _type == "catalogItem" &&
+    coalesce(isActive, true) == true &&
+    !defined(migrationDestination) &&
+    category->slug.current != "arte"
+  ]
   | order(order asc, _updatedAt desc){
     _id,
     title,
@@ -144,7 +151,13 @@ export const catalogCategoriesQuery = defineQuery(`
     order,
     isVisible,
     showInPrintedMenu,
-    "itemCount": 0
+    "itemCount": count(*[
+      _type == "catalogItem" &&
+      references(^._id) &&
+      coalesce(isActive, true) == true &&
+      !defined(migrationDestination) &&
+      ^.slug.current != "arte"
+    ])
   }
 `);
 
@@ -152,7 +165,9 @@ export const catalogItemBySlugQuery = defineQuery(`
   *[
     _type == "catalogItem" &&
     slug.current == $slug &&
-    coalesce(isActive, true) == true
+    coalesce(isActive, true) == true &&
+    !defined(migrationDestination) &&
+    category->slug.current != "arte"
   ][0]{
     _id,
     title,
@@ -202,10 +217,20 @@ export const catalogItemBySlugQuery = defineQuery(`
   }
 `);
 
+
+export const legacyCatalogDestinationBySlugQuery = defineQuery(`
+  *[_type == "catalogItem" && slug.current == $slug][0]{
+    migrationDestination,
+    "categorySlug": category->slug.current
+  }
+`);
+
 export const relatedCatalogItemsQuery = defineQuery(`
   *[
     _type == "catalogItem" &&
     coalesce(isActive, true) == true &&
+    !defined(migrationDestination) &&
+    category->slug.current != "arte" &&
     category._ref == $categoryId &&
     slug.current != $slug
   ] | order(isFeatured desc, order asc)[0...6]{
@@ -295,5 +320,219 @@ export const postBySlugQuery = defineQuery(`
     publishedAt,
     author,
     seo
+  }
+`);
+
+// ---------------------------------------------------------------------------
+// Carta: documentos propios, separados de Productos de Origen.
+// ---------------------------------------------------------------------------
+export const menuItemsQuery = defineQuery(`
+  *[_type == "menuItem" && coalesce(isActive, true) == true]
+  | order(order asc, _updatedAt desc){
+    _id,
+    "sourceId": sourceCatalogItem->_id,
+    title,
+    category->{
+      _id,
+      title,
+      "slug": slug.current,
+      description,
+      tagline,
+      storyTitle,
+      story,
+      sourcing,
+      sourcingFacts,
+      image,
+      imageAlt,
+      order,
+      isVisible
+    },
+    subcategory,
+    shortDescription,
+    mainImage,
+    mainImageAlt,
+    price,
+    showPrice,
+    currency,
+    isActive,
+    order
+  }
+`);
+
+export const menuCategoriesQuery = defineQuery(`
+  *[_type == "menuCategory"] | order(order asc, title asc){
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    tagline,
+    storyTitle,
+    story,
+    sourcing,
+    sourcingFacts,
+    image,
+    imageAlt,
+    order,
+    isVisible,
+    "itemCount": count(*[_type == "menuItem" && references(^._id) && coalesce(isActive, true) == true])
+  }
+`);
+
+// ---------------------------------------------------------------------------
+// Galería de Arte: piezas propias, sin depender de Productos de Origen.
+// ---------------------------------------------------------------------------
+export const artItemsQuery = defineQuery(`
+  *[_type == "artItem" && coalesce(isActive, true) == true]
+  | order(isFeatured desc, order asc, _updatedAt desc){
+    _id,
+    title,
+    "slug": slug.current,
+    category->{
+      _id,
+      title,
+      "slug": slug.current,
+      description,
+      order,
+      isVisible
+    },
+    subcategory,
+    origin,
+    shortDescription,
+    description,
+    mainImage,
+    mainImageAlt,
+    gallery[]{... , alt},
+    producerOrCreator,
+    availability,
+    inquiryMessage,
+    price,
+    showPrice,
+    currency,
+    isActive,
+    isFeatured,
+    order
+  }
+`);
+
+export const artCategoriesQuery = defineQuery(`
+  *[_type == "artCategory"] | order(order asc, title asc){
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    order,
+    isVisible,
+    "itemCount": count(*[_type == "artItem" && references(^._id) && coalesce(isActive, true) == true])
+  }
+`);
+
+export const artItemBySlugQuery = defineQuery(`
+  *[_type == "artItem" && slug.current == $slug && coalesce(isActive, true) == true][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    category->{
+      _id,
+      title,
+      "slug": slug.current,
+      description,
+      order,
+      isVisible
+    },
+    subcategory,
+    origin,
+    shortDescription,
+    description,
+    mainImage,
+    mainImageAlt,
+    gallery[]{... , alt},
+    producerOrCreator,
+    availability,
+    inquiryMessage,
+    price,
+    showPrice,
+    currency,
+    isActive,
+    isFeatured,
+    order
+  }
+`);
+
+export const relatedArtItemsQuery = defineQuery(`
+  *[
+    _type == "artItem" &&
+    coalesce(isActive, true) == true &&
+    category._ref == $categoryId &&
+    slug.current != $slug
+  ] | order(isFeatured desc, order asc)[0...6]{
+    _id,
+    title,
+    "slug": slug.current,
+    category->{
+      _id,
+      title,
+      "slug": slug.current,
+      description,
+      order,
+      isVisible
+    },
+    subcategory,
+    origin,
+    shortDescription,
+    description,
+    mainImage,
+    mainImageAlt,
+    gallery[]{... , alt},
+    producerOrCreator,
+    availability,
+    inquiryMessage,
+    price,
+    showPrice,
+    currency,
+    isActive,
+    isFeatured,
+    order
+  }
+`);
+
+// Compatibilidad temporal: permite que Galería de Arte muestre las piezas que
+// todavía viven en el antiguo catálogo mientras se ejecuta la migración.
+export const legacyArtCatalogItemsQuery = defineQuery(`
+  *[
+    _type == "catalogItem" &&
+    coalesce(isActive, true) == true &&
+    category->slug.current == "arte" &&
+    slug.current != "manualidades" &&
+    !defined(migrationDestination)
+  ] | order(isFeatured desc, order asc, _updatedAt desc){
+    _id,
+    title,
+    "slug": slug.current,
+    category->{
+      _id,
+      title,
+      "slug": slug.current,
+      description,
+      order,
+      isVisible
+    },
+    subcategory,
+    origin,
+    region,
+    shortDescription,
+    description,
+    mainImage,
+    mainImageAlt,
+    gallery[]{... , alt},
+    producerOrCreator,
+    availability,
+    process,
+    inquiryMessage,
+    price,
+    showPrice,
+    currency,
+    isActive,
+    isFeatured,
+    order
   }
 `);

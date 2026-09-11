@@ -1,232 +1,79 @@
-# Catálogo administrado con Sanity
+# Carta, Productos de Origen y Galería de Arte en Sanity
 
-## Qué se administra desde `/studio`
+Desde septiembre de 2026 los tres contenidos se administran por separado. Esta separación evita que una pieza de arte termine como producto o que un cambio del catálogo altere la Carta.
 
-- Configuración del sitio: logo, texto alternativo, redes sociales y las fotos del muro de la pantalla del local.
-- Catálogo > Categorías: nombre, slug, descripción, subtítulo, historia de origen, insumos y productores, ficha de origen, fotografía, orden, visibilidad y si la categoría entra en la carta del café.
-- Catálogo > Productos: contenido, imágenes, procedencia, estado, destacado y orden.
-- Publicaciones: el blog editable por el cliente (ver ).
+## 1. Carta
 
-El catálogo público ya no usa `localStorage`, el editor demo ni el array de productos de `data/site.ts`.
+Tipos de Sanity:
 
-## Migración inicial
+- `menuCategory` — categorías de la Carta.
+- `menuItem` — bebidas, alimentos y demás elementos de la Carta.
 
-El repositorio incluye un seed determinista con los productos que antes estaban hardcodeados.
+Rutas:
 
-1. Crea un token de escritura temporal en Sanity Manage.
-2. Añádelo solo a `.env.local`:
+- `/carta` — vista pública.
+- `/carta/imprimir` — impresión/PDF.
+- `/carta/tv` — pantalla vertical del local.
 
-```env
-SANITY_API_WRITE_TOKEN=...
-```
+Los elementos de Carta no tienen ficha `/carta/[slug]`.
 
-3. Revisa primero el dry run:
+Las categorías pueden conservar los textos de origen, ficha de procedencia y foto usados por la versión impresa y TV. Los elementos mantienen nombre, categoría, subcategoría, descripción corta, foto, precio, visibilidad y orden.
 
-```bash
-npm run catalog:migrate:dry
-```
+## 2. Productos de Origen
 
-4. Ejecuta la migración:
+Tipos de Sanity:
 
-```bash
-npm run catalog:migrate
-```
-
-5. Revisa en `/studio` cada imagen, especialmente el producto Miel, y reemplaza cualquier fotografía de referencia por la fotografía final aprobada.
-6. Elimina `SANITY_API_WRITE_TOKEN` de `.env.local` y revoca el token temporal.
-
-La migración usa IDs deterministas (`catalogCategory.<slug>` y `catalogItem.<slug>`), por lo que repetirla no crea duplicados. Las imágenes existentes no se vuelven a subir si el producto ya tiene una imagen principal.
-
-## Qué sale en la carta del café
-
-La carta impresa (`/catalogo/imprimir`) y la pantalla del local (`/catalogo/tv`) muestran lo que se
-consume en la mesa; el catálogo web muestra todo lo que Raíces vende. Cada categoría tiene el campo
-**¿Mostrar en la carta del café?**: en **No**, la categoría desaparece de la carta y de la TV pero
-sigue en `/catalogo`. Así está configurada Arte, que se vende en el local pero no forma parte de la carta.
-
-El equipo puede cambiarlo desde el Studio en cualquier momento, sin tocar código.
-
-## Carta de café y chocolatería (agosto 2026)
-
-La carta que entregó el cliente se carga con un script aparte, que **no pisa** las ediciones hechas en
-el Studio: crea lo que falta y actualiza solo los campos de la carta (título, precio, categoría, orden).
-
-```bash
-npm run carta:migrate:dry   # simula y valida, no escribe nada
-npm run carta:migrate       # aplica los cambios
-```
-
-Las fotografías se leen del disco, fuera del repositorio. Por defecto busca en `~/Downloads/fotos-raices`;
-se puede apuntar a otra carpeta con la variable `CARTA_PHOTOS_DIR`.
-
-Qué hace: crea las 5 categorías de bebidas (Clásicos, Filtrados & Métodos, Con Leche, Opciones Frías y
-Bebidas de Chocolate) con sus 17 productos, renombra “Café y cacao” como **Para llevar** conservando su
-id (para no romper las referencias de sus productos), marca Arte como fuera de la carta y oculta el
-producto genérico “Café preparado”, que queda reemplazado por el desglose real.
-
-Solo 5 productos tienen fotografía propia (Espresso, Café Pasado, Cappuccino, Chiri Muxsa y Qoñi
-Chocolate). El resto queda sin foto hasta que el cliente la suba desde el Studio: la imagen principal
-ya no es obligatoria, así que el producto no aparece como incompleto.
-
-## Secciones y subsecciones de la carta
-
-La carta funciona en dos niveles, igual que las cartas en papel del cliente:
-
-- **Sección** = la categoría del producto (Café, Sándwiches, Bebidas Andinas…).
-- **Subsección** = el campo **Subcategoría** del producto (Clásicos, Con Leche, Triples…).
-
-Para añadir un producto en el lugar correcto basta con elegir su categoría y escribir la subcategoría
-tal como debe verse en la carta. El orden de las subsecciones lo define el campo **Orden** de los
-productos: la primera subsección que aparece es la del producto con menor número.
-
-Los subtítulos solo se muestran cuando la sección tiene una estructura real de subsecciones (al menos
-dos, con dos productos de media). Así, categorías como Alimentos o Para llevar —donde la subcategoría
-es solo una etiqueta suelta por producto— siguen viéndose como una lista simple.
-
-## Cartas de agosto 2026
-
-Se cargaron con dos scripts, en este orden:
-
-```bash
-npm run carta:migrate      # café y chocolatería (17 productos, 5 fotos)
-npm run cartas:migrate     # sándwiches, bebidas andinas y reorganización a dos niveles
-```
-
-El segundo script además reagrupa los 15 cafés bajo la sección **Café**, renombra la chocolatería y
-corrige el origen del cacao: la productora es la **Ing. Agroforestal Dina Torres Barboza**, de
-Agroindustrias Campos del Valle (el PDF anterior decía "Dina Campos", confundiendo su apellido con el
-nombre de la empresa). Las cuatro categorías antiguas de café quedaron ocultas, no borradas.
-
-Ambos scripts son repetibles y no pisan lo que el equipo edite en el Studio.
-
-## Historias de origen (septiembre 2026)
-
-Cada categoría tiene cinco campos de relato, todos opcionales:
-
-| Campo en el Studio | Dónde se ve | Límite |
-|---|---|---|
-| **Subtítulo de la sección** | Bajo el título, en la pantalla del local | 80 caracteres |
-| **Título de la historia** | Encabezado del relato, en la carta impresa y en la pantalla | 120 caracteres |
-| **Historia de origen** | Bajo el título de la sección en las tres cartas y en la pantalla | 700 caracteres |
-| **Insumos y productores** | Pie del relato, en la carta impresa | 400 caracteres |
-| **Ficha de origen y productores** | Recuadro de datos en la pantalla del local | 8 filas de dato + valor |
-
-La **ficha de origen** es la retícula de las cartas en PDF del cliente: una fila por dato
-(`Origen`, `Altitud`, `Puntaje SCA`, `Productora`…). Cada fila necesita etiqueta y valor; una
-fila a medio llenar se descarta sola y no pinta un renglón vacío en la pantalla. Bebidas Andinas
-no tiene ficha, igual que su carta impresa, y esa sección simplemente no muestra el recuadro.
-
-Son distintos de la **descripción**, que es el resumen corto del catálogo web (`/catalogo`) y sigue
-funcionando igual. Una sección sin historia se muestra como siempre, con su descripción corta.
-
-Dónde aparece cada cosa:
-
-- `/catalogo/imprimir`, `/catalogo/imprimir?fotos=no` y `/catalogo/carta`: la historia va bajo el
-  título de su sección. No depende de que la carta lleve fotos: el relato es contenido de la sección.
-- `/catalogo/tv`: cada sección ocupa **una pantalla completa** con su título, subtítulo, historia,
-  cita y ficha arriba, y los productos debajo. La ficha usa dos columnas; si el número de datos es
-  impar, el último ocupa el ancho entero para no dejar medio recuadro vacío.
-
-Cuando una sección tiene historia, esta reemplaza a la descripción corta en la carta; las secciones
-sin historia siguen mostrando su descripción.
-
-Las cuatro historias que entregó el cliente (Café, Chocolatería, Sándwiches y Bebidas Andinas) se
-cargaron con:
-
-```bash
-npm run historias:migrate:dry   # revisar
-npm run historias:migrate       # aplicar
-```
-
-Ese mismo script aplica la carta final de sándwiches: oculta **Maní Energético & Plátano**, que el
-cliente retiró, y actualiza la descripción de **Palta con Pollo**. La sección quedó con 15 productos.
-
-Los subtítulos y las fichas de origen se cargaron después, transcritos de los mismos PDFs:
-
-```bash
-npm run fichas:migrate:dry   # revisar
-npm run fichas:migrate       # aplicar
-```
-
-Un detalle de contenido: el PDF de chocolatería dice *"Ing. Agrónoma Dina Campos"*. El dato correcto,
-confirmado con el cliente, es **Ing. Agroforestal Dina Torres Barboza**, de Agroindustrias Campos del
-Valle — "Campos" era el nombre de la empresa, no su apellido.
-
-## La pantalla del local (septiembre 2026)
-
-`/catalogo/tv` está pensada para un **televisor girado en vertical (1080×1920)**, con el fondo
-arena de la marca. El ciclo completo son diez pantallas:
-
-| Pantallas | Contenido |
-|---|---|
-| 1–5 | Una por sección de la carta: título, subtítulo, historia, cita, ficha y productos |
-| 6 | Marca y código QR hacia `/catalogo` |
-| 7 | Muro de fotografías, que entran una a una |
-| 8 | Cómo nació Raíces, con la fotografía de los fundadores |
-| 9–10 | Los productores, de dos en dos |
-
-Las secciones **sin historia ni ficha** se fusionan en una sola pantalla —hoy Alimentos y Para
-llevar— y el nombre de cada una pasa a ser el título de su subsección. Si alguna recibe una historia
-desde el Studio, vuelve a separarse sola.
-
-El producto se muestra solo con **nombre y precio**: la descripción corta queda para el catálogo web,
-al que lleva el QR. Cuando una sección pasa de ocho productos, la lista se reparte en dos columnas.
-
-Toda la escala tipográfica cuelga de una columna 9:16 (`--w: min(100vw, 100vh * 9 / 16)` en
-`app/catalogo/tv/tv.module.css`). En el televisor girado la columna llena la pantalla; en un monitor
-apaisado queda centrada con la misma proporción, así que abrir la URL en una laptop **ya es la vista
-previa** — no hace falta girar nada ni tocar el CSS.
-
-Como la pantalla no tiene scroll, `resolveScreenDensity()` en `lib/menuScreenSlides.ts` elige el
-cuerpo del relato y de la ficha según cuánto texto trae la sección, para que el encabezado nunca
-empuje los productos fuera de cuadro.
-
-### El muro de fotografías
-
-Se administra desde **Configuración del sitio > Pantalla del local > Fotos del muro de la pantalla**.
-Suben ahí las imágenes que quieran mostrar, en el orden que quieran, hasta 24.
-
-Si esa lista tiene **menos de cuatro fotos**, el muro cae a las fotografías de producto del catálogo
-—hoy dieciséis— para que la pantalla nunca se quede sin muro mientras el equipo termina de cargar
-las suyas.
-
-### Cómo entran las fotos
-
-La animación se elige desde la URL del televisor, sin desplegar nada:
-
-| URL | Entrada |
-|---|---|
-| `/catalogo/tv` o `?animation=caida` | Caen desde arriba enderezando su giro (por defecto) |
-| `?animation=zoom` | Crecen en su sitio, sin desplazarse |
-| `?animation=giro` | Voltean sobre su eje vertical, como una carta |
-| `?animation=revelado` | Aparecen donde están, con una subida corta |
-
-Cualquier otro valor cae a `caida`. Se puede combinar con el intervalo:
-`/catalogo/tv?s=14&animation=giro`.
-
-Las otras pantallas narrativas (8 a 10) no salen de Sanity: leen `humanOrigin` de `data/social.ts`
-y `people` de `data/people.ts` — el mismo contenido que la landing muestra en `#historia` y en
-"Las personas detrás de Raíces". Todas se arman en `app/catalogo/tv/extraSlides.ts`.
-
-El intervalo de rotación se ajusta por URL: `/catalogo/tv?s=15` para 15 segundos (entre 5 y 120).
-Las pantallas de lectura duran 1,5 veces ese intervalo.
-
-## Webhook
-
-Actualiza el webhook existente con el filtro y proyección documentados en `sanity/WEBHOOKS.md`. Debe responder a:
-
-- `siteSettings`
 - `catalogCategory`
 - `catalogItem`
-- `post`
 
-Publicar un cambio debe devolver `200` y actualizar la portada, `/catalogo` y la ficha correspondiente sin redeploy.
+Rutas:
 
-## Verificación mínima
+- `/productos-de-origen`
+- `/productos-de-origen/[slug]`
 
-- Cambiar el logo actualiza navbar, footer y `/links`.
-- Ocultar o reordenar una red actualiza footer y `/links`.
-- Marcar un producto como destacado controla la portada.
-- Desactivar un producto lo retira de todas las vistas públicas.
-- Cambiar un slug invalida la ficha anterior y activa la nueva.
-- `Consultar` utiliza el WhatsApp configurado en `siteSettings`.
+Este apartado conserva la ficha amplia que el cliente ya conocía. La categoría histórica `arte` queda excluida de Productos de Origen y ya no puede seleccionarse para productos nuevos.
+
+Los campos antiguos que pertenecían a Carta se conservan en los documentos históricos para no perder información, pero están ocultos y en solo lectura en este editor.
+
+## 3. Galería de Arte
+
+Tipos de Sanity:
+
+- `artCategory`
+- `artItem`
+
+Rutas:
+
+- `/galeria-de-arte`
+- `/galeria-de-arte/[slug]`
+
+Cada pieza puede tener nombre, categoría, subcategoría, textos, imágenes, procedencia, artista/artesano, disponibilidad, precio y orden. No debe crearse como `catalogItem`.
+
+La introducción editorial de Lized forma parte de la página de Galería de Arte, pero las piezas reales se administran aquí.
+
+## Migración desde el modelo anterior
+
+El despliegue mantiene lectura de compatibilidad para no vaciar el sitio. Antes de editar por separado, ejecutar:
+
+```bash
+npm run content:split:dry
+npm run content:split
+```
+
+El script copia el contenido a los tipos nuevos sin borrar ni modificar los documentos antiguos. No ejecutar los scripts históricos `carta:migrate` o `cartas:migrate` para la administración normal después de esta separación.
+
+## TV
+
+`/carta/tv` está pensada para pantalla vertical. El intervalo puede ajustarse con `?s=15` y los modos de entrada existentes siguen aceptando `?animation=...`.
+
+Ejemplo:
+
+```text
+/carta/tv?s=14&animation=giro
+```
+
+El QR de TV apunta a `/carta`.
+
+## Revalidación
+
+El webhook debe incluir `menuCategory`, `menuItem`, `catalogCategory`, `catalogItem`, `artCategory`, `artItem`, `post` y `siteSettings`. Revisar `sanity/WEBHOOKS.md`.

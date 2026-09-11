@@ -92,7 +92,7 @@ export function CatalogCollection({
               type="search"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Ejemplo: café, miel, retablos…"
+              placeholder="Ejemplo: café, cacao, miel…"
               autoComplete="off"
             />
             {searchTerm && (
@@ -135,7 +135,7 @@ export function CatalogCollection({
       {filteredItems.length > 0 && (
         <div
           className={`catalog-view-toolbar catalog-view-toolbar-${variant} page-shell`}
-          aria-label="Opciones de visualización del catálogo"
+          aria-label="Opciones de visualización de Productos de Origen"
         >
           {variant === "full" && (
             <div className="catalog-view-group catalog-view-desktop">
@@ -241,7 +241,7 @@ export function CatalogCollection({
               : "Prueba otra categoría o vuelve pronto. El contenido se administra desde Sanity Studio."}
           </p>
           {(activeCategory !== "todos" || normalizedSearch) && (
-            <button type="button" onClick={clearFilters}>Mostrar todo el catálogo</button>
+            <button type="button" onClick={clearFilters}>Mostrar todos los Productos de Origen</button>
           )}
         </div>
       )}

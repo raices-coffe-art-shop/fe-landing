@@ -24,7 +24,7 @@ export function CulturalSplitShowcase() {
           <EditorialImage src={slide.right} alt={slide.rightAlt} />
           <div className="split-panel-text">
             <p>{slide.text}</p>
-            <Link href={`/catalogo/${slide.catalogSlug}`}>Ver en catálogo ↗</Link>
+            <Link href="/galeria-de-arte">Ver Galería de Arte ↗</Link>
           </div>
         </div>
       </div>
@@ -71,11 +71,11 @@ export function CulturalSplitShowcase() {
             <span>{slides[0].eyebrow}</span>
             <h3>{slides[0].title}</h3>
             <p>{slides[0].text}</p>
-            <Link href={`/catalogo/${slides[0].catalogSlug}`}>Ver en catálogo ↗</Link>
+            <Link href="/galeria-de-arte">Ver Galería de Arte ↗</Link>
           </div>
 
           <div className="art-mobile-progress" aria-hidden="true">
-            <span>Arte en Raíces</span>
+            <span>Galería de Arte</span>
             <i><b /></i>
           </div>
         </div>
@@ -84,12 +84,12 @@ export function CulturalSplitShowcase() {
         </div>
         <div className="art-mobile-reduced-list" aria-label="Bloques de arte en Raíces">
           {slides.map((item) => (
-            <Link key={item.number} className="art-mobile-piece" href={`/catalogo/${item.catalogSlug}`}>
+            <Link key={item.number} className="art-mobile-piece" href="/galeria-de-arte">
               <img src={item.left} alt={item.leftAlt} loading="lazy" decoding="async" />
               <span>{item.number} · {item.eyebrow}</span>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
-              <strong>Ver en catálogo ↗</strong>
+              <strong>Ver Galería de Arte ↗</strong>
             </Link>
           ))}
         </div>

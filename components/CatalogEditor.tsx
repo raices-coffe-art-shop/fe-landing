@@ -138,7 +138,7 @@ export function CatalogEditor() {
       <section className="catalogo-hero">
         <div className="catalogo-hero-pattern" aria-hidden="true" />
         <div className="page-shell">
-          <p className="eyebrow light">Catálogo</p>
+          <p className="eyebrow light">Productos de Origen</p>
           <h1>Productos con nombre, procedencia y una historia detrás.</h1>
           <p className="catalogo-hero-note">
             Explora cafés, alimentos, postres, pinturas y piezas seleccionadas. Cada ficha indica qué es, de dónde viene, quién está relacionado con su elaboración y cómo puedes conseguirlo.
@@ -159,7 +159,7 @@ export function CatalogEditor() {
               </button>
             )}
             <button className={`edit-toggle ${editing ? "is-active" : ""}`} onClick={() => setEditing(!editing)} aria-pressed={editing}>
-              {editing ? "Terminar edición" : "Editar catálogo"}
+              {editing ? "Terminar edición" : "Editar Productos de Origen"}
             </button>
           </div>
         </div>

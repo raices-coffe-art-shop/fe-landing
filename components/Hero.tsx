@@ -221,8 +221,9 @@ export function Hero() {
           <p className={styles.lead}>Un espacio en Lima donde Ayacucho se comparte a través de sus sabores, sus personas, su arte y sus historias.</p>
           <p className={styles.lead}>Raíces reúne productos, alimentos, obras y relatos vinculados con Ayacucho. Cada elemento del espacio busca conservar su procedencia y reconocer a las personas que lo producen, elaboran o crean.</p>
           <div className={styles.actions}>
-            <a className="button button-light" href="/catalogo">Ver catálogo</a>
-            <a className="text-link light-link" href="#historia">Conocer nuestra historia <span>↘</span></a>
+            <a className="button button-light" href="/carta">La Carta</a>
+            <a className="text-link light-link" href="/productos-de-origen">Productos de Origen <span>↗</span></a>
+            <a className="text-link light-link" href="#historia">Nuestra Historia <span>↘</span></a>
             <a className="text-link light-link" href="#visita">Cómo llegar <span>↘</span></a>
           </div>
         </div>

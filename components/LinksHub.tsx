@@ -26,16 +26,52 @@ type LinkItem = {
 
 const editorialLinks: LinkItem[] = [
   {
-    id: "catalogo",
-    label: "Carta y catálogo",
-    action: "Abrir catálogo",
-    note: "Café, miel, cacao, arte y piezas con origen.",
-    href: "/#catalogo",
-    meta: "Lo más pedido",
+    id: "carta",
+    label: "La Carta",
+    action: "Ver la carta",
+    note: "Bebidas, alimentos y precios de la carta vigente de Raíces.",
+    href: "/carta",
+    meta: "Carta del café",
+    tone: "honey",
+    icon: "catalog",
+    qrCode: "/qr-codes/carta.svg",
+    qrImage: "/qr/cafe.svg",
+  },
+  {
+    id: "productos-de-origen",
+    label: "Productos de Origen",
+    action: "Explorar productos",
+    note: "Café, alimentos y productos seleccionados con procedencia e historia.",
+    href: "/productos-de-origen",
+    meta: "Origen y procedencia",
     tone: "green",
     icon: "catalog",
-    qrCode: "/qr-codes/catalogo.svg",
+    qrCode: "/qr-codes/productos-de-origen.svg",
     qrImage: "/qr/textil.svg",
+  },
+  {
+    id: "galeria-de-arte",
+    label: "Galería de Arte",
+    action: "Ver la galería",
+    note: "Obras, procesos y piezas que forman parte del espacio de Raíces.",
+    href: "/galeria-de-arte",
+    meta: "Arte en Raíces",
+    tone: "clay",
+    icon: "story",
+    qrCode: "/qr-codes/galeria-de-arte.svg",
+    qrImage: "/qr/ceramica.svg",
+  },
+  {
+    id: "historia",
+    label: "Nuestra Historia",
+    action: "Leer la historia",
+    note: "La idea detrás del café, la memoria y el regreso al origen.",
+    href: "/#historia",
+    meta: "El manifiesto",
+    tone: "ink",
+    icon: "story",
+    qrCode: "/qr-codes/historia.svg",
+    qrImage: "/qr/ceramica.svg",
   },
   {
     id: "personas",
@@ -48,18 +84,6 @@ const editorialLinks: LinkItem[] = [
     icon: "people",
     qrCode: "/qr-codes/personas.svg",
     qrImage: "/qr/retablo.svg",
-  },
-  {
-    id: "historia",
-    label: "Historia de Raíces",
-    action: "Leer la historia",
-    note: "La idea detrás del café, la memoria y el regreso al origen.",
-    href: "/#historia",
-    meta: "El manifiesto",
-    tone: "ink",
-    icon: "story",
-    qrCode: "/qr-codes/historia.svg",
-    qrImage: "/qr/ceramica.svg",
   },
 ];
 
@@ -130,7 +154,7 @@ const socialMeta: Record<SocialPlatform, Omit<LinkItem, "id" | "label" | "href">
     tone: "clay",
     external: true,
     icon: "other",
-    qrCode: "/qr-codes/catalogo.svg",
+    qrCode: "/qr-codes/productos-de-origen.svg",
     qrImage: "/qr/cafe.svg",
   },
 };
@@ -243,9 +267,9 @@ function isExternalLink(url: string) {
 }
 
 export function LinksHub({ brandLogo, socialLinks }: LinksHubProps) {
-  const primaryLinks = [...socialLinksToItems(socialLinks), ...editorialLinks];
+  const primaryLinks = [...editorialLinks, ...socialLinksToItems(socialLinks)];
   const [shared, setShared] = useState(false);
-  const [openId, setOpenId] = useState(primaryLinks[0]?.id ?? "catalogo");
+  const [openId, setOpenId] = useState(primaryLinks[0]?.id ?? "carta");
   const [activeHeroImage, setActiveHeroImage] = useState(0);
   const [previousHeroImage, setPreviousHeroImage] = useState<number | null>(null);
   const [heroRotationVersion, setHeroRotationVersion] = useState(0);
@@ -425,7 +449,7 @@ export function LinksHub({ brandLogo, socialLinks }: LinksHubProps) {
             <div className="links-origin-line"><span>Ayacucho</span><i /><span>Lima</span></div>
             <div className="links-chips" aria-label="Resumen rápido">
               <span>Pedidos por WhatsApp</span>
-              <span>Catálogo vivo</span>
+              <span>Productos de Origen</span>
               <span>Historias reales</span>
             </div>
           </div>

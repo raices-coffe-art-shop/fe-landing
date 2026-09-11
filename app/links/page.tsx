@@ -5,7 +5,7 @@ import { getSiteSettings } from "@/sanity/lib/siteSettings";
 
 export const metadata: Metadata = {
   title: "Enlaces",
-  description: "Todos los enlaces de Raíces: WhatsApp, catálogo, historias, ubicación e Instagram.",
+  description: "Todos los enlaces de Raíces: Carta, Productos de Origen, Galería de Arte, historias, ubicación y redes sociales.",
   alternates: { canonical: "/links" },
   openGraph: { ...baseOpenGraph, url: "/links", title: "Enlaces de Raíces — Café y Cultura" },
 };

@@ -174,12 +174,15 @@ export function AutoSlugInput(props: InputProps) {
   ]);
 
   const routePrefixByType: Record<string, string> = {
-    catalogItem: "/catalogo",
+    catalogItem: "/productos-de-origen",
+    artItem: "/galeria-de-arte",
     post: "/publicaciones",
   };
   const routePrefix = documentType ? routePrefixByType[documentType] : undefined;
   const displayPath = currentSlug
-    ? `${routePrefix ?? ""}/${currentSlug}`
+    ? routePrefix
+      ? `${routePrefix}/${currentSlug}`
+      : currentSlug
     : "Se generará automáticamente";
 
   return (
