@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
-import { CatalogCollection } from "@/components/CatalogCollection";
+import { OriginCategoryGrid } from "@/components/OriginCategoryGrid";
 import { contactChannels } from "@/data/social";
 import { getCatalogCategories, getCatalogItems } from "@/sanity/lib/catalog";
 import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
@@ -51,7 +51,7 @@ export default async function ProductosDeOrigenPage({ searchParams }: ProductosD
               </p>
               <dl>
                 <div><dt>Artículos publicados</dt><dd>{items.length}</dd></div>
-                <div><dt>Categorías visibles</dt><dd>{categories.length}</dd></div>
+                <div><dt>Categorías visibles</dt><dd>{Math.min(categories.length, 6)}</dd></div>
               </dl>
             </div>
           </div>
@@ -60,18 +60,17 @@ export default async function ProductosDeOrigenPage({ searchParams }: ProductosD
         <section className="catalogo-public-section">
           <div className="page-shell catalogo-public-intro">
             <div>
-              <p className="eyebrow">Archivo disponible</p>
-              <h2>Filtra por categoría o recorre todos los Productos de Origen.</h2>
+              <p className="eyebrow">Productos disponibles</p>
+              <h2>Categorías de origen para consultar y pedir directamente.</h2>
             </div>
           </div>
 
-          <CatalogCollection
+          <OriginCategoryGrid
             items={items}
             categories={categories}
             contactHref={contactHref}
             showCatalogPrices={settings.showCatalogPrices}
-            variant="full"
-            initialCategory={requestedCategory || "todos"}
+            initialCategory={requestedCategory}
           />
         </section>
       </main>

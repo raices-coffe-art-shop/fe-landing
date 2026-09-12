@@ -123,6 +123,7 @@ function fetchOptions(tags: string[]) {
 
   return {
     next: {
+      // Tags para actualización inmediata por webhook + 300 s como red de seguridad.
       revalidate: 300,
       tags,
     },

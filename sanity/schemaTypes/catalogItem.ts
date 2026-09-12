@@ -64,7 +64,12 @@ export const catalogItem = defineType({
       type: "reference",
       group: "content",
       to: [{ type: "catalogCategory" }],
-      options: { filter: 'slug.current != "arte"' },
+      // Carta y Productos de Origen son apartados independientes. Las categorías
+      // históricas que ya tienen equivalente en menuCategory no deben poder
+      // seleccionarse aquí.
+      options: {
+        filter: 'slug.current != "arte" && !(slug.current in *[_type == "menuCategory"].slug.current)',
+      },
       validation: (Rule) => Rule.required(),
     }),
     defineField({

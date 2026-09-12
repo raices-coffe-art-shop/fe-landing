@@ -13511,3 +13511,196 @@ img { max-width: 100%; }
     transition: none;
   }
 }
+
+/* ========================================================================== */
+/* PRODUCTOS DE ORIGEN — cards modulares por categoría                       */
+/* ========================================================================== */
+
+.origin-category-container {
+  margin-top: 34px;
+  padding: 22px;
+  border: 1px solid rgba(43, 33, 28, .18);
+  background: rgba(255, 252, 246, .45);
+}
+
+.origin-category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.origin-category-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(43, 33, 28, .22);
+  background: #fffaf1;
+}
+
+.origin-category-image {
+  aspect-ratio: 16 / 8;
+  overflow: hidden;
+  background: #e9dfd0;
+}
+
+.origin-category-image .editorial-image,
+.origin-category-image img {
+  width: 100%;
+  height: 100%;
+}
+
+.origin-category-image img {
+  display: block;
+  object-fit: cover;
+}
+
+.origin-category-content {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  padding: 26px;
+}
+
+.origin-category-heading h3 {
+  margin: 0;
+  font: 500 clamp(2rem, 3vw, 3.2rem)/.98 var(--serif);
+  letter-spacing: -.035em;
+}
+
+.origin-category-products {
+  margin: 26px 0 24px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(43, 33, 28, .16);
+}
+
+.origin-category-products li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(43, 33, 28, .16);
+}
+
+.origin-category-products li > div {
+  min-width: 0;
+}
+
+.origin-category-products a {
+  display: inline-block;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 760;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.origin-category-products a:hover,
+.origin-category-products a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.origin-category-products span {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.origin-category-products strong {
+  white-space: nowrap;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 760;
+}
+
+.origin-category-product-side {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.origin-category-item-inquiry {
+  color: var(--green-deep);
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: .04em;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+.origin-category-item-inquiry:hover,
+.origin-category-item-inquiry:focus-visible {
+  color: var(--ink);
+}
+
+.origin-category-whatsapp.catalog-action {
+  min-height: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: auto;
+  padding: 13px 16px;
+  border: 1px solid #355444;
+  background: #355444;
+  color: #fffaf1;
+  font-size: 13px;
+  font-weight: 780;
+  letter-spacing: .035em;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.origin-category-whatsapp.catalog-action:hover,
+.origin-category-whatsapp.catalog-action:focus-visible {
+  border-color: #20352b;
+  background: #20352b;
+  color: #fffaf1;
+  transform: translateY(-1px);
+}
+
+.origin-category-whatsapp.catalog-action svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.origin-category-empty {
+  margin-top: 34px;
+  padding: 32px;
+  border: 1px solid rgba(43, 33, 28, .18);
+  color: var(--ink-soft);
+}
+
+@media (max-width: 760px) {
+  .origin-category-container {
+    padding: 12px;
+  }
+
+  .origin-category-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .origin-category-content {
+    padding: 22px 20px;
+  }
+
+  .origin-category-products li {
+    gap: 12px;
+  }
+
+  .origin-category-product-side {
+    align-items: flex-end;
+  }
+}

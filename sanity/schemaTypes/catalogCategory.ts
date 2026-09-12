@@ -10,6 +10,9 @@ export const catalogCategory = defineType({
   initialValue: {
     order: 100,
     isVisible: true,
+    // Desde la separación de contenidos, toda categoría nueva creada aquí
+    // pertenece únicamente a Productos de Origen.
+    showInPrintedMenu: false,
   },
   fields: [
     defineField({
@@ -46,7 +49,7 @@ export const catalogCategory = defineType({
       rows: 3,
       validation: (Rule) => Rule.max(300),
     }),
-    // Campos heredados de cuando Productos de Origen y Carta compartían el mismo modelo.
+    // Campos narrativos heredados de cuando Productos de Origen y Carta compartían el mismo modelo.
     // Se conservan para no perder datos antiguos, pero ya no se editan aquí.
     defineField({ name: "tagline", title: "Subtítulo legado de Carta", type: "string", hidden: true, readOnly: true }),
     defineField({ name: "storyTitle", title: "Título de historia legado de Carta", type: "string", hidden: true, readOnly: true }),
@@ -69,8 +72,22 @@ export const catalogCategory = defineType({
         }),
       ],
     }),
-    defineField({ name: "image", title: "Imagen legado de Carta", type: "image", hidden: true, readOnly: true, options: { hotspot: true } }),
-    defineField({ name: "imageAlt", title: "Descripción legado de Carta", type: "string", hidden: true, readOnly: true }),
+    // La imagen histórica de la categoría sí se reutiliza ahora como cabecera de su card.
+    defineField({
+      name: "image",
+      title: "Foto o cabecera de la categoría",
+      description: "Esta imagen aparece en la card de la categoría dentro de Productos de Origen. Si la dejas vacía, el sitio usa temporalmente la foto del primer producto de la categoría.",
+      type: "image",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "imageAlt",
+      title: "Descripción de la imagen",
+      description: "Describe brevemente qué aparece en la foto para accesibilidad. Ejemplo: “Café tostado y empaque de Raíces”.",
+      type: "string",
+      hidden: ({ parent }) => !parent?.image,
+      validation: (Rule) => Rule.max(180),
+    }),
     defineField({
       name: "order",
       title: "Orden",

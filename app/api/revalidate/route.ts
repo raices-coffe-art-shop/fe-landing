@@ -33,7 +33,6 @@ function revalidateMenu() {
   revalidatePath("/carta");
   revalidatePath("/carta/imprimir");
   revalidatePath("/carta/tv");
-  // Compatibilidad con las rutas antiguas que redirigen a la Carta.
   revalidatePath("/catalogo/carta");
   revalidatePath("/catalogo/imprimir");
   revalidatePath("/catalogo/tv");
@@ -45,13 +44,6 @@ function revalidateCatalogCategory() {
   revalidatePath("/");
   revalidatePath("/productos-de-origen");
   revalidatePath("/productos-de-origen/[slug]", "page");
-  // Durante la transición, Galería de Arte puede leer piezas antiguas que aún viven como catalogItem.
-  revalidatePath("/galeria-de-arte");
-  revalidatePath("/galeria-de-arte/[slug]", "page");
-  // Mientras Carta todavía usa la lectura de compatibilidad del catálogo antiguo.
-  revalidatePath("/carta");
-  revalidatePath("/carta/imprimir");
-  revalidatePath("/carta/tv");
 }
 
 function revalidateCatalogItem(slug?: string | null, previousSlug?: string | null) {
@@ -64,13 +56,6 @@ function revalidateCatalogItem(slug?: string | null, previousSlug?: string | nul
   revalidatePath("/");
   revalidatePath("/productos-de-origen");
   revalidatePath("/productos-de-origen/[slug]", "page");
-  // Compatibilidad temporal con las piezas de arte antiguas antes de ejecutar content:split.
-  revalidatePath("/galeria-de-arte");
-  revalidatePath("/galeria-de-arte/[slug]", "page");
-  // Compatibilidad temporal hasta que los menuItem/menuCategory ya estén migrados.
-  revalidatePath("/carta");
-  revalidatePath("/carta/imprimir");
-  revalidatePath("/carta/tv");
 }
 
 function revalidateArt(slug?: string | null, previousSlug?: string | null) {
@@ -101,7 +86,8 @@ export async function POST(request: NextRequest) {
 
   let parsed: Awaited<ReturnType<typeof parseBody<SanityWebhookBody>>>;
   try {
-    parsed = await parseBody<SanityWebhookBody>(request, secret);
+    // Espera brevemente a que el cambio publicado se propague antes de invalidar.
+    parsed = await parseBody<SanityWebhookBody>(request, secret, true);
   } catch {
     return NextResponse.json({ ok: false, message: "Invalid webhook payload" }, { status: 400 });
   }

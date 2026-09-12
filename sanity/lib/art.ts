@@ -154,16 +154,12 @@ function categoriesFromItems(items: CatalogItem[]): CatalogCategory[] {
 export const getArtItems = cache(async (): Promise<CatalogItem[]> => {
   if (!sanityClient) return legacyArtItems();
   try {
-    const [docs, legacy] = await Promise.all([
-      sanityClient.fetch<SanityArtItem[]>(artItemsQuery, {}, fetchOptions([ART_TAG])),
-      legacyArtItems(),
-    ]);
+    const docs = await sanityClient.fetch<SanityArtItem[]>(artItemsQuery, {}, fetchOptions([ART_TAG]));
     const normalized = (docs || []).map(normalizeItem).filter((item): item is CatalogItem => Boolean(item));
-    // Durante la transición, una pieza ya migrada gana por slug y el resto de
-    // piezas antiguas sigue visible hasta que termine content:split.
-    const migratedSlugs = new Set(normalized.map((item) => item.slug));
-    return [...normalized, ...legacy.filter((item) => !migratedSlugs.has(item.slug))]
-      .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"));
+    if (normalized.length > 0) {
+      return normalized.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"));
+    }
+    return legacyArtItems();
   } catch (error) {
     if (process.env.NODE_ENV !== "production") console.error("[Sanity galería] Falló getArtItems:", error);
     return legacyArtItems();

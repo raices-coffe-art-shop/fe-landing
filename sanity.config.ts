@@ -91,7 +91,7 @@ export default defineConfig({
                           .title("Categorías")
                           .schemaType("catalogCategory")
                           .apiVersion(structureApiVersion)
-                          .filter('_type == "catalogCategory" && slug.current != "arte" && count(*[_type == "catalogItem" && references(^._id) && !defined(migrationDestination)]) > 0'),
+                          .filter('_type == "catalogCategory" && slug.current != "arte" && !(slug.current in *[_type == "menuCategory"].slug.current)'),
                       ),
                   ]),
               ),

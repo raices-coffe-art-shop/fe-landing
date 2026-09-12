@@ -142,19 +142,19 @@ async function legacyMenuItems(): Promise<CatalogItem[]> {
 export const getMenuItems = cache(async (): Promise<CatalogItem[]> => {
   if (!sanityClient) return legacyMenuItems();
   try {
-    const [docs, legacy] = await Promise.all([
-      sanityClient.fetch<SanityMenuItem[]>(menuItemsQuery, {}, fetchOptions([MENU_TAG])),
-      legacyMenuItems(),
-    ]);
-    const migrated = (docs || []).map(normalizeItem).filter((item): item is CatalogItem => Boolean(item));
+    const docs = await sanityClient.fetch<SanityMenuItem[]>(menuItemsQuery, {}, fetchOptions([MENU_TAG]));
+    const menuItems = (docs || []).map(normalizeItem).filter((item): item is CatalogItem => Boolean(item));
 
-    // Durante la separación pueden coexistir elementos nuevos y elementos del
-    // catálogo antiguo todavía pendientes. Se combinan por el ID del documento
-    // original para que la Carta nunca quede incompleta a mitad de migración.
-    const byId = new Map<string, CatalogItem>();
-    for (const item of legacy) byId.set(item.id, item);
-    for (const item of migrated) byId.set(item.id, item);
-    return [...byId.values()].sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"));
+    // Desde que Carta tiene sus propios menuItem/menuCategory, esos documentos
+    // son la única fuente normal de la Carta. El catálogo antiguo se conserva
+    // únicamente como respaldo si la migración no existiera en absoluto; no se
+    // mezcla con Productos de Origen porque eso haría que un producto nuevo
+    // terminara apareciendo también en la Carta.
+    if (menuItems.length > 0) {
+      return menuItems.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "es"));
+    }
+
+    return legacyMenuItems();
   } catch (error) {
     if (process.env.NODE_ENV !== "production") console.error("[Sanity carta] Falló getMenuItems:", error);
     return legacyMenuItems();

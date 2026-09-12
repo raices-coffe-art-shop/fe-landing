@@ -99,7 +99,7 @@ export function RaicesPreloader() {
         />
         <path
           className="raices-preloader-bean-cleft"
-          d="M34.4 13.7C25.7 23.5 24.8 32.8 31.5 42.8C38.4 53.1 35.9 63.4 25.8 72.2"
+          d="M34.4 11.3C25.7 21.1 24.8 30.4 31.5 40.4C38.4 50.7 35.9 61 25.8 69.8"
           pathLength="1"
         />
         <path

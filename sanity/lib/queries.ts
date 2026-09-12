@@ -29,6 +29,7 @@ export const featuredCatalogItemsQuery = defineQuery(`
     coalesce(isActive, true) == true &&
     !defined(migrationDestination) &&
     category->slug.current != "arte" &&
+    !(category->slug.current in *[_type == "menuCategory"].slug.current) &&
     coalesce(isFeatured, false) == true
   ] | order(order asc, _updatedAt desc)[0...12]{
     _id,
@@ -84,7 +85,8 @@ export const catalogItemsQuery = defineQuery(`
     _type == "catalogItem" &&
     coalesce(isActive, true) == true &&
     !defined(migrationDestination) &&
-    category->slug.current != "arte"
+    category->slug.current != "arte" &&
+    !(category->slug.current in *[_type == "menuCategory"].slug.current)
   ]
   | order(order asc, _updatedAt desc){
     _id,
@@ -136,7 +138,11 @@ export const catalogItemsQuery = defineQuery(`
 `);
 
 export const catalogCategoriesQuery = defineQuery(`
-  *[_type == "catalogCategory"] | order(order asc, title asc){
+  *[
+    _type == "catalogCategory" &&
+    slug.current != "arte" &&
+    !(slug.current in *[_type == "menuCategory"].slug.current)
+  ] | order(order asc, title asc){
     _id,
     title,
     "slug": slug.current,
@@ -167,7 +173,8 @@ export const catalogItemBySlugQuery = defineQuery(`
     slug.current == $slug &&
     coalesce(isActive, true) == true &&
     !defined(migrationDestination) &&
-    category->slug.current != "arte"
+    category->slug.current != "arte" &&
+    !(category->slug.current in *[_type == "menuCategory"].slug.current)
   ][0]{
     _id,
     title,
@@ -231,6 +238,7 @@ export const relatedCatalogItemsQuery = defineQuery(`
     coalesce(isActive, true) == true &&
     !defined(migrationDestination) &&
     category->slug.current != "arte" &&
+    !(category->slug.current in *[_type == "menuCategory"].slug.current) &&
     category._ref == $categoryId &&
     slug.current != $slug
   ] | order(isFeatured desc, order asc)[0...6]{
