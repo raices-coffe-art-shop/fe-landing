@@ -68,7 +68,7 @@ export default async function ProductosDeOrigenPage({ searchParams }: ProductosD
           <div className="page-shell catalogo-public-intro origin-boxes-intro">
             <div>
               <p className="eyebrow">Productos disponibles</p>
-              <h2>Explora cada familia en sus boxes y consulta directamente por WhatsApp.</h2>
+              <h2>Explora cada categoría y consulta por WhatsApp.</h2>
             </div>
           </div>
 
