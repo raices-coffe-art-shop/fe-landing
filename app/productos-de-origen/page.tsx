@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
 import { OriginCategoryGrid } from "@/components/OriginCategoryGrid";
+import { OriginOfficialList } from "@/components/OriginOfficialList";
 import { contactChannels } from "@/data/social";
 import { getCatalogCategories, getCatalogItems } from "@/sanity/lib/catalog";
 import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
@@ -58,10 +59,16 @@ export default async function ProductosDeOrigenPage({ searchParams }: ProductosD
         </section>
 
         <section className="catalogo-public-section">
-          <div className="page-shell catalogo-public-intro">
+          <OriginOfficialList
+            items={items}
+            categories={categories}
+            showCatalogPrices={settings.showCatalogPrices}
+          />
+
+          <div className="page-shell catalogo-public-intro origin-boxes-intro">
             <div>
               <p className="eyebrow">Productos disponibles</p>
-              <h2>Categorías de origen para consultar y pedir directamente.</h2>
+              <h2>Explora cada familia en sus boxes y consulta directamente por WhatsApp.</h2>
             </div>
           </div>
 

@@ -1,0 +1,47 @@
+{
+  "version": "francisco-2026-09-17",
+  "category": {
+    "slug": "ceramica-tradicional-de-quinua",
+    "title": "Cerámica Tradicional de Quinua",
+    "description": "Piezas modeladas en arcilla y cocidas a leña por los maestros del taller Cerámica Paccha en Quinua, Ayacucho. Arte tutelar que resguarda la memoria, el hogar y las tradiciones andinas.",
+    "order": 10
+  },
+  "items": [
+    {
+      "slug": "torito-de-quinua",
+      "title": "Torito de Quinua",
+      "subcategory": "Cerámica tradicional",
+      "origin": "Quinua, Ayacucho",
+      "producerOrCreator": "Taller Cerámica Paccha",
+      "shortDescription": "Guardián andino de protección, fertilidad y prosperidad en el hogar.",
+      "story": "Guardián andino de protección, fertilidad y prosperidad en el hogar. Simbolismo de los colores: rojo o terracota, fuerza vital, protección y vínculo con la tierra; blanco, pureza, paz y armonía familiar; negro, sabiduría ancestral y firmeza frente a la adversidad; amarillo u ocre, abundancia, energía solar y prosperidad; verde, esperanza y fertilidad de los campos. Disponibilidad y medidas: consultar pieza.",
+      "image": "public/media/francisco-2026-09/torito-de-quinua.jpg",
+      "mainImageAlt": "Torito de Quinua de cerámica tradicional ayacuchana.",
+      "order": 10
+    },
+    {
+      "slug": "iglesia-de-quinua",
+      "title": "Iglesia de Quinua",
+      "subcategory": "Cerámica tradicional",
+      "origin": "Quinua, Ayacucho",
+      "producerOrCreator": "Taller Cerámica Paccha",
+      "shortDescription": "Pieza tutelar de techo que evoca los templos coloniales andinos; símbolo de bendición, unión comunitaria y resguardo del hogar.",
+      "story": "Pieza tutelar de techo que evoca los templos coloniales andinos; símbolo tradicional de bendición, unión comunitaria y resguardo del hogar. Disponibilidad y medidas: consultar pieza.",
+      "image": "public/media/francisco-2026-09/iglesia-de-quinua.jpg",
+      "mainImageAlt": "Iglesia de Quinua elaborada en cerámica tradicional ayacuchana.",
+      "order": 20
+    },
+    {
+      "slug": "retablo-tradicional",
+      "title": "Retablo Tradicional",
+      "subcategory": "Retablo ayacuchano",
+      "origin": "Quinua, Ayacucho",
+      "producerOrCreator": "Taller Cerámica Paccha",
+      "shortDescription": "Herencia del cajón de San Marcos; caja y figuras modeladas a mano que retratan la fe, el trabajo y las celebraciones del campo ayacuchano.",
+      "story": "Herencia del cajón de San Marcos; caja y figuras modeladas a mano que retratan la fe, el trabajo y las celebraciones del campo ayacuchano. Disponibilidad y medidas: consultar pieza.",
+      "image": "public/media/francisco-2026-09/retablo-tradicional.jpg",
+      "mainImageAlt": "Retablo tradicional ayacuchano con figuras modeladas a mano.",
+      "order": 30
+    }
+  ]
+}

@@ -9,7 +9,7 @@ import { baseOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Galería de Arte",
-  description: "Galería de Arte de Raíces: piezas, artesanía, pinturas y obras vinculadas con Ayacucho, con su procedencia y autoría.",
+  description: "Galería de Arte de Raíces: cerámica tradicional de Quinua y piezas ayacuchanas con procedencia, autoría e historia.",
   alternates: { canonical: "/galeria-de-arte" },
   openGraph: { ...baseOpenGraph, url: "/galeria-de-arte", title: "Galería de Arte — Raíces Café y Cultura" },
 };
@@ -21,6 +21,7 @@ export default async function GaleriaDeArtePage() {
     getSiteSettings(),
   ]);
   const contactHref = getPrimarySocialHref(settings, "whatsapp", contactChannels.whatsappHref);
+  const primaryCategory = categories.find((category) => category.slug === "ceramica-tradicional-de-quinua") || categories[0];
 
   return (
     <>
@@ -30,11 +31,11 @@ export default async function GaleriaDeArtePage() {
           <div className="art-intro page-shell">
             <div>
               <p className="eyebrow light">Galería de Arte</p>
-              <h1>La mirada de Lized también forma parte de la historia de Raíces.</h1>
+              <h1>{primaryCategory?.title || "Cerámica Tradicional de Quinua"}</h1>
             </div>
             <div>
-              <p>Los cuadros de Lized ocupan un lugar central dentro del espacio. En ellos aparecen ideas, memorias y una forma personal de acercarse a Ayacucho.</p>
-              <p>La Galería de Arte reúne también toritos, retablos, nacimientos y otras piezas. Cada elemento puede tener su propia ficha con procedencia, autoría, historia y disponibilidad.</p>
+              <p>{primaryCategory?.description || "Piezas modeladas en arcilla y cocidas a leña por los maestros del Taller Cerámica Paccha en Quinua, Ayacucho. Arte tutelar que resguarda la memoria, el hogar y las tradiciones andinas."}</p>
+              <p>Esta entrega reúne el Torito de Quinua, la Iglesia de Quinua y el Retablo Tradicional, cada uno con su ficha de procedencia, creador, historia y disponibilidad.</p>
             </div>
           </div>
         </section>
@@ -43,7 +44,7 @@ export default async function GaleriaDeArtePage() {
           <div className="page-shell catalogo-public-intro">
             <div>
               <p className="eyebrow">Piezas de la galería</p>
-              <h2>Obras y piezas con una ficha propia, separadas de Productos de Origen.</h2>
+              <h2>Piezas entregadas para esta galería, separadas de Productos de Origen.</h2>
             </div>
             <p>{items.length} {items.length === 1 ? "pieza publicada" : "piezas publicadas"}.</p>
           </div>

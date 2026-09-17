@@ -20,7 +20,7 @@ type LinkItem = {
   tone: "honey" | "green" | "red" | "ink" | "clay" | "coffee";
   external?: boolean;
   icon: "whatsapp" | "catalog" | "people" | "story" | "maps" | "instagram" | "facebook" | "tiktok" | "youtube" | "email" | "other";
-  qrCode: string;
+  qrCode?: string;
   qrImage: string;
 };
 
@@ -95,7 +95,9 @@ const socialMeta: Record<SocialPlatform, Omit<LinkItem, "id" | "label" | "href">
     tone: "honey",
     external: true,
     icon: "whatsapp",
-    qrCode: "/qr-codes/whatsapp.svg",
+    // El número publicado en Sanity puede diferir del fallback local. No uses
+    // un SVG estático que pueda apuntar a otro número: el QR se genera siempre
+    // desde el href real recibido por esta página.
     qrImage: "/qr/andes.svg",
   },
   instagram: {
@@ -115,7 +117,7 @@ const socialMeta: Record<SocialPlatform, Omit<LinkItem, "id" | "label" | "href">
     tone: "green",
     external: true,
     icon: "facebook",
-    qrCode: "/qr-codes/instagram.svg",
+    qrCode: "/qr-codes/facebook.svg",
     qrImage: "/qr/textil.svg",
   },
   tiktok: {
@@ -125,7 +127,7 @@ const socialMeta: Record<SocialPlatform, Omit<LinkItem, "id" | "label" | "href">
     tone: "red",
     external: true,
     icon: "tiktok",
-    qrCode: "/qr-codes/instagram.svg",
+    qrCode: "/qr-codes/tiktok.svg",
     qrImage: "/qr/retablo.svg",
   },
   youtube: {
@@ -135,7 +137,6 @@ const socialMeta: Record<SocialPlatform, Omit<LinkItem, "id" | "label" | "href">
     tone: "clay",
     external: true,
     icon: "youtube",
-    qrCode: "/qr-codes/instagram.svg",
     qrImage: "/qr/ceramica.svg",
   },
   email: {
@@ -144,7 +145,7 @@ const socialMeta: Record<SocialPlatform, Omit<LinkItem, "id" | "label" | "href">
     meta: "Correo directo",
     tone: "ink",
     icon: "email",
-    qrCode: "/qr-codes/whatsapp.svg",
+    qrCode: "/qr-codes/email.svg",
     qrImage: "/qr/plaza.svg",
   },
   other: {
@@ -154,7 +155,6 @@ const socialMeta: Record<SocialPlatform, Omit<LinkItem, "id" | "label" | "href">
     tone: "clay",
     external: true,
     icon: "other",
-    qrCode: "/qr-codes/productos-de-origen.svg",
     qrImage: "/qr/cafe.svg",
   },
 };
@@ -221,7 +221,7 @@ function LinkIcon({ type }: { type: LinkItem["icon"] }) {
 }
 
 function LinkQr({ item }: { item: LinkItem }) {
-  const [qrCode, setQrCode] = useState(item.qrCode);
+  const [qrCode, setQrCode] = useState(item.qrCode ?? "");
 
   useEffect(() => {
     let cancelled = false;
@@ -239,7 +239,7 @@ function LinkQr({ item }: { item: LinkItem }) {
         if (!cancelled) setQrCode(dataUrl);
       })
       .catch(() => {
-        if (!cancelled) setQrCode(item.qrCode);
+        if (!cancelled) setQrCode(item.qrCode ?? "");
       });
 
     return () => {
@@ -249,7 +249,11 @@ function LinkQr({ item }: { item: LinkItem }) {
 
   return (
     <div className="link-qr" aria-label={`Código QR para ${item.label}`}>
-      <img className="link-qr-code" src={qrCode} alt="" />
+      {qrCode ? (
+        <img className="link-qr-code" src={qrCode} alt="" />
+      ) : (
+        <span className="link-qr-code link-qr-placeholder" aria-hidden="true">QR</span>
+      )}
       <span className="link-qr-image">
         <img src={item.qrImage} alt="" />
       </span>

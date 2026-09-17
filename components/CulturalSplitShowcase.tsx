@@ -1,17 +1,43 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { EditorialImage } from "@/components/EditorialImage";
-import { artShopSlides as slides } from "@/data/art";
+import { artShopSlides as fallbackSlides } from "@/data/art";
+import type { CatalogItem } from "@/sanity/lib/catalogTypes";
 
-export function CulturalSplitShowcase() {
+type CulturalSplitShowcaseProps = {
+  items?: CatalogItem[];
+};
+
+export function CulturalSplitShowcase({ items = [] }: CulturalSplitShowcaseProps) {
+  const slides = useMemo(() => {
+    const visibleItems = items.filter((item) => item.isActive !== false).slice(0, 4);
+    if (!visibleItems.length) return fallbackSlides;
+
+    return visibleItems.map((item, index) => ({
+      slug: item.slug,
+      number: String(index + 1).padStart(2, "0"),
+      eyebrow: item.subcategory || item.category.title,
+      title: item.title,
+      text: item.shortDescription,
+      left: item.mainImage.src,
+      leftAlt: item.mainImage.alt,
+      right: item.gallery[0]?.src || item.mainImage.src,
+      rightAlt: item.gallery[0]?.alt || item.mainImage.alt,
+      status: "sanity",
+    }));
+  }, [items]);
+
   const [active, setActive] = useState(0);
-  const slide = slides[active];
+  const safeActive = Math.min(active, Math.max(0, slides.length - 1));
+  const slide = slides[safeActive];
+
+  if (!slide) return null;
 
   return (
     <div className="cultural-split-showcase page-shell">
-      <div className="split-stage" key={slide.number}>
+      <div className="split-stage" key={slide.slug}>
         <div className="split-panel split-panel-left">
           <EditorialImage src={slide.left} alt={slide.leftAlt} />
           <div className="split-panel-copy">
@@ -24,18 +50,18 @@ export function CulturalSplitShowcase() {
           <EditorialImage src={slide.right} alt={slide.rightAlt} />
           <div className="split-panel-text">
             <p>{slide.text}</p>
-            <Link href="/galeria-de-arte">Ver Galería de Arte ↗</Link>
+            <Link href={`/galeria-de-arte/${slide.slug}`}>Ver pieza ↗</Link>
           </div>
         </div>
       </div>
 
-      <div className="split-pagination" role="tablist" aria-label="Bloques de arte en Raíces">
+      <div className="split-pagination" role="tablist" aria-label="Piezas de la Galería de Arte de Raíces">
         {slides.map((item, index) => (
           <button
-            key={item.number}
+            key={item.slug}
             role="tab"
-            aria-selected={active === index}
-            className={active === index ? "is-active" : ""}
+            aria-selected={safeActive === index}
+            className={safeActive === index ? "is-active" : ""}
             onClick={() => setActive(index)}
           >
             <span className="split-nav-number">{item.number}</span>
@@ -43,53 +69,20 @@ export function CulturalSplitShowcase() {
               <img src={item.left} alt="" loading="lazy" decoding="async" />
               <img src={item.right} alt="" loading="lazy" decoding="async" />
             </span>
-            <b>{item.eyebrow}</b>
+            <b>{item.title}</b>
           </button>
         ))}
       </div>
 
       <div className="art-mobile-story">
-        <div className="art-mobile-sticky">
-          <div className="art-mobile-visual" aria-label={`Obra ${slides[0].number}: ${slides[0].eyebrow}`}>
-            {slides.map((item, index) => (
-              <img
-                key={item.number}
-                src={item.left}
-                alt={item.leftAlt}
-                loading="lazy"
-                decoding="async"
-                className={index === 0 ? "is-active" : ""}
-              />
-            ))}
-            <div className="art-mobile-counter" aria-hidden="true">
-              <b>{slides[0].number}</b>
-              <span>/ {slides.length.toString().padStart(2, "0")}</span>
-            </div>
-          </div>
-
-          <div key={slides[0].number} className="art-mobile-copy" aria-live="polite">
-            <span>{slides[0].eyebrow}</span>
-            <h3>{slides[0].title}</h3>
-            <p>{slides[0].text}</p>
-            <Link href="/galeria-de-arte">Ver Galería de Arte ↗</Link>
-          </div>
-
-          <div className="art-mobile-progress" aria-hidden="true">
-            <span>Galería de Arte</span>
-            <i><b /></i>
-          </div>
-        </div>
-        <div className="art-mobile-steps" aria-hidden="true">
-          {slides.map((item) => <div key={item.number} />)}
-        </div>
-        <div className="art-mobile-reduced-list" aria-label="Bloques de arte en Raíces">
+        <div className="art-mobile-reduced-list" aria-label="Piezas de la Galería de Arte de Raíces">
           {slides.map((item) => (
-            <Link key={item.number} className="art-mobile-piece" href="/galeria-de-arte">
+            <Link key={item.slug} className="art-mobile-piece" href={`/galeria-de-arte/${item.slug}`}>
               <img src={item.left} alt={item.leftAlt} loading="lazy" decoding="async" />
               <span>{item.number} · {item.eyebrow}</span>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
-              <strong>Ver Galería de Arte ↗</strong>
+              <strong>Ver pieza ↗</strong>
             </Link>
           ))}
         </div>

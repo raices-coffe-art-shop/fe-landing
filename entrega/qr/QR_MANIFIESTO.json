@@ -1,0 +1,77 @@
+[
+  {
+    "slug": "sitio-web",
+    "label": "Sitio web",
+    "url": "https://raicescoffeeart.com/"
+  },
+  {
+    "slug": "todos-los-links",
+    "label": "Todos los links",
+    "url": "https://raicescoffeeart.com/links"
+  },
+  {
+    "slug": "carta",
+    "label": "La Carta",
+    "url": "https://raicescoffeeart.com/carta"
+  },
+  {
+    "slug": "productos-de-origen",
+    "label": "Productos de Origen",
+    "url": "https://raicescoffeeart.com/productos-de-origen"
+  },
+  {
+    "slug": "galeria-de-arte",
+    "label": "Galería de Arte",
+    "url": "https://raicescoffeeart.com/galeria-de-arte"
+  },
+  {
+    "slug": "historia",
+    "label": "Nuestra Historia",
+    "url": "https://raicescoffeeart.com/#historia"
+  },
+  {
+    "slug": "personas",
+    "label": "Personas",
+    "url": "https://raicescoffeeart.com/#personas"
+  },
+  {
+    "slug": "publicaciones",
+    "label": "Publicaciones",
+    "url": "https://raicescoffeeart.com/publicaciones"
+  },
+  {
+    "slug": "visitanos",
+    "label": "Visítanos",
+    "url": "https://raicescoffeeart.com/#visita"
+  },
+  {
+    "slug": "google-maps",
+    "label": "Google Maps / Cómo llegar",
+    "url": "https://www.google.com/maps?q=-12.0854495,-77.0831729"
+  },
+  {
+    "slug": "whatsapp",
+    "label": "WhatsApp",
+    "url": "https://wa.me/992383843"
+  },
+  {
+    "slug": "tiktok",
+    "label": "TikTok",
+    "url": "https://www.tiktok.com/@qalisaludable11"
+  },
+  {
+    "slug": "email",
+    "label": "Correo electrónico",
+    "url": "mailto:raicescoffeeartshop@gmail.com"
+  },
+  {
+    "slug": "instagram",
+    "label": "Instagram",
+    "url": "https://www.instagram.com/raicescoffeeartshop/"
+  },
+  {
+    "slug": "facebook",
+    "label": "Facebook",
+    "url": "https://www.facebook.com/profile.php?id=100089073728506&locale=es_LA"
+  }
+]

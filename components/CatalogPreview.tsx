@@ -34,7 +34,7 @@ export async function CatalogPreview() {
           <h2>Productos con nombre, procedencia y una historia detrás.</h2>
         </div>
         <div className="catalog-title-side">
-          <p>Explora cafés, alimentos, postres, pinturas y piezas seleccionadas. Cada ficha explica qué es, de dónde viene y cómo consultarlo.</p>
+          <p>Explora café, cacao, miel, quesos, panadería y otros productos de origen. Cada ficha explica qué es, de dónde viene y cómo consultarlo.</p>
           <Link className="catalog-title-cta" href="/productos-de-origen">Ver Productos de Origen <span aria-hidden="true">↗</span></Link>
         </div>
       </div>

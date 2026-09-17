@@ -36,7 +36,11 @@
     "menu:split:dry": "node --env-file=.env.local scripts/migrate-menu-only.mjs --dry-run",
     "menu:split": "node --env-file=.env.local scripts/migrate-menu-only.mjs",
     "menu:split:user:dry": "sanity exec scripts/migrate-menu-user-token.mjs --with-user-token -- --dry-run",
-    "menu:split:user": "sanity exec scripts/migrate-menu-user-token.mjs --with-user-token"
+    "menu:split:user": "sanity exec scripts/migrate-menu-user-token.mjs --with-user-token",
+    "francisco:update:dry": "node --env-file=.env.local scripts/update-francisco-2026-09.mjs --dry-run",
+    "francisco:update": "node --env-file=.env.local scripts/update-francisco-2026-09.mjs",
+    "francisco:verify": "node --env-file=.env.local scripts/verify-francisco-2026-09.mjs",
+    "francisco:audit:static": "node scripts/audit-francisco-static.mjs"
   },
   "dependencies": {
     "lenis": "^1.3.25",

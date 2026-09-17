@@ -15,6 +15,7 @@ import { ContinuousRoots } from "@/components/ContinuousRoots";
 import { SocialPurposeSection } from "@/components/SocialPurposeSection";
 import { contactChannels } from "@/data/social";
 import { getPrimarySocialHref, getSiteSettings } from "@/sanity/lib/siteSettings";
+import { getArtCategories, getArtItems } from "@/sanity/lib/art";
 import { JsonLd } from "@/components/JsonLd";
 import { cafeJsonLd } from "@/lib/structuredData";
 import { baseOpenGraph } from "@/lib/seo";
@@ -57,7 +58,12 @@ function VisitSocialIcon({ platform }: { platform: "whatsapp" | "instagram" | "f
 }
 
 export default async function HomePage() {
-  const settings = await getSiteSettings();
+  const [settings, artItems, artCategories] = await Promise.all([
+    getSiteSettings(),
+    getArtItems(),
+    getArtCategories(),
+  ]);
+  const primaryArtCategory = artCategories.find((category) => category.slug === "ceramica-tradicional-de-quinua") || artCategories[0];
   const whatsappHref = getPrimarySocialHref(settings, "whatsapp", contactChannels.whatsappHref);
   const instagramHref = getPrimarySocialHref(settings, "instagram", contactChannels.instagram);
   const facebookHref = getPrimarySocialHref(settings, "facebook", contactChannels.facebook);
@@ -113,12 +119,12 @@ export default async function HomePage() {
             <div className="art-intro page-shell">
               <div>
                 <p className="eyebrow light">Galería de Arte</p>
-                <h2>La mirada de Lized también forma parte de la historia de Raíces.</h2>
+                <h2>{primaryArtCategory?.title || "Cerámica Tradicional de Quinua"}</h2>
               </div>
-              <p>Los cuadros de Lized ocupan un lugar central dentro del espacio. En ellos aparecen ideas, memorias y una forma personal de acercarse a Ayacucho.</p>
+              <p>{primaryArtCategory?.description || "Piezas modeladas en arcilla y cocidas a leña por los maestros del Taller Cerámica Paccha en Quinua, Ayacucho. Arte tutelar que resguarda la memoria, el hogar y las tradiciones andinas."}</p>
             </div>
 
-            <CulturalSplitShowcase />
+            <CulturalSplitShowcase items={artItems} />
           </section>
 
           <CatalogPreview />

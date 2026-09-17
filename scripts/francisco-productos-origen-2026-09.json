@@ -1,0 +1,487 @@
+{
+  "version": "francisco-2026-09-17",
+  "categories": [
+    {
+      "slug": "cafe-de-origen",
+      "title": "Café de Origen",
+      "description": "Café Ayacuchano de especialidad de la Finca La Fortuna, en Ayna - San Francisco, VRAEM.",
+      "order": 10,
+      "image": "public/media/francisco-2026-09/cafe-de-origen.jpg",
+      "imageAlt": "Paquetes de Café Ayacuchano en distintas presentaciones."
+    },
+    {
+      "slug": "chocolateria-cacao-artesanal",
+      "title": "Chocolatería & Cacao Artesanal",
+      "description": "Chocolates finos y derivados artesanales de cacao: barras, mermelada, jalea, polvo y nibs.",
+      "order": 20,
+      "image": "public/media/francisco-2026-09/chocolates-en-barra.jpg",
+      "imageAlt": "Barras de chocolate y productos de cacao exhibidos en Raíces."
+    },
+    {
+      "slug": "apicultura",
+      "title": "Apicultura",
+      "description": "Miel de abeja pura y polen silvestre vinculados al trabajo apícola de origen.",
+      "order": 30,
+      "image": "public/media/francisco-2026-09/miel-polen.jpg",
+      "imageAlt": "Miel y polen presentados por Raíces."
+    },
+    {
+      "slug": "quesos-artesanales",
+      "title": "Quesos Artesanales",
+      "description": "Queso fresco pasteurizado y quesos aromatizados disponibles por molde o por peso.",
+      "order": 40,
+      "image": "public/media/francisco-2026-09/quesos-artesanales.jpg",
+      "imageAlt": "Quesos frescos pasteurizados y quesos aromatizados."
+    },
+    {
+      "slug": "panaderia-granos-andinos",
+      "title": "Panadería Tradicional & Granos Andinos",
+      "description": "Pan chapla, tanta wawa, cancha paccho y mix de frutos secos dentro de la selección tradicional de Raíces.",
+      "order": 50,
+      "image": "public/media/francisco-2026-09/panaderia-tradicional-referencial.webp",
+      "imageAlt": "Imagen referencial del proceso artesanal de panadería tradicional de Ayacucho."
+    }
+  ],
+  "products": [
+    {
+      "slug": "cafe-especialidad-tostado-500g",
+      "title": "Café de Especialidad Tostado",
+      "categorySlug": "cafe-de-origen",
+      "presentations": [
+        "Bolsa 500 g"
+      ],
+      "price": 55,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayna - San Francisco, VRAEM",
+      "region": "Ayacucho",
+      "shortDescription": "Café Ayacuchano de especialidad, disponible en grano entero o molido.",
+      "image": "public/media/francisco-2026-09/cafe-de-origen.jpg",
+      "mainImageAlt": "Café de Especialidad Tostado",
+      "producerOrCreator": "Finca La Fortuna de Pedro Ñahui Atao y familia",
+      "inquiryMessage": "Hola, quisiera consultar por Café de Especialidad Tostado.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": true,
+      "order": 10
+    },
+    {
+      "slug": "cafe-especialidad-tostado-250g",
+      "title": "Café de Especialidad Tostado",
+      "categorySlug": "cafe-de-origen",
+      "presentations": [
+        "Bolsa 250 g"
+      ],
+      "price": 30,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayna - San Francisco, VRAEM",
+      "region": "Ayacucho",
+      "shortDescription": "Café Ayacuchano de especialidad, disponible en grano entero o molido.",
+      "image": "public/media/francisco-2026-09/cafe-de-origen.jpg",
+      "mainImageAlt": "Café de Especialidad Tostado",
+      "producerOrCreator": "Finca La Fortuna de Pedro Ñahui Atao y familia",
+      "inquiryMessage": "Hola, quisiera consultar por Café de Especialidad Tostado.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 20
+    },
+    {
+      "slug": "cafe-verde-250g",
+      "title": "Café Verde / En Grano",
+      "categorySlug": "cafe-de-origen",
+      "presentations": [
+        "Bolsa 250 g"
+      ],
+      "price": 20,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayna - San Francisco, VRAEM",
+      "region": "Ayacucho",
+      "shortDescription": "Café seleccionado sin tostar de Café Ayacuchano.",
+      "image": "public/media/francisco-2026-09/cafe-de-origen.jpg",
+      "mainImageAlt": "Café Verde / En Grano",
+      "producerOrCreator": "Finca La Fortuna de Pedro Ñahui Atao y familia",
+      "inquiryMessage": "Hola, quisiera consultar por Café Verde / En Grano.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 30
+    },
+    {
+      "slug": "chocolates-finos-45g",
+      "title": "Chocolates Finos",
+      "categorySlug": "chocolateria-cacao-artesanal",
+      "presentations": [
+        "Barra 45 g"
+      ],
+      "price": 10,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "VRAEM",
+      "region": "Ayacucho",
+      "shortDescription": "Chocolate de alto porcentaje de cacao y panela. Sabores indicados por Francisco: Capuchino, Stevia, Aguaymanto, Kiwicha y Nibs.",
+      "image": "public/media/francisco-2026-09/chocolates-en-barra.jpg",
+      "mainImageAlt": "Chocolates Finos",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Chocolates Finos.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": true,
+      "order": 40
+    },
+    {
+      "slug": "chocolates-finos-70g",
+      "title": "Chocolates Finos",
+      "categorySlug": "chocolateria-cacao-artesanal",
+      "presentations": [
+        "Barra 70 g"
+      ],
+      "price": 18,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "VRAEM",
+      "region": "Ayacucho",
+      "shortDescription": "Chocolate de alto porcentaje de cacao y panela. Sabores indicados por Francisco: Capuchino, Stevia, Aguaymanto, Kiwicha y Nibs.",
+      "image": "public/media/francisco-2026-09/chocolates-en-barra.jpg",
+      "mainImageAlt": "Chocolates Finos",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Chocolates Finos.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 50
+    },
+    {
+      "slug": "chocolates-finos-stevia-100g",
+      "title": "Chocolates Finos — Stevia",
+      "categorySlug": "chocolateria-cacao-artesanal",
+      "presentations": [
+        "Barra 100 g"
+      ],
+      "price": 27,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "VRAEM",
+      "region": "Ayacucho",
+      "shortDescription": "Barra grande de chocolate, endulzada con stevia.",
+      "image": "public/media/francisco-2026-09/chocolates-en-barra.jpg",
+      "mainImageAlt": "Chocolates Finos — Stevia",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Chocolates Finos — Stevia.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 60
+    },
+    {
+      "slug": "mermelada-cacao-220g",
+      "title": "Mermelada Artesanal de Cacao",
+      "categorySlug": "chocolateria-cacao-artesanal",
+      "presentations": [
+        "Frasco 220 g"
+      ],
+      "price": 25,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "VRAEM",
+      "region": "Ayacucho",
+      "shortDescription": "Mermelada artesanal elaborada a partir de cacao.",
+      "image": "public/media/francisco-2026-09/mermelada-jalea-cacao.jpg",
+      "mainImageAlt": "Mermelada Artesanal de Cacao",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Mermelada Artesanal de Cacao.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 70
+    },
+    {
+      "slug": "jalea-cacao-300g",
+      "title": "Jalea Concentrada de Cacao",
+      "categorySlug": "chocolateria-cacao-artesanal",
+      "presentations": [
+        "Frasco 300 g"
+      ],
+      "price": 52,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "VRAEM",
+      "region": "Ayacucho",
+      "shortDescription": "Jalea concentrada de cacao.",
+      "image": "public/media/francisco-2026-09/mermelada-jalea-cacao.jpg",
+      "mainImageAlt": "Jalea Concentrada de Cacao",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Jalea Concentrada de Cacao.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 80
+    },
+    {
+      "slug": "polvo-cacao-250g",
+      "title": "Polvo de Cacao",
+      "categorySlug": "chocolateria-cacao-artesanal",
+      "presentations": [
+        "Bolsa 250 g"
+      ],
+      "price": null,
+      "showPrice": false,
+      "currency": "PEN",
+      "origin": "VRAEM",
+      "region": "Ayacucho",
+      "shortDescription": "Polvo de cacao mostrado en las fotografías enviadas por Francisco. Precio pendiente de confirmación.",
+      "image": "public/media/francisco-2026-09/polvo-nibs-cacao.jpg",
+      "mainImageAlt": "Polvo de Cacao",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Polvo de Cacao.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 90
+    },
+    {
+      "slug": "nibs-cacao-250g",
+      "title": "Nibs de Cacao",
+      "categorySlug": "chocolateria-cacao-artesanal",
+      "presentations": [
+        "Bolsa 250 g"
+      ],
+      "price": null,
+      "showPrice": false,
+      "currency": "PEN",
+      "origin": "VRAEM",
+      "region": "Ayacucho",
+      "shortDescription": "Nibs de cacao mostrados en las fotografías enviadas por Francisco. Precio pendiente de confirmación.",
+      "image": "public/media/francisco-2026-09/polvo-nibs-cacao.jpg",
+      "mainImageAlt": "Nibs de Cacao",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Nibs de Cacao.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 100
+    },
+    {
+      "slug": "miel-abeja-500g",
+      "title": "Miel de Abeja Pura de Valle",
+      "categorySlug": "apicultura",
+      "presentations": [
+        "Frasco 500 g"
+      ],
+      "price": 48,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayacucho",
+      "region": null,
+      "shortDescription": "Miel de abeja pura de valle.",
+      "image": "public/media/francisco-2026-09/miel-polen.jpg",
+      "mainImageAlt": "Miel de Abeja Pura de Valle",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Miel de Abeja Pura de Valle.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": true,
+      "order": 110
+    },
+    {
+      "slug": "miel-abeja-250g",
+      "title": "Miel de Abeja Pura de Valle",
+      "categorySlug": "apicultura",
+      "presentations": [
+        "Frasco 250 g"
+      ],
+      "price": 22,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayacucho",
+      "region": null,
+      "shortDescription": "Miel de abeja pura de valle.",
+      "image": "public/media/francisco-2026-09/miel-polen.jpg",
+      "mainImageAlt": "Miel de Abeja Pura de Valle",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Miel de Abeja Pura de Valle.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 120
+    },
+    {
+      "slug": "polen-silvestre-250g",
+      "title": "Polen Silvestre",
+      "categorySlug": "apicultura",
+      "presentations": [
+        "Frasco 250 g"
+      ],
+      "price": 40,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayacucho",
+      "region": null,
+      "shortDescription": "Polen silvestre de origen.",
+      "image": "public/media/francisco-2026-09/miel-polen.jpg",
+      "mainImageAlt": "Polen Silvestre",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Polen Silvestre.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 130
+    },
+    {
+      "slug": "queso-fresco-pasteurizado",
+      "title": "Queso Fresco Pasteurizado",
+      "categorySlug": "quesos-artesanales",
+      "presentations": [
+        "Molde entero"
+      ],
+      "price": 38,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayacucho",
+      "region": null,
+      "shortDescription": "Queso fresco pasteurizado. También disponible por peso desde 100 g.",
+      "image": "public/media/francisco-2026-09/quesos-artesanales.jpg",
+      "mainImageAlt": "Queso Fresco Pasteurizado",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Queso Fresco Pasteurizado.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": true,
+      "order": 140
+    },
+    {
+      "slug": "queso-aromatizado",
+      "title": "Queso Aromatizado",
+      "categorySlug": "quesos-artesanales",
+      "presentations": [
+        "Molde entero"
+      ],
+      "price": 41,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayacucho",
+      "region": null,
+      "shortDescription": "Queso aromatizado con huacatay, orégano o aceituna. También disponible por peso desde 100 g.",
+      "image": "public/media/francisco-2026-09/quesos-artesanales.jpg",
+      "mainImageAlt": "Queso Aromatizado",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Queso Aromatizado.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 150
+    },
+    {
+      "slug": "pan-chapla-tradicional",
+      "title": "Pan Chapla Tradicional",
+      "categorySlug": "panaderia-granos-andinos",
+      "presentations": [
+        "Bolsa x 3 unidades"
+      ],
+      "price": 2,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayacucho",
+      "region": null,
+      "shortDescription": "Pan chapla tradicional.",
+      "image": "public/media/francisco-2026-09/panaderia-tradicional-referencial.webp",
+      "mainImageAlt": "Pan Chapla Tradicional",
+      "producerOrCreator": "Karen Córdova / Panadería Kullany",
+      "inquiryMessage": "Hola, quisiera consultar por Pan Chapla Tradicional.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": true,
+      "order": 160
+    },
+    {
+      "slug": "tanta-wawa-unidad",
+      "title": "Tanta Wawa",
+      "categorySlug": "panaderia-granos-andinos",
+      "presentations": [
+        "1 unidad"
+      ],
+      "price": 4,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayacucho",
+      "region": null,
+      "shortDescription": "Tanta wawa disponible por temporada y fiestas especiales.",
+      "image": "public/media/francisco-2026-09/panaderia-tradicional-referencial.webp",
+      "mainImageAlt": "Tanta Wawa",
+      "producerOrCreator": "Karen Córdova / Panadería Kullany",
+      "inquiryMessage": "Hola, quisiera consultar por Tanta Wawa.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 170
+    },
+    {
+      "slug": "tanta-wawa-x3",
+      "title": "Tanta Wawa",
+      "categorySlug": "panaderia-granos-andinos",
+      "presentations": [
+        "Bolsa x 3 unidades"
+      ],
+      "price": 10,
+      "showPrice": true,
+      "currency": "PEN",
+      "origin": "Ayacucho",
+      "region": null,
+      "shortDescription": "Tanta wawa disponible por temporada y fiestas especiales.",
+      "image": "public/media/francisco-2026-09/panaderia-tradicional-referencial.webp",
+      "mainImageAlt": "Tanta Wawa",
+      "producerOrCreator": "Karen Córdova / Panadería Kullany",
+      "inquiryMessage": "Hola, quisiera consultar por Tanta Wawa.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 180
+    },
+    {
+      "slug": "cancha-paccho-tradicional",
+      "title": "Cancha Paccho Tradicional",
+      "categorySlug": "panaderia-granos-andinos",
+      "presentations": [
+        "Bolsa 200 g / 250 g"
+      ],
+      "price": null,
+      "showPrice": false,
+      "currency": "PEN",
+      "origin": "Ayacucho",
+      "region": null,
+      "shortDescription": "Cancha Paccho tradicional. El documento entregado por Francisco no consigna precio.",
+      "image": "public/media/francisco-2026-09/panaderia-tradicional-referencial.webp",
+      "mainImageAlt": "Cancha Paccho Tradicional",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Cancha Paccho Tradicional.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 190
+    },
+    {
+      "slug": "mix-frutos-secos",
+      "title": "Mix de Frutos Secos",
+      "categorySlug": "panaderia-granos-andinos",
+      "presentations": [
+        "Bolsa 150 g / 200 g"
+      ],
+      "price": null,
+      "showPrice": false,
+      "currency": "PEN",
+      "origin": "Ayacucho",
+      "region": null,
+      "shortDescription": "Mix de frutos secos. El documento entregado por Francisco no consigna precio.",
+      "image": "public/media/francisco-2026-09/panaderia-tradicional-referencial.webp",
+      "mainImageAlt": "Mix de Frutos Secos",
+      "producerOrCreator": null,
+      "inquiryMessage": "Hola, quisiera consultar por Mix de Frutos Secos.",
+      "availability": true,
+      "isActive": true,
+      "isFeatured": false,
+      "order": 200
+    }
+  ]
+}
