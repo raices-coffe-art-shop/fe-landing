@@ -238,7 +238,7 @@ export function CatalogCollection({
           <p>
             {normalizedSearch
               ? "Prueba con una palabra más corta, otra categoría o revisa la escritura."
-              : "Prueba otra categoría o vuelve pronto. El contenido se administra desde Sanity Studio."}
+              : "Prueba otra categoría o vuelve pronto para descubrir nuevos productos."}
           </p>
           {(activeCategory !== "todos" || normalizedSearch) && (
             <button type="button" onClick={clearFilters}>Mostrar todos los Productos de Origen</button>

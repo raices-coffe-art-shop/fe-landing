@@ -48,7 +48,7 @@ export async function CatalogPreview() {
       />
 
       <div className="catalog-closing page-shell">
-        <p>Los Productos de Origen cambian con las cosechas, las piezas disponibles y las historias que pueden documentarse con claridad.</p>
+        <p>Descubre los sabores de origen y las historias detrás de los productos que llegan a Raíces.</p>
         <Link href="/productos-de-origen">Explorar todos los Productos de Origen <span aria-hidden="true">↗</span></Link>
       </div>
     </section>

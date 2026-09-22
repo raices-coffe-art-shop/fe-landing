@@ -48,11 +48,11 @@ export default async function ProductosDeOrigenPage({ searchParams }: ProductosD
             </div>
             <div className="catalogo-hero-aside">
               <p className="catalogo-hero-note">
-                Explora cafés, alimentos y productos seleccionados. Cada ficha registra lo que se conoce con claridad sobre su origen y proceso.
+                Descubre cafés, alimentos y productos de origen, con sus sabores, procedencia e historias.
               </p>
               <dl>
-                <div><dt>Artículos publicados</dt><dd>{items.length}</dd></div>
-                <div><dt>Categorías visibles</dt><dd>{Math.min(categories.length, 6)}</dd></div>
+                <div><dt>Productos</dt><dd>{items.length}</dd></div>
+                <div><dt>Categorías</dt><dd>{Math.min(categories.length, 6)}</dd></div>
               </dl>
             </div>
           </div>

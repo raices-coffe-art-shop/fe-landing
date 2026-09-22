@@ -30,8 +30,8 @@ export function OriginOfficialList({ items, categories, showCatalogPrices }: Ori
           <h2 id="origin-official-list-title">Productos de Origen</h2>
         </div>
         <p>
-          Presentaciones y precios vigentes según la información entregada para esta sección.
-          Cuando no se proporcionó un precio, se indica <strong>Consultar</strong>.
+          Descubre nuestros productos, sus presentaciones y precios.
+          Para conocer los precios no publicados, selecciona <strong>Consultar</strong>.
         </p>
       </div>
 
@@ -68,8 +68,8 @@ export function OriginOfficialList({ items, categories, showCatalogPrices }: Ori
                             {item.producerOrCreator && <small>{item.producerOrCreator}</small>}
                             {item.shortDescription && <small>{item.shortDescription}</small>}
                           </td>
-                          <td>{presentation}</td>
-                          <td><strong>{displayPrice ? formattedPrice : "Consultar"}</strong></td>
+                          <td data-label="Presentación">{presentation}</td>
+                          <td data-label="Precio"><strong>{displayPrice ? formattedPrice : "Consultar"}</strong></td>
                         </tr>
                       );
                     })}

@@ -76,7 +76,7 @@ export function ArtCollection({ items, categories, contactHref, showPrices }: { 
         <div className="catalog-empty page-shell" role="status">
           <p className="eyebrow">Sin resultados</p>
           <h3>No encontramos una pieza con esos filtros.</h3>
-          <p>Prueba con otra palabra o categoría. Las piezas se administran desde Galería de Arte en Sanity Studio.</p>
+          <p>Prueba con otra palabra o categoría para descubrir más piezas de la galería.</p>
           <button type="button" onClick={clearFilters}>Mostrar toda la Galería de Arte</button>
         </div>
       )}

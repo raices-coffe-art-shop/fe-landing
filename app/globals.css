@@ -13826,3 +13826,66 @@ img { max-width: 100%; }
   font-weight: 800;
   letter-spacing: .16em;
 }
+
+/* Productos de Origen: conservar tabla de escritorio y ofrecer fichas legibles
+   en móvil sin obligar al documento a desplazarse horizontalmente. */
+.origin-official-list,
+.origin-official-list-groups,
+.origin-official-group,
+.origin-official-table-wrap { min-width: 0; max-width: 100%; }
+
+@media (max-width: 820px) {
+  .origin-official-list-heading { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .origin-official-table-wrap { overflow-x: visible; }
+  .origin-official-table { display: block; min-width: 0; width: 100%; table-layout: fixed; }
+  /* Cabecera verde original, reordenada para que quepa sin scroll en móvil.
+     Primera línea: producto; segunda: presentación y precio, alineadas
+     con las columnas de valores de cada ficha. */
+  .origin-official-table thead { display: block; width: 100%; background: #294b3b; }
+  .origin-official-table thead tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+    width: 100%; min-width: 0; column-gap: 12px;
+  }
+  .origin-official-table thead th {
+    display: block; min-width: 0; margin: 0; border: 0;
+    background: transparent; color: #f6f2e9;
+    font-size: .69rem; line-height: 1.35;
+  }
+  .origin-official-table thead th:first-child {
+    grid-column: 1 / -1; padding: 11px 15px 8px;
+    border-bottom: 1px solid rgba(246,242,233,.22);
+  }
+  .origin-official-table thead th:nth-child(2) { padding: 8px 0 10px 15px; }
+  .origin-official-table thead th:last-child { padding: 8px 15px 10px 0; text-align: right; }
+  .origin-official-table tbody { display: block; min-width: 0; }
+  .origin-official-table tbody tr {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+    column-gap: 12px; padding: 13px 15px; border-bottom: 1px solid rgba(43, 33, 28, .13);
+  }
+  .origin-official-table tbody tr:last-child { border-bottom: 0; }
+  .origin-official-table td {
+    display: block; min-width: 0; padding: 0; border: 0;
+    overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5;
+  }
+  .origin-official-table td:first-child { grid-column: 1 / -1; margin-bottom: 11px; }
+  .origin-official-table td:first-child small { max-width: none; }
+  /* Evitar repetir las etiquetas: ahora las aporta la cabecera verde. */
+  .origin-official-table td[data-label]::before { content: none; }
+  .origin-official-table td:last-child { text-align: right; }
+  .origin-official-table td:last-child strong { display: inline-block; white-space: nowrap; }
+}
+
+/* Galería: en la vista de dos columnas, dar a la procedencia su propia línea
+   y evitar que la categoría compita con ella por el ancho de cada tarjeta. */
+@media (max-width: 760px) {
+  .art-catalog-section .catalog-mobile-cols-2 .product-copy > .catalog-card-meta {
+    display: flex; flex-direction: column; gap: 2px; align-items: flex-start;
+    min-height: 0; max-height: none; font-size: 10px; line-height: 1.45;
+  }
+  .art-catalog-section .catalog-mobile-cols-2 .catalog-card-meta span {
+    display: block; max-width: 100%; overflow: visible; overflow-wrap: anywhere;
+    -webkit-line-clamp: unset;
+  }
+  .art-catalog-section .catalog-mobile-cols-2 .catalog-card-meta span:last-child { text-align: left; }
+}

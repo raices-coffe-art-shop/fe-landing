@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
+import { publicCatalogCopy, publicCatalogPortableText } from "@/lib/publicCatalogCopy";
 import type { SanityImageSource } from "@sanity/image-url";
 import {
   fallbackCatalogCategories,
@@ -210,8 +211,8 @@ function normalizeItem(item: SanityCatalogItem): CatalogItem | null {
       if (!region || region.toLocaleLowerCase("es") === origin.toLocaleLowerCase("es")) return undefined;
       return region;
     })(),
-    shortDescription: item.shortDescription?.trim() || `Conoce más sobre ${title}.`,
-    description: Array.isArray(item.description) ? item.description : [],
+    shortDescription: publicCatalogCopy(item.shortDescription?.trim() || `Conoce más sobre ${title}.`),
+    description: Array.isArray(item.description) ? publicCatalogPortableText(item.description) : [],
     mainImage: normalizeImage(item.mainImage, item.mainImageAlt?.trim() || title),
     gallery: Array.isArray(item.gallery)
       ? item.gallery.map((image) => normalizeImage(image as SanityImageSource, image.alt?.trim() || title, 1000, 1200))
@@ -235,7 +236,10 @@ function normalizeItem(item: SanityCatalogItem): CatalogItem | null {
     isActive: item.isActive !== false,
     isFeatured: item.isFeatured === true,
     order: typeof item.order === "number" ? item.order : 999,
-    seo: item.seo,
+    seo: item.seo ? {
+      ...item.seo,
+      description: item.seo.description ? publicCatalogCopy(item.seo.description) : undefined,
+    } : undefined,
   };
 }
 

@@ -1,0 +1,8 @@
+RAICES | Parche de cabecera verde en Productos de Origen | 22-09-2026
+
+Este parche restaura la barra verde de encabezados de la lista oficial en pantallas moviles, manteniendo las filas legibles y sin desplazamiento horizontal. En escritorio la tabla conserva su presentacion tradicional.
+
+INSTALACION DEL PARCHE: extrae el ZIP en la raiz de tu proyecto actual y reemplaza app/globals.css. Reinicia el servidor local o despliega la version actualizada. Si el navegador conserva la version vieja, recarga la pagina.
+
+NO ejecuta ni requiere migracion de Sanity. NO modifica Carta, Galeria de Arte ni datos.
+Si usas el ZIP del proyecto completo, conserva tu propia configuracion local (.env.local); no esta incluida en el archivo.

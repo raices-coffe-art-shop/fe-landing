@@ -35,7 +35,7 @@ export default async function GaleriaDeArtePage() {
             </div>
             <div>
               <p>{primaryCategory?.description || "Piezas modeladas en arcilla y cocidas a leña por los maestros del Taller Cerámica Paccha en Quinua, Ayacucho. Arte tutelar que resguarda la memoria, el hogar y las tradiciones andinas."}</p>
-              <p>Esta entrega reúne el Torito de Quinua, la Iglesia de Quinua y el Retablo Tradicional, cada uno con su ficha de procedencia, creador, historia y disponibilidad.</p>
+              <p>Conoce el Torito de Quinua, la Iglesia de Quinua y el Retablo Tradicional: tres expresiones del arte y las tradiciones ayacuchanas.</p>
             </div>
           </div>
         </section>
@@ -44,7 +44,7 @@ export default async function GaleriaDeArtePage() {
           <div className="page-shell catalogo-public-intro">
             <div>
               <p className="eyebrow">Piezas de la galería</p>
-              <h2>Piezas entregadas para esta galería, separadas de Productos de Origen.</h2>
+              <h2>Arte y tradición de Quinua.</h2>
             </div>
             <p>{items.length} {items.length === 1 ? "pieza publicada" : "piezas publicadas"}.</p>
           </div>
