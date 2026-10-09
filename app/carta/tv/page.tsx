@@ -55,7 +55,7 @@ export default async function CartaTvPage({ searchParams }: TvPageProps) {
   const slides = [
     ...buildMenuScreenSlides(menuItems, settings.showCatalogPrices, categories),
     ...(collage ? [collage] : []),
-    buildOriginSlide(),
+    buildOriginSlide(settings.originPhoto),
     ...buildPeopleSlides(),
   ];
 

@@ -20,7 +20,7 @@ SANITY_REVALIDATE_SECRET=...
 - Filtro:
 
 ```groq
-_type in ["siteSettings", "menuCategory", "menuItem", "catalogCategory", "catalogItem", "artCategory", "artItem", "post"]
+_type in ["siteSettings", "screenSettings", "menuCategory", "menuItem", "catalogCategory", "catalogItem", "artCategory", "artItem", "post"]
 ```
 
 - Proyección:
@@ -45,6 +45,7 @@ _type in ["siteSettings", "menuCategory", "menuItem", "catalogCategory", "catalo
 - `artItem` / `artCategory`: `/galeria-de-arte` y sus fichas.
 - `post`: `/publicaciones` y la publicación correspondiente.
 - `siteSettings`: superficies generales del sitio.
+- `screenSettings`: pantalla del local (`/carta/tv`), incluidas las fotos de «Nuestros productos» y «Nuestra historia».
 
 ## Respuestas esperadas
 

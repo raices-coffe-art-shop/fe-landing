@@ -3,7 +3,7 @@ import { people } from "@/data/people";
 import { CATALOG_FALLBACK_IMAGE_SRC, resizeCatalogImage } from "@/lib/categoryImage";
 import type { MenuScreenSlide } from "@/lib/menuScreenSlides";
 import type { CatalogItem } from "@/sanity/lib/catalogTypes";
-import type { CollagePhoto } from "@/sanity/lib/siteSettings";
+import type { CollagePhoto, ScreenOriginPhoto } from "@/sanity/lib/siteSettings";
 
 // Después del código QR la pantalla deja de ser carta y pasa a contar quiénes
 // están detrás: primero cómo nació Raíces, con la fotografía de los fundadores,
@@ -144,8 +144,9 @@ export function buildCollageSlide(
   };
 }
 
-export function buildOriginSlide(): TvScreenSlide {
+export function buildOriginSlide(originPhoto: ScreenOriginPhoto | null = null): TvScreenSlide {
   const languageNote = humanOrigin.notes[1] ?? humanOrigin.notes[0];
+  const photo = originPhoto ?? { src: humanOrigin.foundersPhoto, alt: humanOrigin.foundersPhotoAlt };
   return {
     kind: "origin",
     key: "historia",
@@ -153,7 +154,7 @@ export function buildOriginSlide(): TvScreenSlide {
     title: "Nuestra historia",
     headline: humanOrigin.title,
     paragraphs: humanOrigin.paragraphs.slice(0, ORIGIN_PARAGRAPHS),
-    photo: { src: humanOrigin.foundersPhoto, alt: humanOrigin.foundersPhotoAlt },
+    photo,
     note: { label: languageNote.label, text: languageNote.text },
   };
 }

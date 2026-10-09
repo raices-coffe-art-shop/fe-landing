@@ -3,7 +3,7 @@ import type { SanityImageSource } from "@sanity/image-url";
 import { contactChannels } from "@/data/social";
 import { sanityClient } from "./client";
 import { urlForImage } from "./image";
-import { siteSettingsQuery } from "./queries";
+import { screenSettingsQuery, siteSettingsQuery } from "./queries";
 
 export const SITE_SETTINGS_TAG = "siteSettings";
 
@@ -31,20 +31,33 @@ export type CollagePhoto = {
   alt: string;
 };
 
+export type ScreenOriginPhoto = {
+  src: string;
+  alt: string;
+};
+
 export type SiteSettings = {
   brandLogo: BrandLogo;
   showCatalogPrices: boolean;
   collagePhotos: CollagePhoto[];
+  originPhoto: ScreenOriginPhoto | null;
   socialLinks: SocialLink[];
 };
 
 type SanitySocialLink = Partial<SocialLink>;
+type SanityCollagePhoto = { image?: SanityImageSource; alt?: string | null } | null;
+
+type SanityScreenSettings = {
+  collagePhotos?: SanityCollagePhoto[] | null;
+  originPhoto?: SanityImageSource;
+  originPhotoAlt?: string | null;
+} | null;
 
 type SanitySiteSettings = {
   brandLogo?: SanityImageSource;
   brandLogoAlt?: string | null;
   showCatalogPrices?: boolean | null;
-  collagePhotos?: Array<{ image?: SanityImageSource; alt?: string | null } | null> | null;
+  collagePhotos?: SanityCollagePhoto[] | null;
   socialLinks?: SanitySocialLink[] | null;
 } | null;
 
@@ -144,7 +157,7 @@ function normalizeSocialLinks(links: SanitySocialLink[] | null | undefined, useF
 const COLLAGE_PHOTO_WIDTH = 420;
 const COLLAGE_PHOTO_HEIGHT = 520;
 
-function normalizeCollagePhotos(photos: NonNullable<SanitySiteSettings>["collagePhotos"]): CollagePhoto[] {
+function normalizeCollagePhotos(photos: SanityCollagePhoto[] | null | undefined): CollagePhoto[] {
   if (!Array.isArray(photos)) return [];
   const resolved: CollagePhoto[] = [];
   for (const photo of photos) {
@@ -160,7 +173,18 @@ function normalizeCollagePhotos(photos: NonNullable<SanitySiteSettings>["collage
   return resolved;
 }
 
-function normalizeSettings(settings: SanitySiteSettings): SiteSettings {
+function normalizeOriginPhoto(settings: SanityScreenSettings): ScreenOriginPhoto | null {
+  const src = urlForImage(settings?.originPhoto)
+    ?.width(1200)
+    .height(1500)
+    .fit("crop")
+    .auto("format")
+    .url();
+  if (!src) return null;
+  return { src, alt: settings?.originPhotoAlt?.trim() || "Fotografía de la historia de Raíces" };
+}
+
+function normalizeSettings(settings: SanitySiteSettings, screenSettings: SanityScreenSettings = null): SiteSettings {
   const sanityLogo = urlForImage(settings?.brandLogo)?.width(360).height(360).fit("max").auto("format").url();
   const alt = settings?.brandLogoAlt?.trim() || fallbackBrandLogo.alt;
 
@@ -178,7 +202,8 @@ function normalizeSettings(settings: SanitySiteSettings): SiteSettings {
           alt,
         },
     showCatalogPrices: settings?.showCatalogPrices !== false,
-    collagePhotos: normalizeCollagePhotos(settings?.collagePhotos),
+    collagePhotos: normalizeCollagePhotos(screenSettings?.collagePhotos ?? settings?.collagePhotos),
+    originPhoto: normalizeOriginPhoto(screenSettings),
     socialLinks: normalizeSocialLinks(settings?.socialLinks, !settings || !Array.isArray(settings.socialLinks)),
   };
 }
@@ -190,10 +215,13 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
     const fetchOptions = process.env.NODE_ENV === "development"
       ? { cache: "no-store" as const }
       : { next: { revalidate: 300, tags: [SITE_SETTINGS_TAG] } };
-    const settings = await sanityClient.fetch<SanitySiteSettings>(siteSettingsQuery, {}, fetchOptions);
-    return normalizeSettings(settings);
+    const [settings, screenSettings] = await Promise.all([
+      sanityClient.fetch<SanitySiteSettings>(siteSettingsQuery, {}, fetchOptions),
+      sanityClient.fetch<SanityScreenSettings>(screenSettingsQuery, {}, fetchOptions),
+    ]);
+    return normalizeSettings(settings, screenSettings);
   } catch {
-    return normalizeSettings(null);
+    return normalizeSettings(null, null);
   }
 });
 

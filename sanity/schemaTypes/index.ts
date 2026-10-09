@@ -7,12 +7,14 @@ import { menuItem } from "./menuItem";
 import { post } from "./post";
 import { seo } from "./seo";
 import { siteSettings } from "./siteSettings";
+import { screenSettings } from "./screenSettings";
 import { socialLink } from "./socialLink";
 
 export const schemaTypes = [
   socialLink,
   seo,
   siteSettings,
+  screenSettings,
   menuCategory,
   menuItem,
   catalogCategory,

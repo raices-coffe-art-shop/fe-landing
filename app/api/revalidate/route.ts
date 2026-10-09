@@ -9,7 +9,7 @@ import { SITE_SETTINGS_TAG } from "@/sanity/lib/siteSettings";
 
 type SanityWebhookBody = {
   _id?: string;
-  _type?: "siteSettings" | "menuCategory" | "menuItem" | "catalogCategory" | "catalogItem" | "artCategory" | "artItem" | "post" | string;
+  _type?: "siteSettings" | "screenSettings" | "menuCategory" | "menuItem" | "catalogCategory" | "catalogItem" | "artCategory" | "artItem" | "post" | string;
   slug?: string | null;
   previousSlug?: string | null;
 };
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
   const body = parsed.body;
   if (!body?._type) return NextResponse.json({ ok: false, message: "Missing document type" }, { status: 400 });
 
-  if (body._type === "siteSettings") revalidateSiteSettings();
+  if (body._type === "siteSettings" || body._type === "screenSettings") revalidateSiteSettings();
   else if (body._type === "menuCategory" || body._type === "menuItem") revalidateMenu();
   else if (body._type === "catalogCategory") revalidateCatalogCategory();
   else if (body._type === "catalogItem") revalidateCatalogItem(body.slug, body.previousSlug);

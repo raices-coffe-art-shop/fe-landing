@@ -15,6 +15,7 @@ if (!dataset) throw new Error("Missing NEXT_PUBLIC_SANITY_DATASET");
 
 const hiddenRootTypes = new Set([
   "siteSettings",
+  "screenSettings",
   "menuItem",
   "menuCategory",
   "catalogItem",
@@ -38,6 +39,7 @@ const ProductsIcon = studioIcon("◈");
 const ProductsCategoryIcon = studioIcon("◇");
 const ArtIcon = studioIcon("✦");
 const ArtCategoryIcon = studioIcon("◌");
+const ScreenIcon = studioIcon("🖥️");
 const PostsIcon = studioIcon("▤");
 const SettingsIcon = studioIcon("⚙");
 
@@ -107,6 +109,18 @@ export default defineConfig({
                     S.documentTypeListItem("artCategory").title("Categorías").icon(ArtCategoryIcon),
                   ]),
               ),
+            S.listItem()
+              .id("screenSettings")
+              .title("Pantalla del local")
+              .icon(ScreenIcon)
+              .schemaType("screenSettings")
+              .child(
+                S.document()
+                  .id("screenSettings")
+                  .schemaType("screenSettings")
+                  .documentId("screenSettings")
+                  .title("Pantalla del local"),
+              ),
             S.divider(),
             S.listItem()
               .id("posts")
@@ -140,12 +154,12 @@ export default defineConfig({
   },
   document: {
     actions: (previous, context) =>
-      context.schemaType === "siteSettings"
+      context.schemaType === "siteSettings" || context.schemaType === "screenSettings"
         ? previous.filter(({ action }) => action !== "delete" && action !== "duplicate")
         : previous,
   },
   schema: {
     types: schemaTypes,
-    templates: (previous) => previous.filter((template) => template.id !== "siteSettings"),
+    templates: (previous) => previous.filter((template) => template.id !== "siteSettings" && template.id !== "screenSettings"),
   },
 });

@@ -19,6 +19,17 @@ export const siteSettingsQuery = defineQuery(`
   }
 `);
 
+export const screenSettingsQuery = defineQuery(`
+  *[_type == "screenSettings" && _id == "screenSettings"][0]{
+    "collagePhotos": collagePhotos[]{
+      image,
+      alt
+    },
+    originPhoto,
+    originPhotoAlt
+  }
+`);
+
 // Las consultas de catálogo recuperan primero los documentos publicados y
 // aplican la visibilidad editorial en la capa de normalización. Esto evita que
 // una referencia incompleta o un booleano legado haga desaparecer todo el
