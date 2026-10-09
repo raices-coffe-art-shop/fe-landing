@@ -1,7 +1,9 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { YesNoBooleanInput } from "../components/YesNoBooleanInput";
 import { AutoSlugInput } from "../components/AutoSlugInput";
+import { RequiredReferenceInput } from "../components/RequiredReferenceInput";
 import { isUniqueSlugWithinType } from "../lib/slugUniqueness";
+import { isExistingReference } from "../lib/referenceValidation";
 
 const currencies = [
   { title: "Soles (PEN)", value: "PEN" },
@@ -30,7 +32,19 @@ export const artItem = defineType({
       components: { input: AutoSlugInput },
       validation: (Rule) => [Rule.required(), Rule.custom(async (value, context) => isUniqueSlugWithinType(value, context))],
     }),
-    defineField({ name: "category", title: "Categoría", description: "Elige el grupo al que pertenece la pieza: Toritos, Retablos, Nacimientos, Pinturas, etc.", type: "reference", group: "content", to: [{ type: "artCategory" }], validation: (Rule) => Rule.required() }),
+    defineField({
+      name: "category",
+      title: "Categoría",
+      description: "Elige el grupo al que pertenece la pieza: Toritos, Retablos, Nacimientos, Pinturas, etc.",
+      type: "reference",
+      group: "content",
+      to: [{ type: "artCategory" }],
+      components: { input: RequiredReferenceInput },
+      validation: (Rule) => [
+        Rule.required(),
+        Rule.custom((value, context) => isExistingReference(value, context, "artCategory", "categoria")),
+      ],
+    }),
     defineField({ name: "subcategory", title: "Subcategoría", description: "Opcional. Úsala solo si hace falta una clasificación más específica dentro de la categoría.", type: "string", group: "content", validation: (Rule) => Rule.max(80) }),
     defineField({ name: "shortDescription", title: "Texto corto", description: "Una o dos frases para la tarjeta de la galería.", type: "text", rows: 3, group: "content", validation: (Rule) => Rule.required().max(280) }),
     defineField({ name: "description", title: "Descripción completa", description: "Cuenta la historia, significado, técnica o contexto de la pieza en varios párrafos.", type: "array", group: "content", of: [defineArrayMember({ type: "block" })] }),
@@ -63,6 +77,6 @@ export const artItem = defineType({
   ],
   preview: {
     select: { title: "title", category: "category.title", creator: "producerOrCreator", media: "mainImage" },
-    prepare({ title, category, creator, media }) { return { title, subtitle: [category, creator].filter(Boolean).join(" · "), media }; },
+    prepare({ title, category, creator, media }) { return { title, subtitle: [category || "Sin categoría", creator].filter(Boolean).join(" · "), media }; },
   },
 });
