@@ -14,6 +14,16 @@ type SanityWebhookBody = {
   previousSlug?: string | null;
 };
 
+type RevalidationPath = {
+  path: string;
+  type?: "page" | "layout";
+};
+
+type RevalidationPlan = {
+  tags: string[];
+  paths: RevalidationPath[];
+};
+
 const siteSettingsPaths = [
   "/", "/links", "/carta", "/carta/imprimir", "/carta/tv", "/productos-de-origen", "/galeria-de-arte", "/publicaciones", "/comunidad",
 ];
@@ -21,63 +31,82 @@ const siteSettingsDynamicPaths = [
   "/archivo/[slug]", "/productos-de-origen/[slug]", "/galeria-de-arte/[slug]", "/personas/[slug]", "/publicaciones/[slug]",
 ] as const;
 
-function revalidateSiteSettings() {
-  revalidateTag(SITE_SETTINGS_TAG, { expire: 0 });
-  for (const path of siteSettingsPaths) revalidatePath(path);
-  for (const path of siteSettingsDynamicPaths) revalidatePath(path, "page");
+function applyRevalidation(plan: RevalidationPlan) {
+  for (const tag of plan.tags) revalidateTag(tag, { expire: 0 });
+  for (const { path, type } of plan.paths) revalidatePath(path, type);
 }
 
-function revalidateMenu() {
-  revalidateTag(MENU_TAG, { expire: 0 });
-  revalidateTag(MENU_CATEGORIES_TAG, { expire: 0 });
-  revalidatePath("/carta");
-  revalidatePath("/carta/imprimir");
-  revalidatePath("/carta/tv");
-  revalidatePath("/catalogo/carta");
-  revalidatePath("/catalogo/imprimir");
-  revalidatePath("/catalogo/tv");
+function revalidateSiteSettings(): RevalidationPlan {
+  return {
+    tags: [SITE_SETTINGS_TAG],
+    paths: [
+      ...siteSettingsPaths.map((path) => ({ path })),
+      ...siteSettingsDynamicPaths.map((path) => ({ path, type: "page" as const })),
+    ],
+  };
 }
 
-function revalidateCatalogCategory() {
-  revalidateTag(CATALOG_CATEGORIES_TAG, { expire: 0 });
-  revalidateTag(CATALOG_TAG, { expire: 0 });
-  revalidatePath("/");
-  revalidatePath("/productos-de-origen");
-  revalidatePath("/productos-de-origen/[slug]", "page");
+function revalidateMenu(): RevalidationPlan {
+  return {
+    tags: [MENU_TAG, MENU_CATEGORIES_TAG],
+    paths: [
+      { path: "/carta" },
+      { path: "/carta/imprimir" },
+      { path: "/carta/tv" },
+      { path: "/catalogo/carta" },
+      { path: "/catalogo/imprimir" },
+      { path: "/catalogo/tv" },
+    ],
+  };
 }
 
-function revalidateCatalogItem(slug?: string | null, previousSlug?: string | null) {
-  revalidateTag(CATALOG_TAG, { expire: 0 });
-  revalidateTag(CATALOG_CATEGORIES_TAG, { expire: 0 });
-  for (const itemSlug of new Set([slug, previousSlug].filter((value): value is string => Boolean(value)))) {
-    revalidateTag(catalogItemTag(itemSlug), { expire: 0 });
-    revalidatePath(`/productos-de-origen/${itemSlug}`);
-  }
-  revalidatePath("/");
-  revalidatePath("/productos-de-origen");
-  revalidatePath("/productos-de-origen/[slug]", "page");
+function revalidateCatalogCategory(): RevalidationPlan {
+  return {
+    tags: [CATALOG_CATEGORIES_TAG, CATALOG_TAG],
+    paths: [
+      { path: "/" },
+      { path: "/productos-de-origen" },
+      { path: "/productos-de-origen/[slug]", type: "page" },
+    ],
+  };
 }
 
-function revalidateArt(slug?: string | null, previousSlug?: string | null) {
-  revalidateTag(ART_TAG, { expire: 0 });
-  revalidateTag(ART_CATEGORIES_TAG, { expire: 0 });
-  for (const itemSlug of new Set([slug, previousSlug].filter((value): value is string => Boolean(value)))) {
-    revalidateTag(artItemTag(itemSlug), { expire: 0 });
-    revalidatePath(`/galeria-de-arte/${itemSlug}`);
-  }
-  revalidatePath("/");
-  revalidatePath("/galeria-de-arte");
-  revalidatePath("/galeria-de-arte/[slug]", "page");
+function revalidateCatalogItem(slug?: string | null, previousSlug?: string | null): RevalidationPlan {
+  const itemSlugs = [...new Set([slug, previousSlug].filter((value): value is string => Boolean(value)))];
+  return {
+    tags: [CATALOG_TAG, CATALOG_CATEGORIES_TAG, ...itemSlugs.map(catalogItemTag)],
+    paths: [
+      ...itemSlugs.map((itemSlug) => ({ path: `/productos-de-origen/${itemSlug}` })),
+      { path: "/" },
+      { path: "/productos-de-origen" },
+      { path: "/productos-de-origen/[slug]", type: "page" },
+    ],
+  };
 }
 
-function revalidatePost(slug?: string | null, previousSlug?: string | null) {
-  revalidateTag(POSTS_TAG, { expire: 0 });
-  for (const postSlug of new Set([slug, previousSlug].filter((value): value is string => Boolean(value)))) {
-    revalidateTag(postTag(postSlug), { expire: 0 });
-    revalidatePath(`/publicaciones/${postSlug}`);
-  }
-  revalidatePath("/publicaciones");
-  revalidatePath("/publicaciones/[slug]", "page");
+function revalidateArt(slug?: string | null, previousSlug?: string | null): RevalidationPlan {
+  const itemSlugs = [...new Set([slug, previousSlug].filter((value): value is string => Boolean(value)))];
+  return {
+    tags: [ART_TAG, ART_CATEGORIES_TAG, ...itemSlugs.map(artItemTag)],
+    paths: [
+      ...itemSlugs.map((itemSlug) => ({ path: `/galeria-de-arte/${itemSlug}` })),
+      { path: "/" },
+      { path: "/galeria-de-arte" },
+      { path: "/galeria-de-arte/[slug]", type: "page" },
+    ],
+  };
+}
+
+function revalidatePost(slug?: string | null, previousSlug?: string | null): RevalidationPlan {
+  const postSlugs = [...new Set([slug, previousSlug].filter((value): value is string => Boolean(value)))];
+  return {
+    tags: [POSTS_TAG, ...postSlugs.map(postTag)],
+    paths: [
+      ...postSlugs.map((postSlug) => ({ path: `/publicaciones/${postSlug}` })),
+      { path: "/publicaciones" },
+      { path: "/publicaciones/[slug]", type: "page" },
+    ],
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -96,16 +125,30 @@ export async function POST(request: NextRequest) {
   const body = parsed.body;
   if (!body?._type) return NextResponse.json({ ok: false, message: "Missing document type" }, { status: 400 });
 
-  if (body._type === "siteSettings" || body._type === "screenSettings") revalidateSiteSettings();
-  else if (body._type === "menuCategory" || body._type === "menuItem") revalidateMenu();
-  else if (body._type === "catalogCategory") revalidateCatalogCategory();
-  else if (body._type === "catalogItem") revalidateCatalogItem(body.slug, body.previousSlug);
-  else if (body._type === "artCategory") revalidateArt();
-  else if (body._type === "artItem") revalidateArt(body.slug, body.previousSlug);
-  else if (body._type === "post") revalidatePost(body.slug, body.previousSlug);
+  let plan: RevalidationPlan;
+  if (body._type === "siteSettings" || body._type === "screenSettings") plan = revalidateSiteSettings();
+  else if (body._type === "menuCategory" || body._type === "menuItem") plan = revalidateMenu();
+  else if (body._type === "catalogCategory") plan = revalidateCatalogCategory();
+  else if (body._type === "catalogItem") plan = revalidateCatalogItem(body.slug, body.previousSlug);
+  else if (body._type === "artCategory") plan = revalidateArt();
+  else if (body._type === "artItem") plan = revalidateArt(body.slug, body.previousSlug);
+  else if (body._type === "post") plan = revalidatePost(body.slug, body.previousSlug);
   else return NextResponse.json({ ok: true, revalidated: false, message: "Ignored document type", type: body._type });
 
-  return NextResponse.json({ ok: true, revalidated: true, type: body._type, slug: body.slug ?? null, previousSlug: body.previousSlug ?? null });
+  console.info("[revalidate] received", { type: body._type, slug: body.slug ?? null, previousSlug: body.previousSlug ?? null });
+  console.info("[revalidate] invalidating", { tags: plan.tags, paths: plan.paths });
+  applyRevalidation(plan);
+  console.info("[revalidate] finished", { type: body._type });
+
+  return NextResponse.json({
+    ok: true,
+    revalidated: true,
+    type: body._type,
+    slug: body.slug ?? null,
+    previousSlug: body.previousSlug ?? null,
+    tags: plan.tags,
+    paths: plan.paths,
+  });
 }
 
 export function GET() {
